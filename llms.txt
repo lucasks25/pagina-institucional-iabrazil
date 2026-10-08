@@ -1,6 +1,6 @@
 # IA BRAZIL
 
-> Empresa brasileira B2B de implementação de inteligência artificial: diagnóstico de IA em 30 dias, software sob medida, agentes de IA e automação de processos integrados aos sistemas da empresa (ERP, CRM e planilhas), com o retorno calculado antes de construir. Projetos no Brasil, nos Estados Unidos e em Taiwan.
+> Empresa brasileira B2B de implementação de inteligência artificial: diagnóstico de IA em 30 dias, software sob medida, agentes de IA e automação de processos integrados aos sistemas da empresa (ERP, CRM e planilhas), com o retorno calculado antes de construir.
 
 Como a IA BRAZIL trabalha:
 - Análise gratuita: primeira conversa para entender a operação e indicar onde a IA gera resultado.
@@ -25,7 +25,7 @@ Como a IA BRAZIL trabalha:
 - [O que são agentes de IA e como usar na empresa](https://iabrazil.com/guia-o-que-sao-agentes-de-ia.html): O que é um agente de IA, a diferença para chatbots e automações, exemplos práticos em empresas e os cuidados de segurança para começar.
 
 ## Empresa
-- [Sobre a IA BRAZIL](https://iabrazil.com/sobre.html): A IA BRAZIL implementa IA em empresas: diagnóstico, software sob medida, agentes e automação de processos, com projetos no Brasil, nos EUA e em Taiwan.
+- [Sobre a IA BRAZIL](https://iabrazil.com/sobre.html): A IA BRAZIL implementa IA em empresas: diagnóstico, software sob medida, agentes e automação de processos.
 - [Cases de implementação de IA em empresas](https://iabrazil.com/cases.html): Cases de implementação de IA em empresas da indústria, de serviços e do varejo: processos que saíram do manual e passaram a rodar integrados aos sistemas.
 - [Contato e análise gratuita de IA](https://iabrazil.com/contato.html): Fale com a IA BRAZIL e agende uma análise gratuita: mostramos onde a inteligência artificial dá retorno na sua operação e quanto, antes de investir.
 
