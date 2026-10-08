@@ -1,0 +1,68 @@
+/* IA BRAZIL — tema claro, usado só no blog (blog.html e src/noticias/*.html, com <body class="theme-light">).
+   Fundo branco com a mesma fumaça azul do site (as fotos invertidas: viram fumaça azul sobre branco),
+   header de vidro branco, texto escuro. A faixa de contato do fim continua escura, como contraste. */
+
+html:has(body.theme-light) { background: #fff; color-scheme: light; }
+
+body.theme-light {
+  --bg: #ffffff;
+  --bg-rgb: 255, 255, 255;
+  --surface: #f5f7fb;
+  --gray-50: #eef1f6;
+  --panel: #eef1f6;
+  --ink: #0b0d12;
+  --text: #3b4250;
+  --muted: #5f6675;
+  --tone: #6b7282;
+  --line: #e6e9ef;
+  --hairline: #d6dae3;
+  --brand: #2c5fd9;
+  --brand-soft: #3d68e6;
+  --brand-rgb: 44, 95, 217;
+  --header-bg-solid: rgba(255, 255, 255, .92);
+  background: #fff;
+  color: var(--ink);
+}
+body.theme-light.has-net { background: transparent; }
+
+/* Fundo: a fumaça do site em versão clara, bem suave */
+.theme-light .fundo { background: #fff; }
+.theme-light .fundo span { filter: invert(1) hue-rotate(180deg) saturate(1.5) brightness(1.04); }
+.theme-light .fundo::after { background: radial-gradient(120% 90% at 75% 15%, rgba(255, 255, 255, .25), rgba(255, 255, 255, .86) 68%), linear-gradient(180deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, .75)); }
+
+/* Header e menus em vidro branco */
+.theme-light .logo-mark::after { mix-blend-mode: multiply; }
+.theme-light .site-header.is-scrolled .header-shell { border-color: rgba(10, 20, 40, .08); background: rgba(255, 255, 255, .8); box-shadow: inset 0 1px 0 #fff, 0 18px 40px -24px rgba(20, 40, 90, .3); }
+.theme-light .nav-glow { background: rgba(10, 20, 40, .06); box-shadow: none; }
+.theme-light .nav-sub { border-color: rgba(10, 20, 40, .08); background: rgba(255, 255, 255, .98); box-shadow: 0 30px 60px -24px rgba(20, 40, 90, .3); }
+.theme-light .mega-item:hover, .theme-light .mega-item:focus-visible { background: rgba(10, 20, 40, .04); }
+.theme-light .mega-ico { border-color: rgba(10, 20, 40, .1); background: rgba(77, 124, 254, .08); color: var(--accent); }
+.theme-light .mega-feature { --ink: #f7f8f8; --bg-rgb: 8, 9, 10; color: #f7f8f8; }
+.theme-light .lang-switch { border-color: rgba(10, 20, 40, .14); }
+.theme-light .lang-switch:hover { border-color: rgba(10, 20, 40, .4); }
+@media (max-width: 960px) {
+  .theme-light .nav { background: rgba(255, 255, 255, .98); }
+  .theme-light .menu-toggle { border-color: rgba(10, 20, 40, .14); background: rgba(10, 20, 40, .03); }
+  .theme-light .nav a.nav-cta, .theme-light .nav a.nav-cta:hover { color: #fff; }
+}
+
+/* Botões */
+.theme-light .btn-primary { background: #0b0d12; color: #fff; }
+.theme-light .btn-primary:hover { background: #222a3a; }
+.theme-light .btn-outline { border-color: #cfd4de; background: #fff; }
+
+/* Caixas de vidro em versão clara */
+.theme-light .glass { border-color: rgba(10, 20, 40, .08); background: rgba(255, 255, 255, .75); box-shadow: inset 0 1px 0 #fff, 0 30px 60px -32px rgba(30, 70, 180, .3); }
+
+/* Fotos sem escurecer */
+.theme-light .ph { border-color: transparent; background: #eef1f6; }
+.theme-light .ph img, .theme-light a:hover .ph img { filter: none; }
+.theme-light .ph::after { content: none; }
+
+/* Faixa de contato do fim: continua escura (as cores voltam às do tema escuro dentro dela) */
+.theme-light .cta-box { --ink: #f7f8f8; --text: #b4b8bf; --muted: #8a8f98; --brand-soft: #9db8ea; --bg-rgb: 8, 9, 10; color: #f7f8f8; }
+.theme-light .cta-box .btn-primary { background: #e6e7e8; color: #08090a; }
+.theme-light .cta-box .btn-primary:hover { background: #fff; }
+
+/* Rodapé */
+.theme-light .socials a:hover { color: #fff; }

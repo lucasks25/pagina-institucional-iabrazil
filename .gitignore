@@ -1,0 +1,10 @@
+# Ferramentas e artefatos locais
+*.db
+*.db-shm
+*.db-wal
+*.rvf
+*.rvf.*
+.swarm/
+.claude/
+.claude-flow/
+.DS_Store

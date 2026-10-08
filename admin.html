@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <!-- Só roda script deste site; os dados dos contatos nunca viram código -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https:; base-uri 'none'; form-action 'none'">
+  <title>Contatos | IA BRAZIL</title>
+  <meta name="theme-color" content="#0a1a3a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="js/config.js" defer></script>
+  <script src="js/leads.js" defer></script>
+  <script src="js/admin.js" defer></script>
+</head>
+<body class="adm">
+  <header class="adm-bar">
+    <div class="adm-wrap adm-bar-inner">
+      <span class="logo"><span class="logo-mark" aria-hidden="true"></span>IA BRAZIL</span>
+      <span class="adm-bar-title">Contatos</span>
+      <div class="adm-user" id="usuario" hidden>
+        <span class="adm-user-email" id="usuario-email"></span>
+        <button class="btn btn-bar" type="button" id="sair">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="adm-demo" id="aviso-demo" hidden>
+    <div class="adm-wrap">
+      <strong>Modo demonstração</strong>
+      <p>Os contatos ficam salvos só neste navegador. Para recebê-los de verdade, preencha o arquivo <code>js/config.js</code>. O passo a passo está em <code>scripts/supabase-leads.sql</code>.</p>
+    </div>
+  </div>
+
+  <noscript><p class="adm-wrap adm-fatal">Ative o JavaScript para ver os contatos.</p></noscript>
+
+  <main id="conteudo">
+    <!-- Login (só quando o Supabase está configurado) -->
+    <section class="adm-login" id="tela-login" aria-labelledby="login-titulo" hidden>
+      <form class="adm-login-box" id="form-login" method="post" action="#">
+        <p class="adm-kicker">Área restrita</p>
+        <h1 id="login-titulo">Entrar</h1>
+        <p class="adm-login-text">Use o e-mail e a senha cadastrados no Supabase para ver os contatos do site.</p>
+        <label class="adm-field">E-mail<input name="email" type="email" required autocomplete="username" spellcheck="false"></label>
+        <label class="adm-field">Senha<input name="password" type="password" required autocomplete="current-password"></label>
+        <p class="adm-login-msg" id="login-msg" role="alert"></p>
+        <button class="btn btn-primary" type="submit"><span id="login-rotulo">Entrar</span> <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h16M14 7l5 5-5 5"/></svg></button>
+      </form>
+    </section>
+
+    <!-- Painel -->
+    <section class="adm-dash" id="tela-painel" aria-labelledby="painel-titulo" hidden>
+      <div class="adm-wrap">
+        <div class="adm-head">
+          <div>
+            <h1 id="painel-titulo" tabindex="-1">Contatos recebidos</h1>
+            <p>Pedidos enviados pelo formulário do site, do mais recente para o mais antigo.</p>
+          </div>
+          <div class="adm-sync">
+            <span id="atualizado"></span>
+            <button class="btn btn-line btn-sm" type="button" id="atualizar">Atualizar</button>
+          </div>
+        </div>
+
+        <ul class="adm-stats" id="resumo" aria-label="Resumo" hidden>
+          <li class="stat stat-main">
+            <span class="stat-label">Novos</span>
+            <strong class="stat-n" id="n-novos"></strong>
+            <span class="stat-side">
+              <span class="stat-sub">aguardando o primeiro contato</span>
+              <button class="stat-link" type="button" id="ver-novos">Ver só os novos</button>
+            </span>
+          </li>
+          <li class="stat"><span class="stat-label">Total</span><strong class="stat-n" id="n-total"></strong><span class="stat-sub">desde o início</span></li>
+          <li class="stat"><span class="stat-label">Esta semana</span><strong class="stat-n" id="n-semana"></strong><span class="stat-sub">desde segunda-feira</span></li>
+          <li class="stat"><span class="stat-label">Em negociação</span><strong class="stat-n" id="n-proposta"></strong><span class="stat-sub">com proposta enviada</span></li>
+        </ul>
+
+        <div class="adm-tools" id="ferramentas" role="search" hidden>
+          <label class="adm-field adm-search">Buscar
+            <span class="adm-search-box">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg>
+              <input type="search" id="busca" placeholder="Nome, empresa, e-mail ou WhatsApp" autocomplete="off" spellcheck="false">
+            </span>
+          </label>
+          <label class="adm-field">Status
+            <select id="filtro-status">
+              <option value="">Todos</option>
+              <option value="novo">Novo</option>
+              <option value="em_contato">Em contato</option>
+              <option value="proposta">Proposta enviada</option>
+              <option value="fechado">Fechado</option>
+              <option value="perdido">Perdido</option>
+            </select>
+          </label>
+          <label class="adm-field">Interesse<select id="filtro-interesse"><option value="">Todos</option></select></label>
+          <button class="btn btn-line" type="button" id="exportar" title="Exporta os contatos da lista abaixo, com os filtros aplicados">Exportar CSV</button>
+        </div>
+
+        <div class="adm-list-head" id="lista-topo" hidden>
+          <p id="contagem" aria-live="polite"></p>
+          <button class="adm-link" type="button" id="limpar" hidden>Limpar filtros</button>
+        </div>
+
+        <table class="adm-table" id="tabela" hidden>
+          <caption class="sr-only">Contatos recebidos pelo site, do mais recente para o mais antigo. Escolha um nome para ver os detalhes.</caption>
+          <thead>
+            <tr><th scope="col" class="c-date">Recebido</th><th scope="col">Nome e empresa</th><th scope="col" class="c-int">Interesse</th><th scope="col" class="c-contact">Contato</th><th scope="col" class="c-status">Status</th></tr>
+          </thead>
+          <tbody id="linhas"></tbody>
+        </table>
+
+        <div class="adm-state" id="estado" aria-live="polite" hidden></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Detalhes do contato (painel lateral) -->
+  <dialog class="drawer" id="detalhe" aria-labelledby="d-nome">
+    <div class="drawer-inner">
+      <div class="drawer-top">
+        <p class="adm-kicker" id="d-quando"></p>
+        <button class="drawer-close" type="button" id="d-fechar" aria-label="Fechar detalhes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+
+      <h2 id="d-nome"></h2>
+      <p class="drawer-company" id="d-empresa"></p>
+      <div class="drawer-status"><span class="adm-kicker">Status</span><span id="d-status"></span></div>
+
+      <div class="drawer-actions">
+        <a class="btn btn-primary btn-sm" id="d-whatsapp" target="_blank" rel="noopener noreferrer">Abrir WhatsApp <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h16M14 7l5 5-5 5"/></svg></a>
+        <a class="btn btn-line btn-sm" id="d-email">Enviar e-mail</a>
+        <button class="btn btn-line btn-sm" type="button" id="d-copiar">Copiar e-mail</button>
+      </div>
+
+      <section class="drawer-sec" aria-labelledby="d-mensagem-t">
+        <h3 class="adm-kicker" id="d-mensagem-t">Mensagem</h3>
+        <p class="drawer-msg" id="d-mensagem"></p>
+      </section>
+
+      <section class="drawer-sec" aria-labelledby="d-dados-t">
+        <h3 class="adm-kicker" id="d-dados-t">Dados do contato</h3>
+        <dl class="drawer-data" id="d-dados"></dl>
+      </section>
+
+      <section class="drawer-sec">
+        <h3 class="adm-kicker"><label for="d-notas">Notas internas</label></h3>
+        <textarea id="d-notas" rows="5" maxlength="5000" placeholder="O que foi conversado, próximos passos, valores..."></textarea>
+        <div class="drawer-notes-bar">
+          <button class="btn btn-line btn-sm" type="button" id="d-salvar" aria-disabled="true">Salvar notas</button>
+          <span class="drawer-hint" id="d-notas-info" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <div class="drawer-danger">
+        <button class="adm-link" type="button" id="d-excluir">Excluir contato</button>
+        <div class="drawer-confirm" id="d-confirmar" hidden>
+          <p id="d-confirmar-txt"></p>
+          <div class="drawer-confirm-actions">
+            <button class="btn btn-line btn-sm" type="button" id="d-cancelar">Cancelar</button>
+            <button class="btn btn-dark btn-sm" type="button" id="d-excluir-sim">Excluir de vez</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="adm-toast" id="d-toast" role="status"></p>
+    </div>
+  </dialog>
+
+  <p class="adm-toast" id="toast" role="status"></p>
+</body>
+</html>

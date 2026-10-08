@@ -1,0 +1,34 @@
+# IA BRAZIL
+
+> Empresa brasileira B2B de implementação de inteligência artificial: diagnóstico de IA em 30 dias, software sob medida, agentes de IA e automação de processos integrados aos sistemas da empresa (ERP, CRM e planilhas), com o retorno calculado antes de construir. Projetos no Brasil, nos Estados Unidos e em Taiwan.
+
+Como a IA BRAZIL trabalha:
+- Análise gratuita: primeira conversa para entender a operação e indicar onde a IA gera resultado.
+- Diagnóstico de IA em 30 dias: mapa de processos e sistemas, ROI calculado com os dados da empresa e protótipo no caso principal.
+- Método em 4 fases: diagnóstico, priorização, construção em ciclos curtos e medição do resultado em produção.
+- Integração com os sistemas que a empresa já usa (ERP, CRM, planilhas e sistemas próprios) por API, banco de dados ou arquivos, sem trocar o ERP.
+- Projetos alinhados à LGPD. Atendimento em português e inglês.
+
+## Serviços
+- [Diagnóstico de IA](https://iabrazil.com/#diagnostico): onde a IA dá retorno na operação e quanto, em 30 dias.
+- [Implementação de IA sob medida](https://iabrazil.com/#implementacao): plataformas, integrações e automações rodando na operação.
+- [Desenvolvimento de software sob medida com IA](https://iabrazil.com/software-sob-medida.html): Desenvolvimento de software sob medida para empresas: sistemas internos, portais B2B e plataformas web com IA, integrados ao seu ERP e CRM. Análise gratuita.
+- [Agentes de IA para empresas](https://iabrazil.com/agentes-de-ia.html): Agentes de IA para empresas que executam tarefas dentro dos seus sistemas: atendimento, vendas, financeiro e operações, integrados ao ERP e ao CRM.
+- [Automação de processos com IA para empresas](https://iabrazil.com/automacao-de-processos.html): Automação de processos com inteligência artificial: notas fiscais, conciliações, cadastros, documentos e relatórios sem digitação manual, com retorno calculado.
+- [BI e análise de dados com IA para empresas](https://iabrazil.com/dados-e-bi.html): Business intelligence com IA: dados organizados, dashboards claros, previsões e alertas automáticos quando algo foge do normal. Análise gratuita.
+- [Desenvolvimento de apps com IA para empresas](https://iabrazil.com/apps-mobile.html): Desenvolvimento de aplicativos iOS e Android com inteligência artificial para clientes e equipes, do design à publicação nas lojas, integrados aos seus sistemas.
+- [Squad dedicado de desenvolvimento e IA](https://iabrazil.com/squad-dedicado.html): Squad dedicado de desenvolvimento de software e IA para a sua empresa, com especialistas em IA, dados e software e escala conforme a demanda.
+
+## Guias
+- [Como implementar IA na empresa: guia em 4 etapas](https://iabrazil.com/guia-como-implementar-ia-na-empresa.html): Passo a passo para implementar inteligência artificial na empresa: diagnóstico, priorização pelo retorno, integração aos sistemas e medição em produção.
+- [Software sob medida ou SaaS: como decidir](https://iabrazil.com/guia-software-sob-medida-ou-saas.html): Quando vale contratar um software sob medida e quando um sistema pronto (SaaS) resolve. Critérios, custo total e um checklist para decidir com segurança.
+- [O que são agentes de IA e como usar na empresa](https://iabrazil.com/guia-o-que-sao-agentes-de-ia.html): O que é um agente de IA, a diferença para chatbots e automações, exemplos práticos em empresas e os cuidados de segurança para começar.
+
+## Empresa
+- [Sobre a IA BRAZIL](https://iabrazil.com/sobre.html): A IA BRAZIL implementa IA em empresas: diagnóstico, software sob medida, agentes e automação de processos, com projetos no Brasil, nos EUA e em Taiwan.
+- [Cases de implementação de IA em empresas](https://iabrazil.com/cases.html): Cases de implementação de IA em empresas da indústria, de serviços e do varejo: processos que saíram do manual e passaram a rodar integrados aos sistemas.
+- [Contato e análise gratuita de IA](https://iabrazil.com/contato.html): Fale com a IA BRAZIL e agende uma análise gratuita: mostramos onde a inteligência artificial dá retorno na sua operação e quanto, antes de investir.
+
+## Optional
+- [Notícias de IA e tecnologia para empresas](https://iabrazil.com/blog.html): Notícias de inteligência artificial e tecnologia para empresas, atualizadas todo dia: resumos em português das principais fontes do Brasil e do mundo.
+- [B2B AI implementation and custom software](https://iabrazil.com/en/): B2B AI implementation with the return calculated before we build: a 30-day assessment, then platforms, integrations and automations running in your operation.

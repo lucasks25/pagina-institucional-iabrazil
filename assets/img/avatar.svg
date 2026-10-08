@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- IA BRAZIL — espaço para foto de pessoa do time (troque por assets/fotos/*.jpg) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#141821"/>
+      <stop offset="1" stop-color="#0c0f15"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#bg)"/>
+  <circle cx="300" cy="240" r="96" fill="#222a38"/>
+  <path d="M110 600c8-130 92-210 190-210s182 80 190 210z" fill="#222a38"/>
+</svg>
