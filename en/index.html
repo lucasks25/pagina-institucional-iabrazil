@@ -255,16 +255,16 @@
           <article class="offer" id="diagnostico">
             <figure class="ph offer-ph">
               <span class="ph-tag">IAB 01 · 30 days</span>
-              <div class="tela" role="img" aria-label="Sample opportunity map: potential return of $102k per year across four processes, with hours per month, yearly return and priority">
+              <div class="tela" role="img" aria-label="Sample opportunity map: potential return of $102k per year across four company processes, with hours per month, yearly return and priority">
                 <div class="tela-head"><span class="tela-dots"><i></i><i></i><i></i></span><span class="tela-title">Opportunity map</span><em>Sample</em></div>
                 <div class="tela-body">
-                  <div class="mapa-kpis"><p><small>Potential return</small><strong>$102k<span>/yr</span></strong></p><p><small>Manual hours</small><strong>244 h<span>/mo</span></strong></p><p><small>Processes</small><strong>4<span></span></strong></p></div>
+                  <div class="mapa-kpis"><p><small>Potential return</small><strong>$<span data-count="102">102</span>k<span>/yr</span></strong></p><p><small>Manual hours</small><strong><span data-count="244">244</span> h<span>/mo</span></strong></p><p><small>Processes</small><strong><span data-count="4">4</span><span></span></strong></p></div>
                   <div class="mapa">
                     <div class="mapa-row mapa-th"><span>Process</span><span>Hours/mo</span><span>Return/yr</span><span>Priority</span></div>
-                    <div class="mapa-row is-top"><span>Order checking</span><span>120 h</span><span>$50k</span><span class="prio"><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
-                    <div class="mapa-row"><span>Overdue invoice follow-up</span><span>64 h</span><span>$27k</span><span class="prio"><i class="on"></i><i class="on"></i><i></i></span></div>
-                    <div class="mapa-row"><span>Resume screening</span><span>38 h</span><span>$16k</span><span class="prio"><i class="on"></i><i></i><i></i></span></div>
-                    <div class="mapa-row"><span>Weekly sales report</span><span>22 h</span><span>$9k</span><span class="prio"><i class="on"></i><i></i><i></i></span></div>
+                    <div class="mapa-row is-top" style="--r:0"><span>Customer support</span><span><span data-count="120">120</span> h</span><span>$<span data-count="50">50</span>k</span><span class="prio"><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+                    <div class="mapa-row" style="--r:1"><span>Financial reconciliation</span><span><span data-count="64">64</span> h</span><span>$<span data-count="27">27</span>k</span><span class="prio"><i class="on"></i><i class="on"></i><i></i></span></div>
+                    <div class="mapa-row" style="--r:2"><span>Document screening</span><span><span data-count="38">38</span> h</span><span>$<span data-count="16">16</span>k</span><span class="prio"><i class="on"></i><i></i><i></i></span></div>
+                    <div class="mapa-row" style="--r:3"><span>Management reporting</span><span><span data-count="22">22</span> h</span><span>$<span data-count="9">9</span>k</span><span class="prio"><i class="on"></i><i></i><i></i></span></div>
                   </div>
                 </div>
               </div>
@@ -277,17 +277,19 @@
           <article class="offer" id="implementacao">
             <figure class="ph offer-ph">
               <span class="ph-tag">IAB 02 · scoped</span>
-              <div class="tela" role="img" aria-label="Sample agent in production: receives the order, checks stock, posts it to the ERP and sends it to human review when something doesn't match">
-                <div class="tela-head"><span class="tela-dots"><i></i><i></i><i></i></span><span class="tela-title"><b class="live"></b>Order agent · in production</span><em>Sample</em></div>
+              <div class="tela" role="img" aria-label="Sample AI agent in production: tasks from different areas arrive, are processed and posted to the systems, and out-of-pattern cases go to human review">
+                <div class="tela-head"><span class="tela-dots"><i></i><i></i><i></i></span><span class="tela-title"><b class="live"></b>AI agent · in production</span><em>Sample</em></div>
                 <div class="tela-body">
-                  <ol class="feed">
-                    <li style="--i:0"><span class="fi"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="ft"><span>Order #4812 received by e-mail</span><time>09:14:02</time></span></li>
-                    <li style="--i:1"><span class="fi"><svg viewBox="0 0 24 24"><path d="M3 7.5l9-4.5 9 4.5-9 4.5z"/><path d="M3 7.5v9l9 4.5 9-4.5v-9"/><path d="M12 12v9"/></svg></span><span class="ft"><span>Items checked against stock</span><time>09:14:04</time></span><b>ok</b></li>
-                    <li style="--i:2"><span class="fi"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span><span class="ft"><span>Posted to the ERP</span><time>09:14:05</time></span><b>ok</b></li>
-                    <li style="--i:3"><span class="fi"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H10l-6 4z"/></svg></span><span class="ft"><span>Customer notified on WhatsApp</span><time>09:14:06</time></span><b>ok</b></li>
-                    <li style="--i:4" class="is-warn"><span class="fi"><svg viewBox="0 0 24 24"><path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17.2v.01"/></svg></span><span class="ft"><span>Order #4813: price differs from list</span><time>09:21:37</time></span><b>human review</b></li>
-                  </ol>
-                  <p class="tela-foot">Today <strong>146 orders</strong> · 3 for review</p>
+                  <div class="feed-win" data-feed>
+                    <ol class="feed">
+                      <li><span class="fi"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="ft"><span>Request classified and routed</span><time>09:41:12</time></span></li>
+                      <li><span class="fi"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span><span class="ft"><span>Invoice posted to the ERP</span><time>09:41:15</time></span><b>ok</b></li>
+                      <li><span class="fi"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg></span><span class="ft"><span>Contract read and summarized</span><time>09:41:19</time></span><b>ok</b></li>
+                      <li><span class="fi"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H10l-6 4z"/></svg></span><span class="ft"><span>Customer answered on WhatsApp</span><time>09:41:22</time></span><b>ok</b></li>
+                      <li class="is-warn"><span class="fi"><svg viewBox="0 0 24 24"><path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17.2v.01"/></svg></span><span class="ft"><span>Amount out of pattern</span><time>09:41:26</time></span><b>human review</b></li>
+                    </ol>
+                  </div>
+                  <p class="tela-foot">Today <strong><span data-feed-n>146</span> tasks</strong> · <span data-feed-r>3</span> for review</p>
                 </div>
               </div>
             </figure>

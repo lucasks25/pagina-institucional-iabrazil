@@ -81,6 +81,100 @@
     }
   });
 
+  /* Ofertas: as duas telas ganham vida quando entram na tela.
+     Mapa de oportunidades: os números sobem de zero. Agente em produção: tarefas de várias áreas chegam por baixo,
+     "processam" (anel girando) e viram OK; de vez em quando uma cai em revisão humana. Pausa fora da tela. */
+  const offers = document.querySelector('.offers');
+  if (offers) {
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window);
+    const counters = Array.from(offers.querySelectorAll('[data-count]'));
+    const feedWin = offers.querySelector('[data-feed]');
+    const ol = feedWin && feedWin.querySelector('.feed');
+    const ICON = {
+      mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+      db: '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+      chat: '<path d="M4 5h16v11H10l-6 4z"/>',
+      alert: '<path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17.2v.01"/>',
+      doc: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
+      check: '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+      cal: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+      chart: '<path d="M5 19V9M11 19V5M17 19v-7"/>',
+    };
+    const OK = t('ok', 'ok'), REVIEW = t('revisão humana', 'human review');
+    const POOL = [
+      ['cal', t('Reunião agendada e confirmada', 'Meeting booked and confirmed')],
+      ['check', t('Pagamento conciliado', 'Payment reconciled')],
+      ['mail', t('Solicitação classificada e encaminhada', 'Request classified and routed')],
+      ['alert', t('Valor fora do padrão', 'Amount out of pattern'), true],
+      ['doc', t('Currículo triado e ranqueado', 'Resume screened and ranked')],
+      ['chat', t('Cliente respondido no WhatsApp', 'Customer answered on WhatsApp')],
+      ['db', t('Cadastro atualizado no CRM', 'Record updated in the CRM')],
+      ['chart', t('Relatório semanal gerado', 'Weekly report generated')],
+      ['doc', t('Contrato lido e resumido', 'Contract read and summarized')],
+      ['db', t('Nota fiscal lançada no ERP', 'Invoice posted to the ERP')],
+    ];
+
+    const countUp = (el, delay) => {
+      const to = Number(el.dataset.count);
+      el.textContent = '0';
+      const t0 = performance.now() + delay;
+      const step = (now) => {
+        const k = Math.min(1, Math.max(0, (now - t0) / 1300));
+        el.textContent = String(Math.round(to * (1 - Math.pow(1 - k, 3))));
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    let timer = 0, started = false, visible = false, idx = 0;
+    const nEl = offers.querySelector('[data-feed-n]'), rEl = offers.querySelector('[data-feed-r]');
+    let clock = 0;
+    if (ol) {
+      const last = ol.lastElementChild && ol.lastElementChild.querySelector('time');
+      const m = last && last.textContent.match(/(\d+):(\d+):(\d+)/);
+      clock = m ? (+m[1]) * 3600 + (+m[2]) * 60 + (+m[3]) : 9 * 3600 + 41 * 60;
+    }
+    const stamp = () => {
+      clock += 2 + Math.floor(Math.random() * 4);
+      const h = Math.floor(clock / 3600) % 24, mi = Math.floor(clock / 60) % 60, se = clock % 60;
+      return [h, mi, se].map((v) => String(v).padStart(2, '0')).join(':');
+    };
+    const bump = (el) => { if (el) el.textContent = String(Number(el.textContent) + 1); };
+    const add = () => {
+      const [ic, txt, warn] = POOL[idx++ % POOL.length];
+      const li = document.createElement('li');
+      li.className = 'is-busy' + (warn ? ' is-warn' : '');
+      li.innerHTML = `<span class="fi"><svg viewBox="0 0 24 24">${ICON[ic]}</svg></span><span class="ft"><span>${txt}</span><time>${stamp()}</time></span><b>${warn ? REVIEW : OK}</b>`;
+      const h = ol.firstElementChild ? ol.firstElementChild.offsetHeight : 52;
+      ol.append(li);
+      // A lista cresceu por baixo: desloca na hora e anima de volta, para a subida ficar suave
+      ol.style.transition = 'none';
+      ol.style.transform = `translateY(${h}px)`;
+      void ol.offsetHeight;
+      ol.style.transition = '';
+      ol.style.transform = '';
+      while (ol.children.length > 6) ol.firstElementChild.remove();
+      setTimeout(() => { li.classList.remove('is-busy'); bump(nEl); if (warn) bump(rEl); }, 900);
+    };
+    const play = () => { if (!timer && ol && visible && !still) timer = setInterval(() => { if (!document.hidden) add(); }, 2400); };
+    const stop = () => { clearInterval(timer); timer = 0; };
+
+    if (!still) {
+      offers.classList.add('has-motion');
+      counters.forEach((el) => { el.textContent = '0'; });
+      // Cada tela começa a animar quando ela mesma aparece (no celular as duas ficam uma abaixo da outra)
+      const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+        const tela = en.target, vis = en.isIntersecting;
+        if (vis && !tela.classList.contains('is-live')) {
+          tela.classList.add('is-live');
+          tela.querySelectorAll('[data-count]').forEach((el, i) => countUp(el, 450 + (i < 3 ? i * 90 : 500 + (i - 3) * 40)));
+        }
+        if (ol && tela.contains(ol)) { visible = vis; if (vis) play(); else stop(); }
+      }), { threshold: 0.35 });
+      offers.querySelectorAll('.tela').forEach((tela) => io.observe(tela));
+    }
+  }
+
   /* Formulário: a prévia da mensagem no WhatsApp usa o primeiro nome que a pessoa digita */
   const waNome = document.querySelector('[data-wa-nome]');
   const nomeField = document.querySelector('#form-contato [name=nome]');
