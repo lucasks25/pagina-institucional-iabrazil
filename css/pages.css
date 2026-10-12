@@ -259,3 +259,8 @@ html:has(.subnav) { scroll-padding-top: calc(var(--header-h) + 76px); }
 /* Link para o guia no fim das páginas de solução */
 .guide-link { margin-top: var(--sp-6); color: var(--text); font-size: 16px; }
 .guide-link a { color: var(--brand); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Resposta rápida no topo das páginas de serviço (AEO): a definição que buscadores e assistentes de IA citam */
+.answer-top { max-width: 860px; margin-bottom: var(--head-gap); }
+.see-also { margin-top: var(--sp-3); }
+.see-also a + a { margin-left: 2px; }

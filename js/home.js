@@ -1,4 +1,4 @@
-/* IA BRAZIL — interações só da página inicial: campo do topo, método em cartões, fotos do formulário,
+/* IA BRAZIL — interações só da página inicial: campo do topo, método em cartões, prévia do WhatsApp no formulário,
    frase que acende com a rolagem e perguntas em abas. O formulário em si fica em js/main.js. */
 (() => {
   'use strict';
@@ -36,7 +36,7 @@
     });
   }
 
-  /* Método: quatro cartões. O ativo aproxima a foto e abre o painel; a linha do topo enche até a fase ativa.
+  /* Método: quatro cartões. O ativo anima o desenho e abre o painel; a linha do topo enche até a fase ativa.
      Avança sozinho a cada 6 s; com o mouse em cima, o cartão sob o cursor vira o ativo e o avanço pausa.
      Clique ou Enter/Espaço fixam a fase; setas mudam de fase. No celular vira carrossel e não avança sozinho. */
   document.querySelectorAll('[data-steps4]').forEach((list) => {
@@ -81,19 +81,17 @@
     }
   });
 
-  /* Fotos do formulário: trocam sozinhas a cada 5 s, com transição suave */
-  document.querySelectorAll('[data-carousel]').forEach((box) => {
-    const imgs = Array.from(box.querySelectorAll('img'));
-    const dots = Array.from(box.querySelectorAll('.lead-dots span'));
-    if (imgs.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let i = 0;
-    setInterval(() => {
-      if (document.hidden) return;
-      imgs[i].classList.remove('is-on'); if (dots[i]) dots[i].classList.remove('is-on');
-      i = (i + 1) % imgs.length;
-      imgs[i].classList.add('is-on'); if (dots[i]) dots[i].classList.add('is-on');
-    }, 5000);
-  });
+  /* Formulário: a prévia da mensagem no WhatsApp usa o primeiro nome que a pessoa digita */
+  const waNome = document.querySelector('[data-wa-nome]');
+  const nomeField = document.querySelector('#form-contato [name=nome]');
+  if (waNome && nomeField) {
+    const sync = () => {
+      const first = nomeField.value.trim().split(/\s+/)[0].slice(0, 24);
+      waNome.textContent = first ? `, ${first}` : '';
+    };
+    nomeField.addEventListener('input', sync);
+    sync();
+  }
 
   /* Frase grande: as palavras acendem uma a uma conforme a pessoa rola a página */
   document.querySelectorAll('[data-scroll-text]').forEach((el) => {

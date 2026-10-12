@@ -283,7 +283,7 @@ img.is-prov + .tag-prov { display: block; }
 
 .site-footer { padding-top: var(--sp-10); border-top: 1px solid var(--line); background: transparent; color: var(--ink); overflow: hidden; }
 
-.footer-grid { display: grid; grid-template-columns: 1.3fr repeat(4, minmax(0, 1fr)); gap: var(--sp-7); }
+.footer-grid { display: grid; grid-template-columns: 1.3fr repeat(5, minmax(0, 1fr)); gap: var(--sp-6); }
 .footer-brand p { max-width: 300px; margin-top: 18px; color: var(--muted); font-size: var(--fs-sm); line-height: 1.7; }
 
 .socials { display: flex; gap: 10px; margin-top: var(--sp-5); }
@@ -333,6 +333,10 @@ img.is-prov + .tag-prov { display: block; }
 }
 
 /* ---------- Responsivo ---------- */
+
+@media (max-width: 1180px) {
+  .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 
 @media (max-width: 960px) {
   .footer-grid { grid-template-columns: 1fr 1fr; }
