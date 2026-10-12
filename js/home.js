@@ -175,18 +175,6 @@
     }
   }
 
-  /* Formulário: a prévia da mensagem no WhatsApp usa o primeiro nome que a pessoa digita */
-  const waNome = document.querySelector('[data-wa-nome]');
-  const nomeField = document.querySelector('#form-contato [name=nome]');
-  if (waNome && nomeField) {
-    const sync = () => {
-      const first = nomeField.value.trim().split(/\s+/)[0].slice(0, 24);
-      waNome.textContent = first ? `, ${first}` : '';
-    };
-    nomeField.addEventListener('input', sync);
-    sync();
-  }
-
   /* Frase grande: as palavras acendem uma a uma conforme a pessoa rola a página */
   document.querySelectorAll('[data-scroll-text]').forEach((el) => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;

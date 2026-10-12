@@ -36,35 +36,12 @@
 /* Painel da esquerda: o que acontece depois de enviar, e a prévia da primeira mensagem no WhatsApp */
 .lead-next { display: flex; flex-direction: column; gap: var(--sp-7); padding: var(--sp-7); border: 1px solid var(--line); border-radius: 20px; background: radial-gradient(120% 60% at 0% 0%, rgba(var(--accent-rgb), .13), transparent 62%), var(--surface); }
 .lead-next-label { color: var(--muted); font: 500 12px/1.4 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
-.lead-steps { display: grid; gap: var(--sp-5); }
+.lead-steps { flex: 1; display: grid; grid-template-rows: repeat(3, 1fr); }
 .lead-steps li { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); }
-.lead-steps li:not(:last-child)::before { content: ""; position: absolute; top: 34px; bottom: calc(var(--sp-5) * -1 + 4px); left: 14px; width: 1px; background: linear-gradient(180deg, rgba(var(--accent-rgb), .5), var(--hairline)); }
+.lead-steps li:not(:last-child)::before { content: ""; position: absolute; top: 38px; bottom: 8px; left: 14px; width: 1px; background: linear-gradient(180deg, rgba(var(--accent-rgb), .5), var(--hairline)); }
 .lead-steps li > span { display: grid; place-items: center; width: 29px; height: 29px; border: 1px solid rgba(var(--accent-rgb), .45); border-radius: 50%; background: #10162a; color: var(--brand); font: 500 11px/1 var(--font-mono); }
-.lead-steps strong { display: block; color: var(--ink); font-size: 17px; font-weight: 500; letter-spacing: -.01em; line-height: 24px; }
-.lead-steps p { margin-top: 4px; color: var(--muted); font-size: 15px; line-height: 1.55; }
-/* Conversa no WhatsApp (tema escuro do app): digitando… e a mensagem chega quando a caixa entra na tela */
-.wa { margin-top: auto; overflow: hidden; border: 1px solid rgba(255, 255, 255, .1); border-radius: 18px; background: #0b141a; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, .9); }
-.wa-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 8px; background: #1f2c34; color: #aebac1; }
-.wa-back { width: 20px; height: 20px; }
-.wa-who { margin-right: auto; }
-.wa-ic { width: 19px; height: 19px; margin-left: 12px; stroke-width: 1.7; }
-.wa-av { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(140deg, #6f95ff, #2c5fd9); color: #fff; font: 600 11px var(--font-mono); }
-.wa-head strong { display: block; color: #e9edef; font-size: 14px; font-weight: 500; line-height: 1.25; }
-.wa-head small { color: #8696a0; font-size: 12px; }
-.wa-chat { position: relative; min-height: 140px; padding: 16px 14px; background: radial-gradient(rgba(255, 255, 255, .035) 1px, transparent 1.5px) 0 0 / 14px 14px, #0b141a; }
-.wa-msg { position: relative; max-width: 92%; padding: 8px 10px 22px; border-radius: 0 10px 10px; background: #202c33; color: #e9edef; font-size: 14.5px; line-height: 1.45; }
-.wa-msg::before { content: ""; position: absolute; top: 0; left: -7px; border-top: 8px solid #202c33; border-left: 8px solid transparent; }
-.wa-msg time { position: absolute; right: 10px; bottom: 5px; display: inline-flex; align-items: center; gap: 4px; color: #8696a0; font-size: 11px; }
-.wa-msg time svg { width: 16px; height: 11px; color: #53bdeb; stroke-width: 1.8; }
-.wa-typing { position: absolute; top: 14px; left: 14px; display: none; gap: 4px; padding: 12px 14px; border-radius: 0 10px 10px; background: #202c33; }
-.wa-typing i { width: 6px; height: 6px; border-radius: 50%; background: #8696a0; animation: wa-dot 1s ease-in-out infinite; }
-.wa-typing i:nth-child(2) { animation-delay: .15s; }
-.wa-typing i:nth-child(3) { animation-delay: .3s; }
-.js .lead-box.is-in .wa-typing { display: inline-flex; animation: wa-out .2s 1.8s both; }
-.js .lead-box.is-in .wa-msg { animation: wa-in .5s 1.9s cubic-bezier(.2, .7, .2, 1) both; }
-@keyframes wa-dot { 50% { opacity: .35; transform: translateY(-2px); } }
-@keyframes wa-out { to { opacity: 0; visibility: hidden; } }
-@keyframes wa-in { from { opacity: 0; transform: translateY(8px); } }
+.lead-steps strong { display: block; color: var(--ink); font-size: 19px; font-weight: 500; letter-spacing: -.01em; line-height: 24px; }
+.lead-steps p { margin-top: 6px; color: var(--muted); font-size: 16px; line-height: 1.55; }
 .lead-copy { padding: var(--sp-8) var(--sp-8) var(--sp-8) 0; }
 .lead-copy h3 { max-width: 22ch; font-size: clamp(24px, 2.4vw, 32px); font-weight: 500; letter-spacing: -.03em; line-height: 1.2; }
 .lead-quote { max-width: 52ch; margin-top: var(--sp-4); color: var(--muted); line-height: 1.6; }
@@ -347,6 +324,8 @@
   .a-hero-foot { grid-template-columns: 1fr; }
   .lead-box { grid-template-columns: 1fr; gap: var(--sp-6); }
   .lead-next { order: 2; padding: var(--sp-6) var(--sp-5); }
+  .lead-steps { flex: none; grid-template-rows: none; gap: var(--sp-6); }
+  .lead-steps li:not(:last-child)::before { bottom: calc(var(--sp-6) * -1 + 8px); }
   .lead-copy { padding: 0 var(--sp-5) var(--sp-6); }
   .posts { grid-template-columns: 1fr; max-width: 560px; }
 }
@@ -403,8 +382,7 @@
   .tela, .tela *, .mapa::after, .live, .feed li, .feed .fi::after { animation: none !important; }
   .feed { transition: none; }
   .s4, .s4::before, .s4-more, .s4-more p, .trilha-fill, .ph img, .tela { transition: none; }
-  .calc-out::before, .live, .s4-art *, .s4.is-active .s4-art *, .wa-typing i { animation: none !important; }
-}
+  .calc-out::before, .live, .s4-art *, .s4.is-active .s4-art *, }
 
 /* Título da oferta com link para a página do serviço (link interno para SEO) */
 .offer h3 a { color: inherit; text-decoration: none; transition: color .2s; }
