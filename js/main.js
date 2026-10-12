@@ -21,6 +21,17 @@
     a.rel = 'noopener';
   });
 
+  /* Redes e links sociais ainda não publicados: deixam claro que estão em breve e não navegam para #. */
+  document.querySelectorAll('.site-footer .socials a, .site-footer .footer-col a[data-wa], .site-footer .footer-col a[href="#"], .founder-links a.btn[href="#"]').forEach((a) => {
+    a.classList.add('is-coming-soon');
+    a.setAttribute('aria-disabled', 'true');
+    a.setAttribute('data-coming-soon-label', t('Em breve', 'Coming soon'));
+    a.removeAttribute('target');
+    a.removeAttribute('rel');
+    a.title = t('Em breve', 'Coming soon');
+    a.addEventListener('click', (event) => event.preventDefault());
+  });
+
   /* Menu mobile */
   const header = document.querySelector('.site-header');
   const toggle = document.querySelector('.menu-toggle');
