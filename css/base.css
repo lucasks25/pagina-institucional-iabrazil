@@ -283,7 +283,7 @@ img.is-prov + .tag-prov { display: block; }
 
 .site-footer { padding-top: var(--sp-10); border-top: 1px solid var(--line); background: transparent; color: var(--ink); overflow: hidden; }
 
-.footer-grid { display: grid; grid-template-columns: 1.3fr repeat(5, minmax(0, 1fr)); gap: var(--sp-6); }
+.footer-grid { display: grid; grid-template-columns: 1.5fr repeat(3, minmax(0, 1fr)); gap: var(--sp-8) var(--sp-7); }
 .footer-brand p { max-width: 300px; margin-top: 18px; color: var(--muted); font-size: var(--fs-sm); line-height: 1.7; }
 
 .socials { display: flex; gap: 10px; margin-top: var(--sp-5); }
@@ -321,8 +321,13 @@ img.is-prov + .tag-prov { display: block; }
   color: var(--text);
 }
 
-.footer-col h3 { margin-bottom: 18px; font-size: 15px; font-weight: 600; }
-.footer-col li + li { margin-top: 12px; }
+.footer-col h3 { margin-bottom: 16px; font-size: 15px; font-weight: 600; }
+.footer-col li + li { margin-top: 10px; }
+/* Contato real na coluna da marca (WhatsApp e e-mail) */
+.footer-contact { display: grid; gap: 12px; justify-items: start; margin-top: var(--sp-5); }
+.footer-contact a { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-size: 14.5px; transition: color .2s; }
+.footer-contact a:hover { color: var(--brand); }
+.footer-contact svg { width: 18px; height: 18px; flex: none; color: var(--muted); stroke-width: 1.7; }
 .footer-col a { color: var(--muted); font-size: 14px; transition: color .2s; }
 .footer-col a:hover { color: var(--brand); }
 .footer-col a.is-coming-soon {
@@ -360,16 +365,13 @@ img.is-prov + .tag-prov { display: block; }
 
 /* ---------- Responsivo ---------- */
 
-@media (max-width: 1180px) {
-  .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
 @media (max-width: 960px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .footer-brand { grid-column: 1 / -1; }
 }
 
 @media (max-width: 600px) {
-  .footer-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
   .btn-lg { height: 52px; padding: 0 24px; }
 }
 
