@@ -9,8 +9,8 @@
   const EN = document.documentElement.lang.startsWith('en');
   const t = (pt, en) => (EN ? en : pt);
 
-  // TROCAR: número do WhatsApp com DDI + DDD, só números (ex.: 5511999999999)
-  const WHATSAPP_NUMBER = '5500000000000';
+  // Número do WhatsApp com DDI + DDD, só números
+  const WHATSAPP_NUMBER = '5511917092509';
   const DEFAULT_MESSAGE = t('Olá! Vim pelo site da IA BRAZIL e quero conversar sobre um projeto.', 'Hi! I found IA BRAZIL on your website and would like to talk about a project.');
 
   /* Links de WhatsApp */
@@ -22,7 +22,7 @@
   });
 
   /* Redes e links sociais ainda não publicados: deixam claro que estão em breve e não navegam para #. */
-  document.querySelectorAll('.site-footer .socials a, .site-footer .footer-col a[data-wa], .site-footer .footer-col a[href="#"], .founder-links a.btn[href="#"]').forEach((a) => {
+  document.querySelectorAll('.site-footer .socials a:not([data-wa]), .site-footer .footer-col a[href="#"], .founder-links a.btn[href="#"]').forEach((a) => {
     a.classList.add('is-coming-soon');
     a.setAttribute('aria-disabled', 'true');
     a.setAttribute('data-coming-soon-label', t('Em breve', 'Coming soon'));
