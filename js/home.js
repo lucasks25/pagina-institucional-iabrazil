@@ -95,6 +95,12 @@
     }, 5000);
   });
 
+  /* Ofertas: as cenas animadas (lupa e plataforma) só rodam enquanto estão na tela */
+  document.querySelectorAll('.scene').forEach((el) => {
+    if (!('IntersectionObserver' in window)) { el.classList.add('is-live'); return; }
+    new IntersectionObserver(([e]) => el.classList.toggle('is-live', e.isIntersecting), { threshold: 0.25 }).observe(el);
+  });
+
   /* Frase grande: as palavras acendem uma a uma conforme a pessoa rola a página */
   document.querySelectorAll('[data-scroll-text]').forEach((el) => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;

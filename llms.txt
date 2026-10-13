@@ -35,7 +35,7 @@ Como a IA BRAZIL trabalha:
 
 ## Empresa
 - [Sobre a IA BRAZIL](https://www.iabrazil.com/sobre.html): A IA BRAZIL implementa IA em empresas: diagnóstico, software sob medida, agentes e automação de processos.
-- [Cases de implementação de IA em empresas](https://www.iabrazil.com/cases.html): Cases de implementação de IA em empresas da indústria, de serviços e do varejo: processos que saíram do manual e passaram a rodar integrados aos sistemas.
+- [Cases: plataformas, CRM e automação em operação](https://www.iabrazil.com/cases.html): Projetos reais da IA BRAZIL: gestão de ordens de serviço, CRM com atendimento e conversas, gestão de projetos internacionais e processos integrados aos sistemas da empresa.
 - [Contato e análise gratuita de IA](https://www.iabrazil.com/contato.html): Fale com a IA BRAZIL e agende uma análise gratuita: mostramos onde a inteligência artificial dá retorno na sua operação e quanto, antes de investir.
 
 ## Optional

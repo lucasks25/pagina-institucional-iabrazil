@@ -48,6 +48,16 @@
      "name": "Brasil"
     }
    ],
+   "founder": {
+    "@type": "Person",
+    "@id": "https://www.iabrazil.com/sobre.html#fundador",
+    "name": "Lucas Sapuppo",
+    "jobTitle": "Fundador e CEO",
+    "image": "https://www.iabrazil.com/assets/fotos/fundador.jpg",
+    "worksFor": {
+     "@id": "https://www.iabrazil.com/#org"
+    }
+   },
    "knowsAbout": [
     "Inteligência artificial",
     "Implementação de IA em empresas",
@@ -200,6 +210,7 @@
   <link rel="stylesheet" href="css/sections.css">
   <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/ofertas-motion.css">
   <script src="js/config.js" defer></script>
   <script src="js/leads.js" defer></script>
   <script src="js/main.js" defer></script>
@@ -302,14 +313,47 @@
         </div>
         <div class="offers" data-reveal>
           <article class="offer" id="diagnostico">
-            <figure class="ph offer-ph"><img src="assets/img/oferta-diagnostico.jpg" width="899" height="1200" alt="" loading="lazy" decoding="async"><span class="ph-tag">IAB 01 · 30 dias</span></figure>
+            <figure class="ph offer-ph is-scene">
+              <div class="scene scan" role="img" aria-label="Animação de exemplo: uma lupa percorre os processos da empresa, a IA escaneia cada área e destaca três oportunidades de retorno, com as horas economizadas e o retorno anual somado">
+                <div class="scan-hud" aria-hidden="true">
+                  <span class="scan-live"><i></i>IA analisando a operação</span>
+                  <span class="scan-found">Oportunidades <i></i><i></i><i></i></span>
+                  <span class="scan-end"><span class="scan-prog"><b></b></span><span class="scan-total">R$ 146 mil<small>/ano</small></span></span>
+                </div>
+                <div class="scan-grid scan-base" aria-hidden="true"><div class="tl is-hot"><span>Atendimento</span><em>−120 h/mês</em><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Vendas</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Compras</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Estoque</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl is-hot"><span>Financeiro</span><em>−64 h/mês</em><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Contratos</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>RH</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl is-hot"><span>Documentos</span><em>−38 h/mês</em><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Relatórios</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Cadastros</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Suporte</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Logística</span><i class="tl-bars"><b></b><b></b><b></b></i></div></div>
+                <div class="scan-grid scan-reveal" aria-hidden="true"><div class="tl is-hot"><span>Atendimento</span><em>−120 h/mês</em><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Vendas</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Compras</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Estoque</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl is-hot"><span>Financeiro</span><em>−64 h/mês</em><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Contratos</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>RH</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl is-hot"><span>Documentos</span><em>−38 h/mês</em><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Relatórios</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Cadastros</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Suporte</span><i class="tl-bars"><b></b><b></b><b></b></i></div><div class="tl"><span>Logística</span><i class="tl-bars"><b></b><b></b><b></b></i></div></div>
+                <div class="scan-lens" aria-hidden="true"><div class="scan-lens-in"><i class="scan-line"></i></div></div>
+                <span class="scene-ex" aria-hidden="true">Exemplo</span>
+              </div>
+              <span class="ph-tag">IAB 01 · 30 dias</span>
+            </figure>
             <h3><a href="diagnostico-de-ia.html">Diagnóstico de IA</a></h3>
             <p>Para quem quer saber onde a IA dá retorno antes de investir. Analisamos processos e dados reais, calculamos o ROI e entregamos um protótipo funcionando.</p>
             <ul class="ticks"><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Mapa de processos e sistemas</li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>ROI calculado com os seus dados</li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Protótipo no caso principal</li></ul>
             <a class="btn btn-primary" href="#analise">Começar pelo diagnóstico <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h16M14 7l5 5-5 5"/></svg></a>
           </article>
           <article class="offer" id="implementacao">
-            <figure class="ph offer-ph"><img src="assets/img/oferta-implementacao.jpg" width="1200" height="800" alt="" loading="lazy" decoding="async"><span class="ph-tag">IAB 02 · por escopo</span></figure>
+            <figure class="ph offer-ph is-scene">
+              <div class="scene build" role="img" aria-label="Animação de exemplo: ERP, CRM e planilhas se conectam a uma plataforma que é montada em ciclos curtos até entrar no ar">
+                <svg class="build-wires" viewBox="0 0 160 110" preserveAspectRatio="none" aria-hidden="true"><path class="w w1" pathLength="1" d="M40 26.4 C 52 26.4, 50 44, 60.8 44"/><path class="w w2" pathLength="1" d="M40 51.7 C 52 51.7, 50 55, 60.8 55"/><path class="w w3" pathLength="1" d="M40 77 C 52 77, 50 66, 60.8 66"/><path class="wf wf1" d="M40 26.4 C 52 26.4, 50 44, 60.8 44"/><path class="wf wf2" d="M40 51.7 C 52 51.7, 50 55, 60.8 55"/><path class="wf wf3" d="M40 77 C 52 77, 50 66, 60.8 66"/></svg>
+                <div class="src s1">ERP</div><div class="src s2">CRM</div><div class="src s3">Planilhas</div>
+                <div class="win" aria-hidden="true">
+                  <div class="win-head"><span class="win-dots"><i></i><i></i><i></i></span><span class="win-title">Sua plataforma</span><span class="win-ai">IA</span>
+                    <span class="win-status"><span class="ws-b"><i></i>Em construção</span><span class="ws-l"><i></i>No ar</span></span></div>
+                  <div class="win-body">
+                    <div class="win-side"><b class="side1"></b><b class="side2"></b><b class="side3"></b><b class="side4"></b></div>
+                    <div class="win-main">
+                      <div class="kpis"><div class="kp kp1"><u></u><s></s></div><div class="kp kp2"><u></u><s></s></div><div class="kp kp3"><u></u><s></s></div></div>
+                      <div class="chart"><svg viewBox="0 0 100 34" preserveAspectRatio="none"><defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4d7cfe" stop-opacity=".4"/><stop offset="1" stop-color="#4d7cfe" stop-opacity="0"/></linearGradient></defs><path class="c-area" d="M0 30 L14 26 L28 27 L42 19 L56 20 L70 11 L84 12 L100 4 V34 H0Z"/><path class="c-line" pathLength="1" d="M0 30 L14 26 L28 27 L42 19 L56 20 L70 11 L84 12 L100 4"/></svg></div>
+                      <div class="rows"><div class="rw rw1"><u></u><s></s></div><div class="rw rw2"><u></u><s></s></div><div class="rw rw3"><u></u><s></s></div></div>
+                    </div>
+                  </div>
+                  <i class="win-sweep"></i>
+                </div>
+                <div class="steps" aria-hidden="true"><span class="st-track"><b></b></span><span class="st st1"><i></i>Ciclo 1</span><span class="st st2"><i></i>Ciclo 2</span><span class="st st3"><i></i>Ciclo 3</span><span class="st st4"><i></i>No ar</span></div>
+              </div>
+              <span class="ph-tag">IAB 02 · por escopo</span>
+            </figure>
             <h3>Implementação sob medida</h3>
             <p>Para quem já decidiu implementar. Construímos plataformas, integrações e automações conectadas aos seus sistemas, com resultado acompanhado.</p>
             <ul class="ticks"><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Integração com ERP, CRM e planilhas</li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Treinamento do time</li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Acompanhamento em produção</li></ul>
@@ -453,7 +497,7 @@
     </section>
 
     <!-- QUEM ESTÁ POR TRÁS: o fundador num retrato só, no estilo das páginas de liderança de empresas grandes
-         (mesmo componente .founder da página Sobre). TROCAR: nome, foto (assets/fotos/fundador.jpg, vertical) e LinkedIn -->
+         (mesmo componente .founder da página Sobre). TROCAR: link do LinkedIn (hoje o botão fica "em breve") -->
     <section class="block founder-block" id="quem-somos">
       <div class="container">
         <div class="a-head" data-reveal>
@@ -462,10 +506,10 @@
           <p>Uma empresa B2B focada em IA aplicada à operação, com o fundador à frente de cada projeto.</p>
         </div>
         <div class="founder" data-reveal>
-          <figure class="founder-photo"><img loading="lazy" src="assets/fotos/fundador.jpg" data-prov="assets/img/avatar.svg" width="960" height="1200" alt="Fundador e CEO da IA BRAZIL" onerror="this.onerror=null;this.src=this.dataset.prov;this.classList.add('is-prov')"><span class="tag-prov">Foto provisória</span></figure>
+          <figure class="founder-photo"><img loading="lazy" src="assets/fotos/fundador.jpg" data-prov="assets/img/avatar.svg" width="960" height="1200" alt="Lucas Sapuppo, fundador e CEO da IA BRAZIL" onerror="this.onerror=null;this.src=this.dataset.prov;this.classList.add('is-prov')"></figure>
           <div class="founder-copy">
             <p class="founder-role">Fundador e CEO</p>
-            <h3 class="founder-name">Nome do Fundador</h3>
+            <h3 class="founder-name">Lucas Sapuppo</h3>
             <blockquote class="founder-quote">“Não vendemos ferramenta genérica. Estruturamos, desenvolvemos e acompanhamos plataformas que mudam o dia a dia da empresa.”</blockquote>
             <p class="founder-bio">À frente de cada projeto da IA BRAZIL, do diagnóstico à entrega.</p>
             <div class="founder-links">
