@@ -35,7 +35,7 @@ Como a IA BRAZIL trabalha:
 
 ## Empresa
 - [Sobre a IA BRAZIL](https://www.iabrazil.com/sobre.html): A IA BRAZIL implementa IA em empresas: diagnóstico, software sob medida, agentes e automação de processos.
-- [Cases: plataformas, CRM e automação em operação](https://www.iabrazil.com/cases.html): Projetos reais da IA BRAZIL: gestão de ordens de serviço, CRM com atendimento e conversas, gestão de projetos internacionais e processos integrados aos sistemas da empresa.
+- [Cases: plataformas, CRM e sites para empresas](https://www.iabrazil.com/cases.html): Conheça os projetos da IA BRAZIL: ICORACING, Salute, Vionex, Clínica BZ, Agência Retrato, Flip Seguros e SuperAI. Plataformas, CRM e sites para empresas.
 - [Contato e análise gratuita de IA](https://www.iabrazil.com/contato.html): Fale com a IA BRAZIL e agende uma análise gratuita: mostramos onde a inteligência artificial dá retorno na sua operação e quanto, antes de investir.
 - Contato: WhatsApp +55 11 91709-2509 · e-mail contato@iabrazil.com
 

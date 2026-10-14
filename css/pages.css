@@ -47,6 +47,9 @@
 
 /* ---------- Cases: linhas separadas por divisória ---------- */
 
+.case-nav { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--sp-3) var(--sp-5); margin-top: var(--sp-7); }
+.case-nav a { padding-block: var(--sp-3); color: var(--text); font-size: 14px; border-bottom: 1px solid var(--line); transition: color .2s, border-color .2s; }
+.case-nav a:hover, .case-nav a:focus-visible { color: var(--brand); border-color: var(--brand); }
 .case-list { border-bottom: 1px solid var(--line); }
 .case-row {
   display: grid;
@@ -65,6 +68,12 @@
 .case-detail h3 { color: var(--tone); font: 500 12.5px/1.5 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
 .case-detail p { margin-top: 4px; color: var(--text); font-size: 16px; line-height: 1.6; }
 .case-detail .tags li { padding: 5px 12px; box-shadow: none; background: var(--gray-50); font-size: 13px; }
+.case-preview { margin: var(--sp-6) 0 0; overflow: hidden; border: 1px solid var(--hairline); border-radius: 16px; background: var(--surface); }
+.case-preview-bar { display: flex; align-items: center; gap: var(--sp-3); padding: 12px 16px; border-bottom: 1px solid var(--line); color: var(--muted); font: 400 11px/1.4 var(--font-mono); }
+.case-preview-dots { display: flex; gap: 5px; }
+.case-preview-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--tone); opacity: .6; }
+.case-preview img { display: block; width: 100%; height: auto; }
+.case-preview figcaption { padding: 12px 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; line-height: 1.5; }
 
 /* ---------- Sobre ---------- */
 
