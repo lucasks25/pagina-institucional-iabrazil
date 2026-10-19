@@ -7,34 +7,40 @@
   const EN = document.documentElement.lang.startsWith('en');
   const t = (pt, en) => (EN ? en : pt);
 
-  /* Topo: primeiro passo com um campo só. Valida o e-mail, leva ao formulário completo já preenchido */
+  /* Topo: campo de e-mail. Valida, envia na hora e confirma ali mesmo, sem levar a outra parte da página */
   const capture = document.querySelector('[data-hero-capture]');
   if (capture) {
     const email = capture.querySelector('input[type=email]');
     const hint = document.getElementById('hero-hint');
-    capture.addEventListener('submit', (e) => {
+    const btn = capture.querySelector('button[type=submit]');
+    const label = btn ? Array.from(btn.childNodes).map((n) => n.cloneNode(true)) : [];
+    let sending = false;
+    const say = (msg, ok) => { hint.textContent = msg; hint.classList.toggle('is-ok', !!ok); };
+    capture.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (sending) return;
       const v = email.value.trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
-        hint.textContent = t('Informe um e-mail válido, ex.: nome@empresa.com.br', 'Enter a valid e-mail, e.g. name@company.com');
+        say(t('Informe um e-mail válido, ex.: nome@empresa.com.br', 'Enter a valid e-mail, e.g. name@company.com'));
         email.setAttribute('aria-invalid', 'true');
         email.focus();
         return;
       }
-      hint.textContent = '';
       email.removeAttribute('aria-invalid');
-      // Guarda o e-mail na hora (sem esperar resposta) e segue para o formulário completo
-      if (window.Leads && window.Leads.saveEmail) window.Leads.saveEmail(v, location.pathname);
-      const main = document.getElementById('form-contato');
-      const target = document.getElementById('analise');
-      if (main) {
-        const field = main.elements.email;
-        if (field) { field.value = v; field.dispatchEvent(new Event('input')); }
+      say('');
+      sending = true;
+      btn.disabled = true;
+      btn.textContent = t('Enviando...', 'Sending...');
+      const ok = window.Leads && window.Leads.saveEmail ? await window.Leads.saveEmail(v, location.pathname) : false;
+      sending = false;
+      btn.disabled = false;
+      btn.replaceChildren(...label.map((n) => n.cloneNode(true)));
+      if (ok) {
+        email.value = '';
+        say(t('Recebemos o seu e-mail. Nosso time entra em contato em breve.', 'We got your e-mail. Our team will reach out shortly.'), true);
+      } else {
+        say(t('Não foi possível enviar agora. Tente de novo ou fale pelo WhatsApp.', "We couldn't send it right now. Try again or reach us on WhatsApp."));
       }
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // Leva o foco para a primeira pergunta do formulário (a primeira opção da etapa 1)
-      const first = main && main.querySelector('[data-step] input:not([type=hidden]), input[name=nome]');
-      if (first) setTimeout(() => first.focus({ preventScroll: true }), 700);
     });
   }
 

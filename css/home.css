@@ -25,6 +25,7 @@
 .hero-capture input:focus { outline: none; }
 .hero-capture .btn { flex: none; height: 46px; }
 .hero-hint { min-height: 20px; margin: var(--sp-2) 0 0 var(--sp-5); color: var(--danger); font-size: 13px; }
+.hero-hint.is-ok { color: var(--brand); }
 .a-hero-trust { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); margin-top: var(--sp-3); color: var(--muted); font-size: 13.5px; }
 .a-hero-trust li { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
 .a-hero-trust li::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
