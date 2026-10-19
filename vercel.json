@@ -10,6 +10,31 @@
       "source": "/adminn/",
       "destination": "/adminn",
       "permanent": false
+    },
+    {
+      "source": "/go/:origem/:campanha",
+      "destination": "/?utm_source=:origem&utm_medium=link&utm_campaign=:campanha",
+      "permanent": false
+    },
+    {
+      "source": "/go/:origem",
+      "destination": "/?utm_source=:origem&utm_medium=link&utm_campaign=:origem",
+      "permanent": false
+    },
+    {
+      "source": "/ig",
+      "destination": "/?utm_source=instagram&utm_medium=bio&utm_campaign=instagram",
+      "permanent": false
+    },
+    {
+      "source": "/li",
+      "destination": "/?utm_source=linkedin&utm_medium=perfil&utm_campaign=linkedin",
+      "permanent": false
+    },
+    {
+      "source": "/wpp",
+      "destination": "/?utm_source=whatsapp&utm_medium=mensagem&utm_campaign=whatsapp",
+      "permanent": false
     }
   ],
   "headers": [

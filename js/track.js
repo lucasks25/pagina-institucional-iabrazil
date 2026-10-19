@@ -3,10 +3,6 @@
    Não guarda IP, não usa cookies e respeita "Não rastrear" do navegador. */
 (() => {
   'use strict';
-  if (navigator.doNotTrack === '1' || window.doNotTrack === '1' || navigator.globalPrivacyControl) return;
-  try { if (localStorage.getItem('iabr-no-track')) return; } catch {}
-  if (/bot|crawl|spider|headless|lighthouse/i.test(navigator.userAgent)) return;
-
   const KEY = 'iabr-ft'; // primeira página da visita (fica só nesta aba, some ao fechar)
   const q = new URLSearchParams(location.search);
   const utm = {};
@@ -14,6 +10,19 @@
     const v = q.get(k);
     if (v) utm[k] = v.slice(0, 80);
   });
+
+  // Limpa o endereço: depois de lida, a campanha não precisa ficar visível na barra do navegador
+  if (Object.keys(utm).length) {
+    try {
+      Object.keys(utm).forEach((k) => q.delete(k));
+      const rest = q.toString();
+      history.replaceState(history.state, '', location.pathname + (rest ? `?${rest}` : '') + location.hash);
+    } catch {}
+  }
+
+  if (navigator.doNotTrack === '1' || window.doNotTrack === '1' || navigator.globalPrivacyControl) return;
+  try { if (localStorage.getItem('iabr-no-track')) return; } catch {}
+  if (/bot|crawl|spider|headless|lighthouse/i.test(navigator.userAgent)) return;
 
   // Site de origem só conta se for outro site (sem parâmetros)
   let ref = '';
