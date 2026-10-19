@@ -46,7 +46,7 @@
     return { main, sub: day + fTime.format(d), full: longDate(d) };
   }
 
-  const fullName = (l) => `${l.nome} ${l.sobrenome}`.trim() || 'Sem nome';
+  const fullName = (l) => `${l.nome} ${l.sobrenome}`.trim() || (l.parcial ? 'Só deixou o e-mail' : 'Sem nome');
   const plural = (n) => `${n} ${n === 1 ? 'contato' : 'contatos'}`;
   const fold = (s) => String(s || '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
   const digits = (s) => String(s || '').replace(/\D/g, '');
@@ -225,7 +225,7 @@
     const name = fullName(l);
     return el('tr', { class: l.status === 'novo' ? 'is-new' : null, 'data-id': l.id },
       el('td', { class: 'c-date' }, el('time', { dateTime: l.created_at, title: t.full, text: t.main }), el('span', { class: 'c-sub', text: t.sub })),
-      el('td', { class: 'c-name' }, el('button', { class: 'lead-open', type: 'button', text: name }), el('span', { class: 'c-sub', text: l.empresa })),
+      el('td', { class: 'c-name' }, el('button', { class: 'lead-open', type: 'button', text: name }), el('span', { class: 'c-sub', text: l.empresa || (l.parcial ? l.email : '') })),
       el('td', { class: 'c-int', text: l.interesse }),
       el('td', { class: 'c-contact' }, el('span', { class: 'c-line', text: l.whatsapp }), el('span', { class: 'c-sub', text: l.email })),
       el('td', { class: 'c-status' }, statusPicker(l, `Status de ${name}`)));
@@ -473,10 +473,6 @@
     $('d-cancelar').addEventListener('click', () => { confirmDelete(false); $('d-excluir').focus(); });
     $('d-excluir-sim').addEventListener('click', deleteCurrent);
 
-    // Modo demonstração: um envio feito em outra aba aparece aqui sozinho
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'iabr-leads' && L.mode() === 'demo' && !drawer.open) load(true);
-    });
   }
 
   /* ---------- Início ---------- */
@@ -486,7 +482,6 @@
     return;
   }
   bind();
-  $('aviso-demo').hidden = L.mode() !== 'demo';
   if (L.hasSession()) showDash();
   else showLogin();
 })();

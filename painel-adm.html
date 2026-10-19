@@ -3,21 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
+  <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="referrer" content="no-referrer">
   <!-- Só roda script deste site; os dados dos contatos nunca viram código -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https:; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
   <title>Contatos | IA BRAZIL</title>
   <meta name="theme-color" content="#0a1a3a">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/admin.css">
-  <script src="js/config.js" defer></script>
-  <script src="js/leads.js" defer></script>
-  <script src="js/admin.js" defer></script>
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <script src="/js/leads.js" defer></script>
+  <script src="/js/admin.js" defer></script>
 </head>
 <body class="adm">
   <header class="adm-bar">
@@ -31,22 +30,16 @@
     </div>
   </header>
 
-  <div class="adm-demo" id="aviso-demo" hidden>
-    <div class="adm-wrap">
-      <strong>Modo demonstração</strong>
-      <p>Os contatos ficam salvos só neste navegador. Para recebê-los de verdade, preencha o arquivo <code>js/config.js</code>. O passo a passo está em <code>scripts/supabase-leads.sql</code>.</p>
-    </div>
-  </div>
 
   <noscript><p class="adm-wrap adm-fatal">Ative o JavaScript para ver os contatos.</p></noscript>
 
   <main id="conteudo">
-    <!-- Login (só quando o Supabase está configurado) -->
+    <!-- Login -->
     <section class="adm-login" id="tela-login" aria-labelledby="login-titulo" hidden>
       <form class="adm-login-box" id="form-login" method="post" action="#">
         <p class="adm-kicker">Área restrita</p>
         <h1 id="login-titulo">Entrar</h1>
-        <p class="adm-login-text">Use o e-mail e a senha cadastrados no Supabase para ver os contatos do site.</p>
+        <p class="adm-login-text">Área restrita. Entre com o seu e-mail e a sua senha para ver os contatos do site.</p>
         <label class="adm-field">E-mail<input name="email" type="email" required autocomplete="username" spellcheck="false"></label>
         <label class="adm-field">Senha<input name="password" type="password" required autocomplete="current-password"></label>
         <p class="adm-login-msg" id="login-msg" role="alert"></p>

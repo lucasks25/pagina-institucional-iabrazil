@@ -23,6 +23,8 @@
       }
       hint.textContent = '';
       email.removeAttribute('aria-invalid');
+      // Guarda o e-mail na hora (sem esperar resposta) e segue para o formulário completo
+      if (window.Leads && window.Leads.saveEmail) window.Leads.saveEmail(v, location.pathname);
       const main = document.getElementById('form-contato');
       const target = document.getElementById('analise');
       if (main) {
