@@ -1,5 +1,29 @@
 /* IA BRAZIL — painel de contatos (admin.html): usa as cores e botões do base.css */
 
+/* O painel é CLARO, mas o base.css agora é o tema escuro do site (títulos quase brancos).
+   Aqui as cores voltam para o tema claro só nesta página, senão o texto some no fundo claro. */
+:root {
+  color-scheme: light;
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --panel: #ffffff;
+  --ink: #0a1428;
+  --text: #3a4358;
+  --muted: #5b6478;
+  --tone: #667085;
+  --line: #e3e6ec;
+  --hairline: #d0d5dd;
+  --brand: #2c5fd9;
+  --brand-dark: #1f47a8;
+  --brand-soft: #9db8ea;
+  --blue-50: #eef3ff;
+  --blue-100: #dbe5ff;
+}
+.btn-primary { background: var(--navy); color: #fff; }
+.btn-primary:hover { background: var(--ink); }
+.btn-outline { border-color: var(--hairline); background: #fff; color: var(--ink); }
+.btn-outline:hover { border-color: var(--ink); }
+
 [hidden] { display: none !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 

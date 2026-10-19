@@ -29,10 +29,14 @@ module.exports = async (req, res) => {
   }
 };
 
+// Tira espaços e aspas que às vezes vêm junto quando o valor é colado no painel da Vercel
+const unquote = (v) => String(v || '').trim().replace(/^["']+|["']+$/g, '').trim();
+
 async function login(req, res) {
-  const adminEmail = String(process.env.ADMIN_EMAIL || '').trim().toLowerCase();
-  const hash = process.env.ADMIN_PASSWORD_HASH || '';
-  if (!adminEmail || !hash) throw new Error('config');
+  const adminEmail = unquote(process.env.ADMIN_EMAIL).toLowerCase();
+  const hash = unquote(process.env.ADMIN_PASSWORD_HASH);
+  const plain = unquote(process.env.ADMIN_PASSWORD); // alternativa mais simples ao hash
+  if (!adminEmail || (!hash && !plain)) throw new Error('config');
 
   const who = L.visitor(req);
   if (await L.tooMany('login', who, FAIL_MAX, FAIL_WINDOW)) return L.send(res, 429, { ok: false, error: 'limite' });
@@ -41,13 +45,16 @@ async function login(req, res) {
   const email = String(body.email || '').trim().toLowerCase().slice(0, 254);
   const password = String(body.password || '').slice(0, 200);
 
-  // As duas conferências sempre rodam, para a resposta não mostrar qual das duas errou
+  // Todas as conferências sempre rodam, para a resposta não mostrar qual delas errou
   const okEmail = L.equalText(email, adminEmail);
-  const okPass = L.checkPassword(password, hash);
-  if (okEmail && okPass) {
+  const okHash = L.checkPassword(password, hash);
+  const okPlain = plain ? L.equalText(password, plain) : false;
+  if (okEmail && (okHash || okPlain)) {
     L.setSession(req, res, adminEmail);
     return L.send(res, 200, { ok: true, email: adminEmail });
   }
+  // Motivo só no log do servidor (Vercel > Logs), sem valores secretos
+  console.error('login recusado:', JSON.stringify({ emailConfere: okEmail, hashConfere: okHash, senhaSimplesConfere: okPlain, hashPartes: hash ? hash.split(':').length : 0, hashTamanho: hash.length, temSenhaSimples: !!plain }));
   await L.hit('login', who);
   await L.wait(700);
   return L.send(res, 401, { ok: false, error: 'credenciais' });
