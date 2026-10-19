@@ -17,12 +17,17 @@
   <link rel="stylesheet" href="/css/admin.css">
   <script src="/js/leads.js" defer></script>
   <script src="/js/admin.js" defer></script>
+  <script src="/js/admin-stats.js" defer></script>
 </head>
 <body class="adm">
   <header class="adm-bar">
     <div class="adm-wrap adm-bar-inner">
       <span class="logo"><span class="logo-mark" aria-hidden="true"></span>IA BRAZIL</span>
-      <span class="adm-bar-title">Contatos</span>
+      <span class="adm-bar-title">Painel</span>
+      <nav class="adm-tabs" id="abas" aria-label="Seções do painel" hidden>
+        <button type="button" data-aba="contatos" aria-current="true">Contatos</button>
+        <button type="button" data-aba="visitas">Visitas</button>
+      </nav>
       <div class="adm-user" id="usuario" hidden>
         <span class="adm-user-email" id="usuario-email"></span>
         <button class="btn btn-bar" type="button" id="sair">Sair</button>
@@ -110,6 +115,27 @@
         </table>
 
         <div class="adm-state" id="estado" aria-live="polite" hidden></div>
+      </div>
+    </section>
+
+    <!-- Visitas: de onde vêm as pessoas e os contatos (js/admin-stats.js) -->
+    <section class="adm-dash" id="tela-visitas" aria-labelledby="visitas-titulo" hidden>
+      <div class="adm-wrap">
+        <div class="adm-head">
+          <div>
+            <h1 id="visitas-titulo" tabindex="-1">Visitas e origem dos contatos</h1>
+            <p>Estatísticas próprias do site, sem cookies. As suas visitas, feitas neste navegador depois de entrar no painel, não são contadas.</p>
+          </div>
+          <div class="adm-sync">
+            <div class="adm-periodo" role="group" aria-label="Período">
+              <button class="btn btn-line btn-sm" type="button" data-dias="7">7 dias</button>
+              <button class="btn btn-line btn-sm" type="button" data-dias="30" aria-pressed="true">30 dias</button>
+              <button class="btn btn-line btn-sm" type="button" data-dias="90">90 dias</button>
+            </div>
+          </div>
+        </div>
+        <p class="adm-aviso" id="visitas-aviso" role="status" hidden></p>
+        <div id="visitas-corpo"></div>
       </div>
     </section>
   </main>

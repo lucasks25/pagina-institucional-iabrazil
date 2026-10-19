@@ -165,6 +165,61 @@ const equalText = (a, b) => {
   return crypto.timingSafeEqual(x, y);
 };
 
+
+/* ---------- Análise de visitas ---------- */
+
+const BOT = /bot|crawl|spider|slurp|headless|lighthouse|pagespeed|preview|monitor|curl|wget|python|axios|node-fetch|facebookexternalhit|whatsapp\/|telegram/i;
+const isBot = (ua) => !ua || BOT.test(String(ua));
+
+const deviceOf = (ua) => {
+  const u = String(ua || '');
+  if (/ipad|tablet|(android(?!.*mobile))/i.test(u)) return 'Tablet';
+  if (/mobi|iphone|android/i.test(u)) return 'Celular';
+  return 'Computador';
+};
+
+const hostOnly = (url) => {
+  try { return new URL(url).hostname.replace(/^www\./, '').toLowerCase(); } catch { return ''; }
+};
+
+const SEARCH = [[/(^|\.)google\./, 'Google (busca)'], [/(^|\.)bing\.com$/, 'Bing (busca)'], [/duckduckgo\.com$/, 'DuckDuckGo (busca)'],
+  [/(^|\.)yahoo\./, 'Yahoo (busca)'], [/ecosia\.org$/, 'Ecosia (busca)'], [/brave\.com$/, 'Brave (busca)']];
+const AI = [[/chatgpt\.com$|(^|\.)openai\.com$/, 'ChatGPT'], [/perplexity\.ai$/, 'Perplexity'], [/gemini\.google\.com$/, 'Gemini'],
+  [/claude\.ai$/, 'Claude'], [/copilot\.microsoft\.com$/, 'Copilot']];
+const SOCIAL = [[/instagram\.com$/, 'Instagram'], [/(^|\.)facebook\.com$|(^|\.)fb\.com$|fb\.me$/, 'Facebook'], [/linkedin\.com$|lnkd\.in$/, 'LinkedIn'],
+  [/(^|\.)t\.co$|twitter\.com$|(^|\.)x\.com$/, 'X (Twitter)'], [/youtube\.com$|youtu\.be$/, 'YouTube'], [/tiktok\.com$/, 'TikTok'],
+  [/wa\.me$|whatsapp\.com$/, 'WhatsApp'], [/(^|\.)t\.me$|telegram\.org$/, 'Telegram'], [/pinterest\./, 'Pinterest'], [/reddit\.com$/, 'Reddit']];
+const pick = (table, host) => { const hit = table.find(([re]) => re.test(host)); return hit ? hit[1] : ''; };
+const cut = (v, n) => String(v || '').replace(/[\u0000-\u001f\u007f]+/g, ' ').trim().slice(0, n);
+
+/* Decide "de onde veio" a partir das UTM (se houver) ou do site de origem */
+function classify(refUrl, utm, ownHost) {
+  const u = utm || {};
+  const src = cut(u.utm_source, 60).toLowerCase(), med = cut(u.utm_medium, 60).toLowerCase(), camp = cut(u.utm_campaign, 80);
+  const host = hostOnly(refUrl);
+  if (host && ownHost && (host === ownHost || host.endsWith('.' + ownHost))) return { canal: null, detalhe: null, referencia: null };
+  const refPath = (() => { try { const x = new URL(refUrl); return cut(x.hostname.replace(/^www\./, '') + (x.pathname === '/' ? '' : x.pathname), 200); } catch { return ''; } })();
+  if (src || med) {
+    const paid = /cpc|ppc|paid|ads|display|cpm|social-paid/.test(med);
+    const name = cut(u.utm_source, 60) || host || 'campanha';
+    return { canal: paid ? `Anúncio (${name})` : `Campanha (${name})`, detalhe: camp || med || null, referencia: refPath || null };
+  }
+  if (!host) return { canal: 'Direto', detalhe: null, referencia: null };
+  const ai = pick(AI, host); if (ai) return { canal: `IA (${ai})`, detalhe: host, referencia: refPath };
+  const se = pick(SEARCH, host); if (se) return { canal: se, detalhe: host, referencia: refPath };
+  const so = pick(SOCIAL, host); if (so) return { canal: so, detalhe: host, referencia: refPath };
+  return { canal: 'Outros sites', detalhe: host, referencia: refPath };
+}
+
+// Código de visitante que muda todo dia e não tem como ser desfeito (não é cookie, não guarda IP)
+const dailyVisitor = (req) => crypto.createHmac('sha256', secret())
+  .update(`d1|${new Date().toISOString().slice(0, 10)}|${ip(req)}|${String(req.headers['user-agent'] || '')}`).digest('hex').slice(0, 16);
+
+const geo = (req) => {
+  const dec = (v) => { try { return decodeURIComponent(String(v || '')); } catch { return ''; } };
+  return { pais: cut(req.headers['x-vercel-ip-country'], 2).toUpperCase() || null, cidade: cut(dec(req.headers['x-vercel-ip-city']), 80) || null };
+};
+
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-module.exports = { LIMITS, STATUS, UUID, EMAIL, clean, send, readBody, originOk, visitor, sb, tooMany, hit, session, setSession, clearSession, checkPassword, equalText, wait };
+module.exports = { isBot, deviceOf, hostOnly, classify, dailyVisitor, geo, cut, LIMITS, STATUS, UUID, EMAIL, clean, send, readBody, originOk, visitor, sb, tooMany, hit, session, setSession, clearSession, checkPassword, equalText, wait };

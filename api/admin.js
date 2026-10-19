@@ -20,6 +20,7 @@ module.exports = async (req, res) => {
 
     if (action === 'me' && req.method === 'GET') return L.send(res, 200, { ok: true, email: s.sub });
     if (action === 'list' && req.method === 'GET') return await list(res);
+    if (action === 'stats' && req.method === 'GET') return await stats(req, res);
     if (action === 'update' && req.method === 'PATCH') return await update(req, res);
     if (action === 'remove' && req.method === 'DELETE') return await remove(req, res);
     return L.send(res, 404, { ok: false });
@@ -92,4 +93,76 @@ async function remove(req, res) {
   const rows = await L.sb(`leads?id=eq.${id}`, { method: 'DELETE', prefer: 'return=representation' });
   if (!rows || !rows.length) return L.send(res, 404, { ok: false });
   return L.send(res, 200, { ok: true });
+}
+
+/* Resumo das visitas e de onde vêm os contatos. Soma tudo aqui no servidor e manda só os totais. */
+const top = (map, n = 10) => Array.from(map.entries()).sort((a, b) => b[1] - a[1]).slice(0, n).map(([nome, total]) => ({ nome, total }));
+const bump = (map, k, by = 1) => { if (k) map.set(k, (map.get(k) || 0) + by); };
+
+async function stats(req, res) {
+  const q = new URL(req.url, 'http://x').searchParams;
+  const days = Math.min(Math.max(parseInt(q.get('days') || '30', 10) || 30, 1), 365);
+  const since = new Date(Date.now() - days * 86400000);
+  since.setHours(0, 0, 0, 0);
+  const iso = encodeURIComponent(since.toISOString());
+
+  const views = [];
+  let truncated = false;
+  for (let page = 0; page < 40; page += 1) {
+    let chunk;
+    try {
+      chunk = await L.sb(`pageviews?select=at,tipo,path,entrada,canal,detalhe,pais,cidade,dispositivo,vid,utm_campaign&at=gte.${iso}&order=at.desc&limit=1000&offset=${page * 1000}`);
+    } catch (err) {
+      if (err && (err.status === 404 || err.status === 400)) return L.send(res, 200, { ok: true, ready: false });
+      throw err;
+    }
+    views.push(...chunk);
+    if (chunk.length < 1000) break;
+    if (page === 39) truncated = true;
+  }
+  let leads = [];
+  try {
+    leads = await L.sb(`leads?select=created_at,canal,campanha,pagina_entrada,parcial&created_at=gte.${iso}&order=created_at.desc&limit=5000`);
+  } catch (err) {
+    if (!(err && (err.status === 400 || err.status === 404))) throw err;
+    leads = await L.sb(`leads?select=created_at,parcial&created_at=gte.${iso}&order=created_at.desc&limit=5000`);
+  }
+
+  const daily = new Map(), pages = new Map(), canais = new Map(), paises = new Map(), cidades = new Map(), devs = new Map(), camps = new Map(), refs = new Map();
+  const visitors = new Set(), leadsByCanal = new Map();
+  let pageviews = 0, whats = 0, emails = 0, visits = 0;
+  const day = (t) => new Date(new Date(t).getTime() - 3 * 3600000).toISOString().slice(0, 10); // dia no horário de Brasília
+  for (let i = 0; i < days; i += 1) daily.set(day(Date.now() - i * 86400000), { views: 0, leads: 0 });
+
+  views.forEach((v) => {
+    const d = day(v.at); const slot = daily.get(d);
+    if (v.tipo === 'whatsapp') { whats += 1; return; }
+    if (v.tipo === 'email') { emails += 1; return; }
+    pageviews += 1; if (slot) slot.views += 1;
+    bump(pages, v.path);
+    if (v.vid) visitors.add(d + v.vid);
+    if (v.entrada) {
+      visits += 1;
+      bump(canais, v.canal || 'Direto');
+      if (v.detalhe && !/^(Direto)$/.test(v.canal || '')) bump(refs, `${v.canal} · ${v.detalhe}`);
+      if (v.utm_campaign) bump(camps, v.utm_campaign);
+    }
+    bump(paises, v.pais || 'Desconhecido'); if (v.cidade) bump(cidades, `${v.cidade}${v.pais ? ' (' + v.pais + ')' : ''}`);
+    bump(devs, v.dispositivo || 'Desconhecido');
+  });
+  let leadCount = 0;
+  leads.forEach((l) => {
+    leadCount += 1;
+    const slot = daily.get(day(l.created_at)); if (slot) slot.leads += 1;
+    bump(leadsByCanal, l.canal || 'Sem origem registrada');
+  });
+
+  const canalTabela = top(canais, 12).map((c) => ({ ...c, contatos: leadsByCanal.get(c.nome) || 0 }));
+  leadsByCanal.forEach((n, nome) => { if (!canais.has(nome)) canalTabela.push({ nome, total: 0, contatos: n }); });
+  return L.send(res, 200, {
+    ok: true, ready: true, days, truncated,
+    totais: { visitas: visits, paginasVistas: pageviews, visitantes: visitors.size, contatos: leadCount, cliquesWhatsapp: whats, cliquesEmail: emails },
+    diario: Array.from(daily.entries()).sort((a, b) => a[0].localeCompare(b[0])).map(([dia, v]) => ({ dia, ...v })),
+    canais: canalTabela, paginas: top(pages, 12), paises: top(paises, 8), cidades: top(cidades, 8), dispositivos: top(devs, 4), campanhas: top(camps, 8), origens: top(refs, 10),
+  });
 }

@@ -288,7 +288,7 @@
     $('d-mensagem').textContent = l.mensagem || 'A pessoa não escreveu mensagem.';
     $('d-mensagem').classList.toggle('is-empty', !l.mensagem);
     const data = [['Nome', l.nome], ['Sobrenome', l.sobrenome], ['E-mail', l.email], ['WhatsApp', l.whatsapp],
-      ['Empresa', l.empresa], ['Interesse', l.interesse], ['Origem', l.origem], ['Recebido em', longDate(created)]];
+      ['Empresa', l.empresa], ['Interesse', l.interesse], ['De onde veio', l.canal], ['Campanha', l.campanha], ['Página de entrada', l.pagina_entrada], ['Site de origem', l.referencia], ['Formulário', l.origem], ['Recebido em', longDate(created)]];
     if (updated) data.push(['Atualizado em', longDate(updated)]);
     $('d-dados').replaceChildren(...data.flatMap(([k, v]) => [el('dt', { text: k }), el('dd', { class: v ? null : 'is-empty', text: v || 'Não informado' })]));
     $('d-notas').value = l.notas;

@@ -39,7 +39,7 @@
       status: STATUS.includes(x.status) ? x.status : 'novo',
       parcial: !!x.parcial,
     };
-    FORM_FIELDS.concat('notas').forEach((f) => { out[f] = x[f] == null ? '' : String(x[f]); });
+    FORM_FIELDS.concat('notas', 'canal', 'campanha', 'pagina_entrada', 'referencia').forEach((f) => { out[f] = x[f] == null ? '' : String(x[f]); });
     return out;
   };
 
@@ -57,6 +57,11 @@
 
   const json = (res) => res.json().catch(() => ({}));
 
+  // De onde a pessoa veio (guardado pelo track.js na primeira página da visita, só nesta aba)
+  const firstTouch = () => {
+    try { return JSON.parse(sessionStorage.getItem('iabr-ft') || 'null') || undefined; } catch { return undefined; }
+  };
+
   /* Sessão do painel */
   let who = null;
   try { who = JSON.parse(sessionStorage.getItem(FLAG) || 'null'); } catch {}
@@ -70,8 +75,8 @@
   };
 
   // Chamadas do painel: o servidor confere o cookie em toda chamada
-  async function admin(action, { method = 'GET', body, id } = {}) {
-    const q = `a=${encodeURIComponent(action)}${id ? `&id=${encodeURIComponent(id)}` : ''}`;
+  async function admin(action, { method = 'GET', body, id, extra } = {}) {
+    const q = `a=${encodeURIComponent(action)}${id ? `&id=${encodeURIComponent(id)}` : ''}${extra ? `&${extra}` : ''}`;
     const res = await request(`/api/admin?${q}`, {
       method,
       headers: { 'Content-Type': 'application/json', 'X-IABR': '1' },
@@ -107,7 +112,7 @@
     FORM_FIELDS.forEach((f) => { data[f] = clean(src[f], f) || null; });
     if (REQUIRED.some((f) => !data[f])) throw new Error('Preencha todos os campos obrigatórios.');
     if (!EMAIL.test(data.email)) throw new Error('Informe um e-mail válido.');
-    const res = await request('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    const res = await request('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, ft: firstTouch() }) });
     if (!res.ok) {
       const err = new Error(res.status === 429 ? 'Muitos envios seguidos. Tente de novo mais tarde.' : 'Não foi possível enviar agora.');
       err.status = res.status;
@@ -123,7 +128,7 @@
       const res = await request('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tipo: 'email', email: e, origem: `Topo do site (só e-mail) · ${clean(origem || location.pathname, 'origem')}`.slice(0, LIMITS.origem) }),
+        body: JSON.stringify({ tipo: 'email', ft: firstTouch(), email: e, origem: `Topo do site (só e-mail) · ${clean(origem || location.pathname, 'origem')}`.slice(0, LIMITS.origem) }),
       });
       return res.ok;
     } catch {
@@ -136,6 +141,7 @@
     try {
       const data = await admin('login', { method: 'POST', body: { email: String(email || '').trim(), password: String(password || '') } });
       remember(data.email);
+      try { localStorage.setItem('iabr-no-track', '1'); } catch {} // as visitas do dono do site não entram nas estatísticas
     } catch (err) {
       if (err.status === 401) throw new AuthError('E-mail ou senha incorretos.');
       if (err.status === 429) throw new AuthError(err.message);
@@ -170,9 +176,14 @@
     return normalize(data.lead);
   }
 
+  // Resumo de visitas e origem dos contatos (dias: 7, 30, 90...)
+  async function stats(days) {
+    return admin('stats', { extra: `days=${Math.min(Math.max(parseInt(days, 10) || 30, 1), 365)}` });
+  }
+
   async function remove(id) {
     await admin('remove', { method: 'DELETE', id: checkId(id) });
   }
 
-  window.Leads = Object.freeze({ mode, save, saveEmail, login, logout, hasSession, user, list, update, remove, AuthError, STATUS: STATUS.slice(), LIMITS: { ...LIMITS } });
+  window.Leads = Object.freeze({ mode, save, saveEmail, login, logout, hasSession, user, list, update, remove, stats, AuthError, STATUS: STATUS.slice(), LIMITS: { ...LIMITS } });
 })();

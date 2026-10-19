@@ -21,28 +21,29 @@ module.exports = async (req, res) => {
   if (!data.email || !L.EMAIL.test(data.email)) return L.send(res, 400, { ok: false, error: 'email' });
   if (!onlyEmail && REQUIRED.some((f) => !data[f])) return L.send(res, 400, { ok: false, error: 'campos' });
 
+  // De onde a pessoa veio (primeira página da visita). Se o SQL de análise ainda não rodou, o contato é salvo sem isso.
+  const ft = body.ft && typeof body.ft === 'object' ? body.ft : {};
+  const c = L.classify(String(ft.ref || ''), ft, 'www.iabrazil.com');
+  const attr = {
+    canal: c.canal || (ft.landing ? 'Direto' : null),
+    campanha: L.cut(ft.utm_campaign, 80) || null,
+    pagina_entrada: String(ft.landing || '').startsWith('/') ? L.cut(String(ft.landing).split('?')[0], 200) : null,
+    referencia: c.referencia || null,
+  };
+  const withAttr = async (fn) => {
+    try { return await fn(attr); } catch (err) { if (err && err.status === 400) return fn({}); throw err; }
+  };
+
   try {
     const who = L.visitor(req);
     if (await L.tooMany('lead', who, 8, 3600)) return L.send(res, 429, { ok: false, error: 'limite' });
     await L.hit('lead', who);
 
-    const email = encodeURIComponent(data.email);
-    if (onlyEmail) {
-      // O mesmo e-mail não vira duas linhas
-      const same = await L.sb(`leads?email=eq.${email}&select=id&limit=1`);
-      if (!same || !same.length) {
-        await L.sb('leads', { method: 'POST', body: { email: data.email, origem: data.origem, parcial: true }, prefer: 'return=minimal' });
-      }
-      return L.send(res, 200, { ok: true });
-    }
-
-    // Formulário completo: se esse e-mail já tinha deixado só o e-mail no topo, completa aquela linha
-    const partial = await L.sb(`leads?email=eq.${email}&parcial=eq.true&select=id&order=created_at.desc&limit=1`);
-    if (partial && partial.length) {
-      await L.sb(`leads?id=eq.${partial[0].id}`, { method: 'PATCH', body: { ...data, parcial: false }, prefer: 'return=minimal' });
-    } else {
-      await L.sb('leads', { method: 'POST', body: { ...data, parcial: false }, prefer: 'return=minimal' });
-    }
+    // Cada envio vira uma linha nova (e-mail do topo e formulário, mesmo do mesmo e-mail), nada é substituído
+    const row = onlyEmail
+      ? { email: data.email, origem: data.origem, parcial: true }
+      : { ...data, parcial: false };
+    await withAttr((x) => L.sb('leads', { method: 'POST', body: { ...row, ...x }, prefer: 'return=minimal' }));
     return L.send(res, 200, { ok: true });
   } catch (err) {
     // Sem detalhes para quem chamou; o motivo fica só no log da Vercel

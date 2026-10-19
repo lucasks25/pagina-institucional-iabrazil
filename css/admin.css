@@ -303,3 +303,54 @@ tr.is-new .lead-open { font-weight: 700; }
 @media (prefers-reduced-motion: reduce) {
   .drawer[open], .drawer[open]::backdrop { animation: none; }
 }
+
+/* ---------- Abas e tela de Visitas ---------- */
+.adm-tabs { display: flex; gap: 4px; margin-left: 8px; }
+.adm-tabs button { height: 36px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; color: var(--on-dark-muted); font: 600 13px var(--font); cursor: pointer; transition: background .2s, color .2s; }
+.adm-tabs button:hover { background: rgba(255, 255, 255, .08); color: var(--white); }
+.adm-tabs button[aria-current] { background: rgba(255, 255, 255, .14); color: var(--white); }
+.adm-periodo { display: flex; gap: 6px; }
+.adm-periodo .btn[aria-pressed="true"] { border-color: var(--navy); background: var(--navy); color: #fff; }
+.adm-aviso { margin: 0 0 18px; padding: 12px 16px; border: 1px solid var(--blue-100); border-radius: 10px; background: var(--blue-50); color: var(--ink); font-size: 14px; }
+
+.vs-cards { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin: 0 0 20px; padding: 0; list-style: none; }
+.vs-card { display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.vs-k { color: var(--muted); font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.vs-card strong { color: var(--ink); font-size: 30px; font-weight: 500; letter-spacing: -.03em; line-height: 1.1; }
+.vs-card small { color: var(--muted); font-size: 12.5px; line-height: 1.35; }
+.vs-box { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: #fff; min-width: 0; }
+.vs-box h2 { margin: 0 0 14px; color: var(--ink); font-size: 15px; font-weight: 600; letter-spacing: 0; }
+.vs-wide { margin-bottom: 20px; }
+.vs-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-bottom: 56px; }
+.vs-vazio { margin: 0; color: var(--muted); font-size: 14px; }
+.vs-leg { margin: 8px 0 0; color: var(--muted); font-size: 12.5px; }
+.vs-chart { display: block; width: 100%; height: auto; }
+.vs-bar { fill: #c9d7fb; }
+.vs-bar.has-lead { fill: var(--brand); }
+.vs-dot { fill: #0a1428; }
+.vs-lab { fill: var(--muted); font: 500 11px var(--font); }
+.vs-tab { width: 100%; border-collapse: collapse; font-size: 14px; }
+.vs-tab th { padding: 0 0 8px; color: var(--muted); font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-align: left; text-transform: uppercase; border-bottom: 1px solid var(--line); }
+.vs-tab td { padding: 9px 0; color: var(--ink); border-bottom: 1px solid #f0f2f6; overflow-wrap: anywhere; }
+.vs-tab tr:last-child td { border-bottom: 0; }
+.vs-tab .n { padding-left: 14px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vs-bars { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.vs-bars li { display: grid; grid-template-columns: minmax(70px, 130px) 1fr auto; align-items: center; gap: 12px; font-size: 14px; }
+.vs-n { color: var(--ink); overflow-wrap: anywhere; }
+.vs-trilho { height: 8px; border-radius: 99px; background: #eef1f6; overflow: hidden; }
+.vs-trilho i { display: block; height: 100%; border-radius: 99px; background: var(--brand); }
+.vs-v { color: var(--muted); font-size: 12.5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media (max-width: 1100px) { .vs-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .vs-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vs-grid { grid-template-columns: 1fr; }
+  .adm-bar-title { display: none; }
+  .adm-tabs { margin-left: 0; }
+  .adm-periodo { flex-wrap: wrap; }
+}
+/* O base.css pinta todo SVG com contorno (para ícones); o gráfico usa só preenchimento */
+.vs-chart, .vs-chart * { stroke: none; }
+.vs-chart text { font-weight: 500; }
+#tela-visitas .adm-head { margin-bottom: 24px; }
+#tela-visitas .adm-head > div:first-child { max-width: 640px; }
+@media (max-width: 760px) { #tela-visitas .adm-head { flex-direction: column; align-items: flex-start; gap: 14px; } }
