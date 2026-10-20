@@ -43,6 +43,9 @@
   }).observe(usuario, { attributes: true, attributeFilter: ['hidden'] });
   new MutationObserver(() => { if (!login.hidden) { abas.hidden = true; vis.hidden = true; aba = 'contatos'; } }).observe(login, { attributes: true, attributeFilter: ['hidden'] });
 
+  // Se a página foi recarregada já logado, o painel abre antes deste arquivo carregar: monta as abas agora
+  if (!usuario.hidden && login.hidden) show('contatos');
+
   document.querySelectorAll('[data-dias]').forEach((b) => b.addEventListener('click', () => {
     dias = Number(b.dataset.dias);
     document.querySelectorAll('[data-dias]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
