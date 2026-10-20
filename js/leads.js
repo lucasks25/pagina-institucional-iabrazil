@@ -118,6 +118,7 @@
       err.status = res.status;
       throw err;
     }
+    try { window.IABRTrack && window.IABRTrack('envio', 'formulario'); } catch {}
   }
 
   // Campo de e-mail do topo: guarda só o e-mail e devolve true se o servidor aceitou
@@ -130,6 +131,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tipo: 'email', ft: firstTouch(), email: e, origem: `Topo do site (só e-mail) · ${clean(origem || location.pathname, 'origem')}`.slice(0, LIMITS.origem) }),
       });
+      if (res.ok) { try { window.IABRTrack && window.IABRTrack('envio', 'topo'); } catch {} }
       return res.ok;
     } catch {
       return false;

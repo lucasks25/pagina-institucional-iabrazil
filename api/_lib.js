@@ -168,8 +168,30 @@ const equalText = (a, b) => {
 
 /* ---------- Análise de visitas ---------- */
 
-const BOT = /bot|crawl|spider|slurp|headless|lighthouse|pagespeed|preview|monitor|curl|wget|python|axios|node-fetch|facebookexternalhit|whatsapp\/|telegram/i;
-const isBot = (ua) => !ua || BOT.test(String(ua));
+const BOT = new RegExp([
+  'bot', 'crawl', 'spider', 'slurp', 'headless', 'lighthouse', 'pagespeed', 'gtmetrix', 'preview', 'monitor', 'uptime', 'pingdom',
+  'statuscake', 'datadog', 'newrelic', 'curl', 'wget', 'python', 'axios', 'node-fetch', 'okhttp', 'go-http', 'java/', 'libwww', 'scrapy',
+  'facebookexternalhit', 'facebot', 'linkedinbot', 'slackbot', 'slack-imgproxy', 'twitterbot', 'discordbot', 'telegrambot', 'whatsapp/',
+  'skypeuripreview', 'embedly', 'quora link', 'pinterestbot', 'vkshare', 'outbrain', 'validator', 'semrush', 'ahrefs', 'mj12', 'dotbot',
+  'petalbot', 'bytespider', 'vercel-screenshot', 'vercel-favicon', 'feedfetcher', 'mediapartners', 'google-read-aloud', 'storebot',
+  'chrome-lighthouse',
+].join('|'), 'i');
+const isBot = (ua) => !ua || String(ua).length < 30 || BOT.test(String(ua));
+
+/* Navegador e sistema, a partir do texto que o navegador envia */
+const uaInfo = (ua) => {
+  const u = String(ua || '');
+  const navegador = /edg\//i.test(u) ? 'Edge' : /opr\/|opera/i.test(u) ? 'Opera' : /samsungbrowser/i.test(u) ? 'Samsung Internet'
+    : /firefox|fxios/i.test(u) ? 'Firefox' : /crios|chrome/i.test(u) ? 'Chrome' : /safari/i.test(u) ? 'Safari' : 'Outro';
+  const sistema = /iphone|ipad|ipod/i.test(u) ? 'iOS' : /android/i.test(u) ? 'Android' : /windows/i.test(u) ? 'Windows'
+    : /mac os|macintosh/i.test(u) ? 'macOS' : /cros/i.test(u) ? 'ChromeOS' : /linux/i.test(u) ? 'Linux' : 'Outro';
+  return { navegador, sistema };
+};
+
+const BR_UF = { AC: 'Acre', AL: 'Alagoas', AP: 'Amapá', AM: 'Amazonas', BA: 'Bahia', CE: 'Ceará', DF: 'Distrito Federal', ES: 'Espírito Santo',
+  GO: 'Goiás', MA: 'Maranhão', MT: 'Mato Grosso', MS: 'Mato Grosso do Sul', MG: 'Minas Gerais', PA: 'Pará', PB: 'Paraíba', PR: 'Paraná',
+  PE: 'Pernambuco', PI: 'Piauí', RJ: 'Rio de Janeiro', RN: 'Rio Grande do Norte', RS: 'Rio Grande do Sul', RO: 'Rondônia', RR: 'Roraima',
+  SC: 'Santa Catarina', SP: 'São Paulo', SE: 'Sergipe', TO: 'Tocantins' };
 
 const deviceOf = (ua) => {
   const u = String(ua || '');
@@ -217,9 +239,12 @@ const dailyVisitor = (req) => crypto.createHmac('sha256', secret())
 
 const geo = (req) => {
   const dec = (v) => { try { return decodeURIComponent(String(v || '')); } catch { return ''; } };
-  return { pais: cut(req.headers['x-vercel-ip-country'], 2).toUpperCase() || null, cidade: cut(dec(req.headers['x-vercel-ip-city']), 80) || null };
+  const pais = cut(req.headers['x-vercel-ip-country'], 2).toUpperCase() || null;
+  const reg = cut(req.headers['x-vercel-ip-country-region'], 8).toUpperCase();
+  const regiao = reg ? (pais === 'BR' && BR_UF[reg] ? BR_UF[reg] : `${reg}${pais && pais !== 'BR' ? ' (' + pais + ')' : ''}`) : null;
+  return { pais, cidade: cut(dec(req.headers['x-vercel-ip-city']), 80) || null, regiao };
 };
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-module.exports = { isBot, deviceOf, hostOnly, classify, dailyVisitor, geo, cut, LIMITS, STATUS, UUID, EMAIL, clean, send, readBody, originOk, visitor, sb, tooMany, hit, session, setSession, clearSession, checkPassword, equalText, wait };
+module.exports = { isBot, uaInfo, deviceOf, hostOnly, classify, dailyVisitor, geo, cut, LIMITS, STATUS, UUID, EMAIL, clean, send, readBody, originOk, visitor, sb, tooMany, hit, session, setSession, clearSession, checkPassword, equalText, wait };

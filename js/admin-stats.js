@@ -12,7 +12,8 @@
 
   const el = (tag, attrs, ...kids) => {
     const n = document.createElement(tag);
-    Object.entries(attrs || {}).forEach(([k, v]) => { if (k === 'text') n.textContent = v; else if (v != null) n.setAttribute(k, v); });
+    // style vai pelo CSSOM: a política de segurança do painel (CSP) bloqueia o atributo style escrito em HTML
+    Object.entries(attrs || {}).forEach(([k, v]) => { if (k === 'text') n.textContent = v; else if (k === 'style') n.style.cssText = v; else if (v != null) n.setAttribute(k, v); });
     kids.flat().forEach((k) => { if (k != null) n.append(k); });
     return n;
   };
@@ -72,6 +73,30 @@
     return box;
   }
 
+  const fmtTempo = (sec) => (sec >= 60 ? `${Math.floor(sec / 60)}min ${String(sec % 60).padStart(2, '0')}s` : `${sec}s`);
+
+  // Funil: cada etapa mostra quantas pessoas chegaram e que parte da etapa anterior seguiu
+  function funil(linhas) {
+    const box = el('section', { class: 'vs-box vs-wide' }, el('h2', { text: 'Funil: da visita ao contato' }));
+    const max = Math.max(linhas[0].total, 1);
+    box.append(el('ul', { class: 'vs-funil' }, linhas.map((l, i) => el('li', null,
+      el('span', { class: 'vs-n', text: l.etapa }),
+      el('span', { class: 'vs-trilho' }, el('i', { style: `width:${Math.max(2, Math.round((l.total / max) * 100))}%` })),
+      el('span', { class: 'vs-v', text: `${num(l.total)} · ${pct(l.total, max)}${i ? ` (${pct(l.total, linhas[i - 1].total)} da etapa anterior)` : ''}` })))));
+    return box;
+  }
+
+  // Colunas simples (horário do dia)
+  function colunas(titulo, valores, rotulo) {
+    const box = el('section', { class: 'vs-box' }, el('h2', { text: titulo }));
+    const max = Math.max(...valores, 1);
+    if (!valores.some((v) => v)) { box.append(el('p', { class: 'vs-vazio', text: 'Ainda sem dados neste período.' })); return box; }
+    box.append(el('div', { class: 'vs-cols', role: 'img', 'aria-label': titulo },
+      valores.map((v, i) => el('span', { class: 'vs-col', title: `${rotulo(i)}: ${v} página(s) vista(s)` }, el('i', { style: `height:${Math.max(v ? 4 : 0, Math.round((v / max) * 100))}%` })))),
+      el('div', { class: 'vs-cols-lab' }, el('span', { text: '0h' }), el('span', { text: '6h' }), el('span', { text: '12h' }), el('span', { text: '18h' }), el('span', { text: '23h' })));
+    return box;
+  }
+
   // Gráfico de barras por dia (SVG montado por DOM, sem biblioteca)
   function grafico(diario) {
     const W = 760, H = 180, pad = 24, n = diario.length, max = Math.max(...diario.map((d) => d.views), 1);
@@ -120,14 +145,39 @@
       card('Contatos', num(t.contatos), 'e-mails e formulários'),
       card('Conversão', pct(t.contatos, t.visitas), 'contatos ÷ visitas'),
       card('Cliques no WhatsApp', num(t.cliquesWhatsapp), t.cliquesEmail ? `e ${num(t.cliquesEmail)} no e-mail` : '')));
+    if (d.metricas) {
+      const m = d.metricas;
+      corpo.append(el('ul', { class: 'vs-cards vs-cards-4' },
+        card('Tempo médio no site', fmtTempo(m.tempoMedio), 'por visita (aba aberta e visível)'),
+        card('Páginas por visita', String(m.paginasPorVisita).replace('.', ','), `em ${num(m.visitasMedidas)} visitas medidas`),
+        card('Rejeição', `${String(m.rejeicao).replace('.', ',')}%`, 'abriu uma página e saiu logo'),
+        card('Rolagem média', `${m.rolagemMedia}%`, 'até onde as pessoas descem a página')));
+    }
     corpo.append(el('section', { class: 'vs-box vs-wide' }, el('h2', { text: 'Páginas vistas por dia' }), grafico(d.diario), el('p', { class: 'vs-leg', text: 'Barra azul-escura com ponto: dia em que chegou algum contato.' })));
+    if (d.funil) corpo.append(funil(d.funil));
+    if (d.extra) corpo.append(el('div', { class: 'vs-grid vs-grid-top' },
+      colunas('Horário de pico (horário de Brasília)', d.horas, (i) => `${i}h`),
+      barras('Dia da semana', d.semana, t.paginasVistas)));
+    else if (d.ready) { aviso.hidden = false; aviso.textContent = 'Para ver navegador, estado, tempo no site, funil e cliques, rode de novo o arquivo scripts/supabase-leads.sql no Supabase.'; }
     corpo.append(el('div', { class: 'vs-grid' },
       tabela('De onde vêm as visitas e os contatos', d.canais, [{ t: 'Origem', v: (l) => l.nome }, { t: 'Visitas', v: (l) => num(l.total) }, { t: 'Contatos', v: (l) => num(l.contatos) }, { t: 'Conversão', v: (l) => (l.total ? pct(l.contatos, l.total) : '–') }]),
       tabela('Páginas mais acessadas', d.paginas, [{ t: 'Página', v: (l) => l.nome }, { t: 'Vistas', v: (l) => num(l.total) }]),
       tabela('Sites de origem', d.origens, [{ t: 'Site', v: (l) => l.nome }, { t: 'Visitas', v: (l) => num(l.total) }]),
       tabela('Campanhas (UTM)', d.campanhas, [{ t: 'Campanha', v: (l) => l.nome }, { t: 'Visitas', v: (l) => num(l.total) }]),
       barras('Países', d.paises, t.paginasVistas), barras('Aparelhos', d.dispositivos, t.paginasVistas),
-      tabela('Cidades', d.cidades, [{ t: 'Cidade', v: (l) => l.nome }, { t: 'Vistas', v: (l) => num(l.total) }])));
+      tabela('Cidades', d.cidades, [{ t: 'Cidade', v: (l) => l.nome }, { t: 'Vistas', v: (l) => num(l.total) }]),
+      d.extra ? barras('Estados', d.regioes, t.paginasVistas) : null,
+      d.extra ? barras('Navegadores', d.navegadores, t.paginasVistas) : null,
+      d.extra ? barras('Sistemas', d.sistemas, t.paginasVistas) : null,
+      d.extra ? tabela('Botões mais clicados', d.cliques, [{ t: 'Botão', v: (l) => l.nome }, { t: 'Cliques', v: (l) => num(l.total) }]) : null));
+    const pf = d.perfil || {};
+    const soma = (arr) => (arr || []).reduce((a, b) => a + b.total, 0);
+    if (soma(pf.tamanho) + soma(pf.faturamento) + soma(pf.jaIa) + soma(pf.cargo) > 0) {
+      corpo.append(el('h2', { class: 'vs-secao', text: 'Perfil de quem preencheu o formulário' }));
+      corpo.append(el('div', { class: 'vs-grid' },
+        barras('Tamanho da empresa', pf.tamanho || [], soma(pf.tamanho)), barras('Faturamento mensal', pf.faturamento || [], soma(pf.faturamento)),
+        barras('Já implementou IA?', pf.jaIa || [], soma(pf.jaIa)), barras('Cargo', pf.cargo || [], soma(pf.cargo))));
+    }
   }
 
   async function load() {

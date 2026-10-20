@@ -98,6 +98,15 @@ async function remove(req, res) {
 /* Resumo das visitas e de onde vêm os contatos. Soma tudo aqui no servidor e manda só os totais. */
 const top = (map, n = 10) => Array.from(map.entries()).sort((a, b) => b[1] - a[1]).slice(0, n).map(([nome, total]) => ({ nome, total }));
 const bump = (map, k, by = 1) => { if (k) map.set(k, (map.get(k) || 0) + by); };
+const field = (msg, ...names) => {
+  for (const n of names) {
+    const m = String(msg || '').match(new RegExp(`(?:^|\\n)${n}:\\s*([^\\n]+)`, 'i'));
+    if (m) return m[1].trim().slice(0, 60);
+  }
+  return '';
+};
+const DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const NEW = 'navegador,sistema,regiao,sessao,duracao,rolagem,clique';
 
 async function stats(req, res) {
   const q = new URL(req.url, 'http://x').searchParams;
@@ -105,16 +114,19 @@ async function stats(req, res) {
   const since = new Date(Date.now() - days * 86400000);
   since.setHours(0, 0, 0, 0);
   const iso = encodeURIComponent(since.toISOString());
+  const BASE = 'at,tipo,path,entrada,canal,detalhe,pais,cidade,dispositivo,vid,utm_campaign';
 
   const views = [];
-  let truncated = false;
+  let truncated = false, extra = true;
   for (let page = 0; page < 40; page += 1) {
     let chunk;
+    const get = (cols) => L.sb(`pageviews?select=${cols}&at=gte.${iso}&order=at.desc&limit=1000&offset=${page * 1000}`);
     try {
-      chunk = await L.sb(`pageviews?select=at,tipo,path,entrada,canal,detalhe,pais,cidade,dispositivo,vid,utm_campaign&at=gte.${iso}&order=at.desc&limit=1000&offset=${page * 1000}`);
+      chunk = await get(extra ? `${BASE},${NEW}` : BASE);
     } catch (err) {
-      if (err && (err.status === 404 || err.status === 400)) return L.send(res, 200, { ok: true, ready: false });
-      throw err;
+      if (err && err.status === 400 && extra && page === 0) { extra = false; chunk = await get(BASE).catch(() => null); if (!chunk) return L.send(res, 200, { ok: true, ready: false }); }
+      else if (err && (err.status === 404 || err.status === 400)) return L.send(res, 200, { ok: true, ready: false });
+      else throw err;
     }
     views.push(...chunk);
     if (chunk.length < 1000) break;
@@ -122,25 +134,34 @@ async function stats(req, res) {
   }
   let leads = [];
   try {
-    leads = await L.sb(`leads?select=created_at,canal,campanha,pagina_entrada,parcial&created_at=gte.${iso}&order=created_at.desc&limit=5000`);
+    leads = await L.sb(`leads?select=created_at,canal,campanha,pagina_entrada,parcial,mensagem&created_at=gte.${iso}&order=created_at.desc&limit=5000`);
   } catch (err) {
     if (!(err && (err.status === 400 || err.status === 404))) throw err;
-    leads = await L.sb(`leads?select=created_at,parcial&created_at=gte.${iso}&order=created_at.desc&limit=5000`);
+    leads = await L.sb(`leads?select=created_at,parcial,mensagem&created_at=gte.${iso}&order=created_at.desc&limit=5000`).catch(() => L.sb(`leads?select=created_at,parcial&created_at=gte.${iso}&limit=5000`));
   }
 
   const daily = new Map(), pages = new Map(), canais = new Map(), paises = new Map(), cidades = new Map(), devs = new Map(), camps = new Map(), refs = new Map();
-  const visitors = new Set(), leadsByCanal = new Map();
+  const navs = new Map(), sists = new Map(), regs = new Map(), cliques = new Map(), horas = Array(24).fill(0), semana = Array(7).fill(0);
+  const visitors = new Set(), leadsByCanal = new Map(), sess = new Map();
   let pageviews = 0, whats = 0, emails = 0, visits = 0;
-  const day = (t) => new Date(new Date(t).getTime() - 3 * 3600000).toISOString().slice(0, 10); // dia no horário de Brasília
+  const brt = (t) => new Date(new Date(t).getTime() - 3 * 3600000);
+  const day = (t) => brt(t).toISOString().slice(0, 10); // dia no horário de Brasília
   for (let i = 0; i < days; i += 1) daily.set(day(Date.now() - i * 86400000), { views: 0, leads: 0 });
+  const S = (id) => { if (!id) return null; if (!sess.has(id)) sess.set(id, { views: 0, dur: 0, ev: false, whats: false, inicio: false, envio: false, scroll: {} }); return sess.get(id); };
 
   views.forEach((v) => {
-    const d = day(v.at); const slot = daily.get(d);
-    if (v.tipo === 'whatsapp') { whats += 1; return; }
-    if (v.tipo === 'email') { emails += 1; return; }
+    const d = day(v.at); const slot = daily.get(d); const ss = S(v.sessao);
+    if (v.tipo === 'whatsapp') { whats += 1; if (ss) { ss.ev = true; ss.whats = true; } return; }
+    if (v.tipo === 'email') { emails += 1; if (ss) { ss.ev = true; ss.whats = true; } return; }
+    if (v.tipo === 'tempo') { if (ss) { ss.dur += v.duracao || 0; ss.scroll[v.path] = Math.max(ss.scroll[v.path] || 0, v.rolagem || 0); } return; }
+    if (v.tipo === 'clique') { bump(cliques, v.clique); if (ss) ss.ev = true; return; }
+    if (v.tipo === 'form_inicio') { if (ss) { ss.ev = true; ss.inicio = true; } return; }
+    if (v.tipo === 'envio') { if (ss) { ss.ev = true; ss.envio = true; } return; }
     pageviews += 1; if (slot) slot.views += 1;
+    if (ss) ss.views += 1;
     bump(pages, v.path);
     if (v.vid) visitors.add(d + v.vid);
+    const b = brt(v.at); horas[b.getUTCHours()] += 1; semana[b.getUTCDay()] += 1;
     if (v.entrada) {
       visits += 1;
       bump(canais, v.canal || 'Direto');
@@ -149,20 +170,54 @@ async function stats(req, res) {
     }
     bump(paises, v.pais || 'Desconhecido'); if (v.cidade) bump(cidades, `${v.cidade}${v.pais ? ' (' + v.pais + ')' : ''}`);
     bump(devs, v.dispositivo || 'Desconhecido');
+    if (extra) { bump(navs, v.navegador); bump(sists, v.sistema); bump(regs, v.regiao); }
   });
+
+  const perfil = { tamanho: new Map(), faturamento: new Map(), jaIa: new Map(), cargo: new Map() };
   let leadCount = 0;
   leads.forEach((l) => {
     leadCount += 1;
     const slot = daily.get(day(l.created_at)); if (slot) slot.leads += 1;
     bump(leadsByCanal, l.canal || 'Sem origem registrada');
+    if (!l.parcial) {
+      bump(perfil.tamanho, field(l.mensagem, 'Tamanho da empresa', 'Company size'));
+      bump(perfil.faturamento, field(l.mensagem, 'Faturamento mensal', 'Monthly revenue'));
+      bump(perfil.jaIa, field(l.mensagem, 'Já implementou IA', 'Already implemented AI'));
+      bump(perfil.cargo, field(l.mensagem, 'Cargo', 'Role'));
+    }
   });
 
+  // Visita = o que acontece na mesma aba. Só visitas com código (dados novos) entram nestas contas.
+  const lista = Array.from(sess.values()).filter((x) => x.views > 0);
+  const n = lista.length;
+  const comTempo = lista.filter((x) => x.dur > 0);
+  const scrolls = lista.flatMap((x) => Object.values(x.scroll)).filter((v) => v > 0);
+  const avg = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
+  const engajou = lista.filter((x) => x.views >= 2 || x.dur >= 30).length;
+  const metricas = n ? {
+    visitasMedidas: n,
+    tempoMedio: Math.round(avg(comTempo.map((x) => x.dur))),
+    paginasPorVisita: Math.round((lista.reduce((a, x) => a + x.views, 0) / n) * 10) / 10,
+    rejeicao: Math.round((lista.filter((x) => x.views === 1 && x.dur < 10 && !x.ev).length / n) * 1000) / 10,
+    rolagemMedia: Math.round(avg(scrolls)),
+  } : null;
+  const funil = n ? [
+    { etapa: 'Visitaram o site', total: n },
+    { etapa: 'Exploraram (2+ páginas ou 30s+)', total: engajou },
+    { etapa: 'Começaram um contato (WhatsApp, e-mail ou formulário)', total: lista.filter((x) => x.whats || x.inicio).length },
+    { etapa: 'Enviaram e-mail ou formulário', total: lista.filter((x) => x.envio).length },
+  ] : null;
+
   const canalTabela = top(canais, 12).map((c) => ({ ...c, contatos: leadsByCanal.get(c.nome) || 0 }));
-  leadsByCanal.forEach((n, nome) => { if (!canais.has(nome)) canalTabela.push({ nome, total: 0, contatos: n }); });
+  leadsByCanal.forEach((cnt, nome) => { if (!canais.has(nome)) canalTabela.push({ nome, total: 0, contatos: cnt }); });
   return L.send(res, 200, {
-    ok: true, ready: true, days, truncated,
+    ok: true, ready: true, days, truncated, extra,
     totais: { visitas: visits, paginasVistas: pageviews, visitantes: visitors.size, contatos: leadCount, cliquesWhatsapp: whats, cliquesEmail: emails },
+    metricas, funil,
     diario: Array.from(daily.entries()).sort((a, b) => a[0].localeCompare(b[0])).map(([dia, v]) => ({ dia, ...v })),
     canais: canalTabela, paginas: top(pages, 12), paises: top(paises, 8), cidades: top(cidades, 8), dispositivos: top(devs, 4), campanhas: top(camps, 8), origens: top(refs, 10),
+    navegadores: top(navs, 6), sistemas: top(sists, 6), regioes: top(regs, 10), cliques: top(cliques, 10),
+    horas, semana: semana.map((total, i) => ({ nome: DIAS[i], total })),
+    perfil: { tamanho: top(perfil.tamanho, 6), faturamento: top(perfil.faturamento, 6), jaIa: top(perfil.jaIa, 4), cargo: top(perfil.cargo, 8) },
   });
 }

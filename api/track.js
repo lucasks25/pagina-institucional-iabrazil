@@ -2,7 +2,8 @@
 /* IA BRAZIL — análise de visitas própria (sem cookies, sem IP). Rota: POST /api/track */
 const L = require('./_lib');
 
-const KINDS = new Set(['view', 'whatsapp', 'email']);
+const KINDS = new Set(['view', 'whatsapp', 'email', 'tempo', 'clique', 'form_inicio', 'envio']);
+const NEW_COLS = ['navegador', 'sistema', 'regiao', 'sessao', 'duracao', 'rolagem', 'clique'];
 // Freio simples por instância contra enchente de visitas falsas (o servidor reinicia, então é só um complemento)
 const seen = new Map();
 const flooded = (key) => {
@@ -11,7 +12,7 @@ const flooded = (key) => {
   arr.push(now);
   seen.set(key, arr);
   if (seen.size > 5000) seen.clear();
-  return arr.length > 90;
+  return arr.length > 160;
 };
 
 module.exports = async (req, res) => {
@@ -31,7 +32,11 @@ module.exports = async (req, res) => {
   try {
     const vid = L.dailyVisitor(req);
     if (flooded(vid)) return L.send(res, 429, { ok: false });
-    const row = { tipo, path, vid, dispositivo: L.deviceOf(req.headers['user-agent']), idioma: L.cut(b.lang, 10) || null, ...L.geo(req) };
+    const sid = /^[0-9a-f]{12,32}$/.test(String(b.sid || '')) ? String(b.sid) : null;
+    const num = (v, max) => { const n = Math.round(Number(v)); return Number.isFinite(n) && n >= 0 ? Math.min(n, max) : null; };
+    const row = { tipo, path, vid, dispositivo: L.deviceOf(req.headers['user-agent']), idioma: L.cut(b.lang, 10) || null, ...L.uaInfo(req.headers['user-agent']), ...L.geo(req), sessao: sid };
+    if (tipo === 'tempo') { row.duracao = num(b.dur, 3 * 3600); row.rolagem = num(b.scroll, 100); if (!row.duracao && !row.rolagem) return L.send(res, 200, { ok: true }); }
+    if (tipo === 'clique' || tipo === 'form_inicio' || tipo === 'envio') row.clique = L.cut(b.label, 40) || null;
     if (tipo === 'view' && b.entry) {
       const refUrl = /^https?:\/\//i.test(String(b.ref || '')) ? String(b.ref).slice(0, 300) : '';
       const c = L.classify(refUrl, b.utm, 'www.iabrazil.com');
@@ -41,7 +46,14 @@ module.exports = async (req, res) => {
       row.utm_medium = L.cut(u.utm_medium, 80) || null;
       row.utm_campaign = L.cut(u.utm_campaign, 80) || null;
     }
-    await L.sb('pageviews', { method: 'POST', body: row, prefer: 'return=minimal' });
+    try {
+      await L.sb('pageviews', { method: 'POST', body: row, prefer: 'return=minimal' });
+    } catch (err) {
+      // SQL novo ainda não rodou: grava sem as colunas novas, para não perder a visita
+      if (!(err && err.status === 400)) throw err;
+      NEW_COLS.forEach((k) => { delete row[k]; });
+      if (tipo === 'view' || tipo === 'whatsapp' || tipo === 'email') await L.sb('pageviews', { method: 'POST', body: row, prefer: 'return=minimal' });
+    }
     if (Math.random() < 0.01) {
       const old = new Date(Date.now() - 400 * 86400000).toISOString();
       L.sb(`pageviews?at=lt.${encodeURIComponent(old)}`, { method: 'DELETE' }).catch(() => {});
