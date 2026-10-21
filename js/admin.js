@@ -291,6 +291,7 @@
       ['Empresa', l.empresa], ['Interesse', l.interesse], ['De onde veio', l.canal], ['Campanha', l.campanha], ['Página de entrada', l.pagina_entrada], ['Site de origem', l.referencia], ['Formulário', l.origem], ['Recebido em', longDate(created)]];
     if (updated) data.push(['Atualizado em', longDate(updated)]);
     $('d-dados').replaceChildren(...data.flatMap(([k, v]) => [el('dt', { text: k }), el('dd', { class: v ? null : 'is-empty', text: v || 'Não informado' })]));
+    fillQualif(l);
     $('d-notas').value = l.notas;
     $('d-notas-info').textContent = '';
     $('d-salvar').setAttribute('aria-disabled', 'true');
@@ -302,6 +303,39 @@
   }
 
   const notesDirty = () => !!current && $('d-notas').value.trim() !== current.notas.trim();
+
+  /* Qualificação: o que estiver salvo; se não, o que veio na mensagem de formulários antigos */
+  const QUALIF = [['cargo', 'Cargo'], ['tamanho_empresa', 'Tamanho da empresa'], ['faturamento', 'Faturamento mensal'], ['ja_ia', 'Já implementou IA']];
+  const fromMessage = (msg, label) => {
+    const m = String(msg || '').match(new RegExp(`(?:^|\\n)${label}:\\s*([^\\n]+)`, 'i'));
+    return m ? m[1].trim().slice(0, 80) : '';
+  };
+  const qualifValue = (l, k, label) => l[k] || fromMessage(l.mensagem, label);
+  const qualifDirty = () => !!current && QUALIF.some(([k]) => $(`q-${k}`).value.trim() !== (current[k] || '').trim());
+
+  function fillQualif(l) {
+    QUALIF.forEach(([k, label]) => { $(`q-${k}`).value = qualifValue(l, k, label); });
+    // Valor tirado da mensagem ainda não está salvo nas colunas: o botão já fica liberado
+    $('q-salvar').setAttribute('aria-disabled', String(!qualifDirty()));
+    $('q-info').textContent = qualifDirty() ? 'Preenchido a partir da mensagem. Salve para registrar.' : '';
+  }
+
+  async function saveQualif(l) {
+    const here = () => current === l;
+    const patch = {};
+    QUALIF.forEach(([k]) => { patch[k] = $(`q-${k}`).value; });
+    if (here()) $('q-info').textContent = 'Salvando...';
+    try {
+      Object.assign(l, await L.update(l.id, patch));
+      if (!here()) return toast('Qualificação salva.');
+      $('q-salvar').setAttribute('aria-disabled', String(!qualifDirty()));
+      $('q-info').textContent = `Qualificação salva às ${fTime.format(new Date())}.`;
+    } catch (err) {
+      if (handleAuth(err)) return;
+      if (here()) $('q-info').textContent = `Não foi possível salvar. ${errText(err)}`;
+      else toast(`Não foi possível salvar a qualificação de ${fullName(l)}. ${errText(err)}`, true);
+    }
+  }
 
   async function saveNotes(l, value) {
     const here = () => current === l;
@@ -373,10 +407,12 @@
       if (/^\s*[=+\-@]|^[\t\r]/.test(s)) s = `'${s}`;
       return `"${s.replace(/"/g, '""')}"`;
     };
-    const head = ['Recebido em', 'Status', 'Nome', 'Sobrenome', 'Empresa', 'E-mail', 'WhatsApp', 'Interesse', 'Mensagem', 'Notas', 'Origem'];
+    const head = ['Recebido em', 'Status', 'Nome', 'Sobrenome', 'Empresa', 'E-mail', 'WhatsApp', 'Interesse', 'Mensagem', 'Notas', 'Origem',
+      'Cargo', 'Tamanho da empresa', 'Faturamento mensal', 'Já usa IA', 'De onde veio', 'Campanha', 'Página de entrada', 'Site de origem', 'Veio de anúncio'];
     const body = rows.map((l) => {
       const d = toDate(l.created_at);
-      return [d ? `${fDate.format(d)} ${fTime.format(d)}` : '', STATUS[l.status], l.nome, l.sobrenome, l.empresa, l.email, l.whatsapp, l.interesse, l.mensagem, l.notas, l.origem];
+      return [d ? `${fDate.format(d)} ${fTime.format(d)}` : '', STATUS[l.status], l.nome, l.sobrenome, l.empresa, l.email, l.whatsapp, l.interesse, l.mensagem, l.notas, l.origem,
+        ...QUALIF.map(([k, label]) => qualifValue(l, k, label)), l.canal, l.campanha, l.pagina_entrada, l.referencia, l.clique_id ? 'Sim' : ''];
     });
     // BOM + ponto e vírgula: o Excel em português abre com acentos e colunas certos
     const csv = `﻿${[head, ...body].map((r) => r.map(cell).join(';')).join('\r\n')}`;
@@ -448,6 +484,7 @@
     drawer.addEventListener('close', () => {
       document.documentElement.classList.remove('is-locked');
       if (current && notesDirty()) saveNotes(current, $('d-notas').value);
+      if (current && qualifDirty() && $('q-info').textContent === 'Alterações não salvas.') saveQualif(current);
       current = null;
       if (opener && opener.isConnected && !opener.closest('[hidden]')) opener.focus();
       opener = null;
@@ -459,6 +496,12 @@
       $('d-notas-info').textContent = dirty ? 'Alterações não salvas.' : '';
     });
     $('d-salvar').addEventListener('click', () => { if (notesDirty()) saveNotes(current, $('d-notas').value); });
+    $('d-qualif').addEventListener('input', () => {
+      const dirty = qualifDirty();
+      $('q-salvar').setAttribute('aria-disabled', String(!dirty));
+      $('q-info').textContent = dirty ? 'Alterações não salvas.' : '';
+    });
+    $('q-salvar').addEventListener('click', () => { if (qualifDirty()) saveQualif(current); });
 
     $('d-copiar').addEventListener('click', async () => {
       if (!current || !current.email) return;

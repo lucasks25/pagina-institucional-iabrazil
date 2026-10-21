@@ -172,7 +172,8 @@
       d.extra ? barras('Estados', d.regioes, t.paginasVistas) : null,
       d.extra ? barras('Navegadores', d.navegadores, t.paginasVistas) : null,
       d.extra ? barras('Sistemas', d.sistemas, t.paginasVistas) : null,
-      d.extra ? tabela('Botões mais clicados', d.cliques, [{ t: 'Botão', v: (l) => l.nome }, { t: 'Cliques', v: (l) => num(l.total) }]) : null));
+      d.extra ? tabela('Botões mais clicados', d.cliques, [{ t: 'Botão', v: (l) => l.nome }, { t: 'Cliques', v: (l) => num(l.total) }]) : null,
+      d.extra && d.casos && d.casos.length ? tabela('Cases mais vistos', d.casos, [{ t: 'Case', v: (l) => l.nome }, { t: 'Visitas que viram', v: (l) => num(l.total) }]) : null));
     const pf = d.perfil || {};
     const soma = (arr) => (arr || []).reduce((a, b) => a + b.total, 0);
     if (soma(pf.tamanho) + soma(pf.faturamento) + soma(pf.jaIa) + soma(pf.cargo) > 0) {

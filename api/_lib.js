@@ -4,7 +4,9 @@
      SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SESSION_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD_HASH */
 const crypto = require('crypto');
 
-const LIMITS = { nome: 80, sobrenome: 80, empresa: 120, email: 254, whatsapp: 30, interesse: 120, mensagem: 2000, origem: 300, notas: 5000 };
+const LIMITS = { nome: 80, sobrenome: 80, empresa: 120, email: 254, whatsapp: 30, interesse: 120, mensagem: 2000, origem: 300, notas: 5000,
+  cargo: 80, tamanho_empresa: 80, faturamento: 80, ja_ia: 80, clique_id: 200 };
+const QUALIFICACAO = ['cargo', 'tamanho_empresa', 'faturamento', 'ja_ia'];
 const STATUS = ['novo', 'em_contato', 'proposta', 'fechado', 'perdido'];
 const MULTILINE = ['mensagem', 'notas'];
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -247,4 +249,4 @@ const geo = (req) => {
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-module.exports = { isBot, uaInfo, deviceOf, hostOnly, classify, dailyVisitor, geo, cut, LIMITS, STATUS, UUID, EMAIL, clean, send, readBody, originOk, visitor, sb, tooMany, hit, session, setSession, clearSession, checkPassword, equalText, wait };
+module.exports = { QUALIFICACAO, isBot, uaInfo, deviceOf, hostOnly, classify, dailyVisitor, geo, cut, LIMITS, STATUS, UUID, EMAIL, clean, send, readBody, originOk, visitor, sb, tooMany, hit, session, setSession, clearSession, checkPassword, equalText, wait };

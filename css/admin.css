@@ -220,6 +220,9 @@ tr.is-new .lead-open { font-weight: 700; }
 .drawer textarea { height: auto; min-height: 128px; padding: 10px 12px; line-height: 1.55; resize: vertical; }
 .drawer-notes-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 10px; }
 .drawer-hint { color: var(--muted); font-size: 13px; }
+.drawer-sec > .drawer-hint { margin: -4px 0 14px; }
+.drawer-qualif { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 560px) { .drawer-qualif { grid-template-columns: 1fr; } }
 
 .drawer-danger { padding-top: 24px; }
 .drawer-confirm { display: grid; gap: 14px; padding: 16px 18px; border-left: 3px solid var(--navy); background: var(--blue-50); color: var(--ink); font-size: 14.5px; line-height: 1.5; }

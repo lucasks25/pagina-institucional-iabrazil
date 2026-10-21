@@ -1,19 +1,19 @@
 # IA BRAZIL
 
-> Empresa brasileira B2B de implementação de inteligência artificial: diagnóstico de IA em 30 dias, software sob medida, agentes de IA e automação de processos integrados aos sistemas da empresa (ERP, CRM e planilhas), com o retorno calculado antes de construir.
+> A IA BRAZIL desenvolve sistemas sob medida para empresas: plataformas de gestão, CRM, integrações, automação de processos e agentes de inteligência artificial integrados aos sistemas que a empresa já usa (ERP, CRM e planilhas), além de diagnóstico de IA e sites profissionais.
 
 Como a IA BRAZIL trabalha:
 - Análise gratuita: primeira conversa para entender a operação e indicar onde a IA gera resultado.
 - Diagnóstico de IA em 30 dias: mapa de processos e sistemas, ROI calculado com os dados da empresa e protótipo no caso principal.
 - Método em 4 fases: diagnóstico, priorização, construção em ciclos curtos e medição do resultado em produção.
 - Integração com os sistemas que a empresa já usa (ERP, CRM, planilhas e sistemas próprios) por API, banco de dados ou arquivos, sem trocar o ERP.
-- Projetos alinhados à LGPD. Atendimento em português e inglês.
+- Atendimento em português e inglês.
 
 ## Serviços
 - [Diagnóstico de IA](https://www.iabrazil.com/diagnostico-de-ia.html): onde a IA dá retorno na operação e quanto, em 30 dias.
 - [Implementação de IA sob medida](https://www.iabrazil.com/#implementacao): plataformas, integrações e automações rodando na operação.
 - [Consultoria de inteligência artificial para empresas](https://www.iabrazil.com/consultoria-de-inteligencia-artificial.html): Consultoria de IA que implementa: diagnóstico, ROI calculado antes de construir e soluções integradas ao ERP e ao CRM, medidas em produção.
-- [Desenvolvimento de software sob medida com IA](https://www.iabrazil.com/software-sob-medida.html): Desenvolvimento de software sob medida para empresas: sistemas internos, portais B2B e plataformas web com IA, integrados ao seu ERP e CRM. Análise gratuita.
+- [Desenvolvimento de Sistemas Sob Medida para Empresas](https://www.iabrazil.com/software-sob-medida.html): Sistemas de gestão, CRM, portais e plataformas web desenvolvidos para o processo da sua empresa, integrados ao que você já usa. Solicite um orçamento.
 - [Agentes de IA para empresas](https://www.iabrazil.com/agentes-de-ia.html): Agentes de IA para empresas que executam tarefas dentro dos seus sistemas: atendimento, vendas, financeiro e operações, integrados ao ERP e ao CRM.
 - [Automação de processos com IA para empresas](https://www.iabrazil.com/automacao-de-processos.html): Automação de processos com inteligência artificial: notas fiscais, conciliações, cadastros, documentos e relatórios sem digitação manual, com retorno calculado.
 - [BI e análise de dados com IA para empresas](https://www.iabrazil.com/dados-e-bi.html): Business intelligence com IA: dados organizados, dashboards claros, previsões e alertas automáticos quando algo foge do normal. Análise gratuita.
@@ -35,8 +35,8 @@ Como a IA BRAZIL trabalha:
 
 ## Empresa
 - [Sobre a IA BRAZIL](https://www.iabrazil.com/sobre.html): A IA BRAZIL implementa IA em empresas: diagnóstico, software sob medida, agentes e automação de processos.
-- [Cases: plataformas, CRM e sites para empresas](https://www.iabrazil.com/cases.html): Conheça os projetos da IA BRAZIL: ICORACING, Salute, Vionex, Clínica BZ, Agência Retrato, Flip Seguros e SuperAI. Plataformas, CRM e sites para empresas.
-- [Contato e análise gratuita de IA](https://www.iabrazil.com/contato.html): Fale com a IA BRAZIL e agende uma análise gratuita: mostramos onde a inteligência artificial dá retorno na sua operação e quanto, antes de investir.
+- [Cases: plataformas, CRM e sites para empresas](https://www.iabrazil.com/cases.html): Projetos da IA BRAZIL: Nicodanny, ICORACING, Salute, Vionex, Clínica BZ, Agência Retrato, Flip Seguros e SuperAI. Sistemas de gestão, CRM e sites.
+- [Contato: converse sobre o seu projeto](https://www.iabrazil.com/contato.html): Fale com a IA BRAZIL sobre um sistema sob medida, CRM, integração, automação ou projeto de IA. Resposta pelo WhatsApp ou e-mail.
 - Contato: WhatsApp +55 11 91709-2509 · e-mail contato@iabrazil.com
 
 ## Optional

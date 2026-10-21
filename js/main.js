@@ -11,7 +11,7 @@
 
   // Número do WhatsApp com DDI + DDD, só números
   const WHATSAPP_NUMBER = '5511917092509';
-  const DEFAULT_MESSAGE = t('Olá! Vim pelo site da IA BRAZIL e quero conversar sobre um projeto.', 'Hi! I found IA BRAZIL on your website and would like to talk about a project.');
+  const DEFAULT_MESSAGE = t('Olá! Conheci a IA BRAZIL pelo site e gostaria de conversar sobre um projeto para minha empresa.', 'Hi! I found IA BRAZIL through the website and would like to talk about a project for my company.');
 
   /* Links de WhatsApp */
   const waHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(DEFAULT_MESSAGE)}`;
@@ -145,13 +145,13 @@
     // Link do WhatsApp com os dados do formulário na mensagem
     const waLink = (d) => {
       const text = [
-        t('Olá! Vim pelo site da IA BRAZIL.', 'Hi! I found IA BRAZIL on your website.'),
+        t('Olá! Conheci a IA BRAZIL pelo site e gostaria de conversar sobre um projeto para minha empresa.', 'Hi! I found IA BRAZIL through the website and would like to talk about a project for my company.'),
         '',
         `${t('Nome', 'Name')}: ${d.get('nome')} ${d.get('sobrenome')}`.trim(),
         `${t('Empresa', 'Company')}: ${d.get('empresa')}`,
         `E-mail: ${d.get('email')}`,
         `WhatsApp: ${d.get('whatsapp')}`,
-        `${t('Interesse', 'Interest')}: ${d.get('interesse')}`,
+        `${t('Serviço', 'Service')}: ${d.get('interesse')}`,
         '',
         `${t('Mensagem', 'Message')}: ${d.get('mensagem') || t('(não informada)', '(none)')}`,
       ].join('\n');
@@ -188,16 +188,16 @@
     const thanks = (d) => {
       const panel = make('div', 'form-done');
       const name = String(d.get('nome')).trim();
-      const title = make('h2', '', t(`Obrigado, ${name}. Recebemos o seu contato.`, `Thank you, ${name}. We have received your message.`));
+      const title = make('h2', '', t('Recebemos sua solicitação.', 'We have received your request.'));
       title.id = 'form-done-title';
       panel.tabIndex = -1;
       panel.setAttribute('role', 'region');
       panel.setAttribute('aria-labelledby', title.id);
       panel.append(
-        make('p', 'badge', t('Mensagem enviada', 'Message sent')),
+        make('p', 'badge', t(`Obrigado, ${name}`, `Thank you, ${name}`)),
         title,
-        make('p', '', t('Nosso time vai responder em breve pelo WhatsApp ou pelo e-mail que você informou. Se quiser adiantar a conversa, continue pelo WhatsApp com a sua mensagem pronta.',
-          'Our team will get back to you shortly by WhatsApp or by the e-mail you provided. To move faster, continue on WhatsApp with your message ready.')),
+        make('p', '', t('Entraremos em contato pelos dados informados. Se preferir adiantar a conversa, continue pelo WhatsApp com a sua mensagem pronta.',
+          'We will contact you using the details you provided. To move faster, continue on WhatsApp with your message ready.')),
         waButton(d),
       );
       form.replaceWith(panel);

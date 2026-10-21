@@ -236,3 +236,9 @@
 /* Título da oferta com link para a página do serviço (link interno para SEO) */
 .offer h3 a { color: inherit; text-decoration: none; transition: color .2s; }
 .offer h3 a:hover { color: var(--brand); }
+
+/* Topo: alternativa ao campo de e-mail (ver projetos ou descrever o projeto) */
+.hero-alt { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; margin: var(--sp-2) 0 0 var(--sp-5); color: var(--muted); font-size: 14px; }
+.hero-alt a:not(.arrow-link) { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.hero-alt a:not(.arrow-link):hover { color: var(--brand); }
+@media (max-width: 600px) { .hero-alt { margin-left: 0; } }

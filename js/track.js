@@ -11,17 +11,26 @@
     const v = q.get(k);
     if (v) utm[k] = v.slice(0, 80);
   });
+  // Código do clique no anúncio do Google: guardado só nesta aba, e só vai junto se a pessoa enviar o formulário
+  const ads = {};
+  ['gclid', 'gbraid', 'wbraid'].forEach((k) => {
+    const v = q.get(k);
+    if (v && /^[\w.-]{4,200}$/.test(v)) ads[k] = v;
+  });
+  // Anúncio sem UTM (só com o código do Google) conta como anúncio, não como acesso direto
+  if (Object.keys(ads).length && !utm.utm_source) Object.assign(utm, { utm_source: 'google', utm_medium: 'cpc' });
 
   // Limpa o endereço: depois de lida, a campanha não precisa ficar visível na barra do navegador
-  if (Object.keys(utm).length) {
+  if (Object.keys(utm).length || Object.keys(ads).length) {
     try {
-      Object.keys(utm).forEach((k) => q.delete(k));
+      Object.keys(utm).concat(Object.keys(ads)).forEach((k) => q.delete(k));
       const rest = q.toString();
       history.replaceState(history.state, '', location.pathname + (rest ? `?${rest}` : '') + location.hash);
     } catch {}
   }
 
   window.IABRTrack = () => {}; // vira função de verdade só se o rastreio estiver ligado
+  window.dataLayer = window.dataLayer || [];
   if (navigator.doNotTrack === '1' || window.doNotTrack === '1' || navigator.globalPrivacyControl) return;
   try { if (localStorage.getItem('iabr-no-track')) return; } catch {}
   if (/bot|crawl|spider|headless|lighthouse/i.test(navigator.userAgent)) return;
@@ -37,7 +46,10 @@
   try {
     if (!sessionStorage.getItem(KEY)) {
       first = true;
-      sessionStorage.setItem(KEY, JSON.stringify({ ref, landing: location.pathname, ...utm }));
+      sessionStorage.setItem(KEY, JSON.stringify({ ref, landing: location.pathname, ...utm, ...ads }));
+    } else if (Object.keys(ads).length) {
+      // Chegou por um anúncio no meio da visita: guarda o código do clique sem trocar a página de entrada
+      sessionStorage.setItem(KEY, JSON.stringify({ ...JSON.parse(sessionStorage.getItem(KEY)), ...ads }));
     }
   } catch { first = true; }
 
@@ -56,11 +68,17 @@
       fetch('/api/track', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: data }).catch(() => {});
     } catch {}
   };
+  /* Eventos no formato do Google (dataLayer). Ficam parados até existir um GA4/Google Ads configurado;
+     nunca levam nome, e-mail, telefone ou texto digitado. Clique no WhatsApp não é contato recebido. */
+  const layer = (event, params) => { try { window.dataLayer.push({ event, page_path: location.pathname, ...params }); } catch {} };
+  const LAYER = { form_inicio: 'lead_form_start', envio: 'generate_lead', case_view: 'case_view' };
+
   const once = new Set(); // cada etapa do funil conta uma vez por visita
   const step = (t, label) => {
     const k = t + label;
     try { if (sessionStorage.getItem('iabr-' + k)) return; sessionStorage.setItem('iabr-' + k, '1'); } catch { if (once.has(k)) return; once.add(k); }
     send({ t, label });
+    if (LAYER[t]) layer(LAYER[t], t === 'case_view' ? { case_id: label } : { form_location: label || 'formulario' });
   };
   window.IABRTrack = (t, label) => step(t, label || '');
 
@@ -93,8 +111,8 @@
     const a = e.target.closest && e.target.closest('a, button');
     if (!a) return;
     const href = a.getAttribute('href') || '';
-    if (a.hasAttribute('data-wa') || /wa\.me\//.test(href)) { send({ t: 'whatsapp' }); return; }
-    if (/^mailto:/i.test(href)) { send({ t: 'email' }); return; }
+    if (a.hasAttribute('data-wa') || /wa\.me\//.test(href)) { send({ t: 'whatsapp' }); layer('contact_whatsapp_click', {}); return; }
+    if (/^mailto:/i.test(href)) { send({ t: 'email' }); layer('contact_email_click', {}); return; }
     if (a.matches('.btn, .nav-cta, [data-cta]') && a.type !== 'submit') {
       const label = (a.getAttribute('data-cta') || a.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40);
       if (label) send({ t: 'clique', label });
@@ -108,4 +126,13 @@
     if (f.matches('[data-hero-capture]')) step('form_inicio', 'topo');
     else if (f.matches('#form-contato, .lead-form, form[data-compose]')) step('form_inicio', 'formulario');
   });
+
+  /* Cases vistos: conta uma vez por visita quando metade do case aparece na tela */
+  const cases = document.querySelectorAll('article.case-row[id]');
+  if (cases.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { step('case_view', e.target.id.slice(0, 40)); io.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    cases.forEach((c) => io.observe(c));
+  }
 })();

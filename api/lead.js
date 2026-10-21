@@ -29,9 +29,15 @@ module.exports = async (req, res) => {
     campanha: L.cut(ft.utm_campaign, 80) || null,
     pagina_entrada: String(ft.landing || '').startsWith('/') ? L.cut(String(ft.landing).split('?')[0], 200) : null,
     referencia: c.referencia || null,
+    clique_id: L.cut(ft.gclid || ft.gbraid || ft.wbraid, 200) || null, // só quando a pessoa chegou por um anúncio
   };
   const withAttr = async (fn) => {
-    try { return await fn(attr); } catch (err) { if (err && err.status === 400) return fn({}); throw err; }
+    // Tenta com tudo; se o banco ainda não tem a coluna do anúncio, sem ela; se não tem nenhuma, sem atribuição
+    const { clique_id: _, ...semClique } = attr;
+    for (const x of [attr, semClique]) {
+      try { return await fn(x); } catch (err) { if (!(err && err.status === 400)) throw err; }
+    }
+    return fn({});
   };
 
   try {

@@ -81,8 +81,17 @@ async function update(req, res) {
     patch.status = body.status;
   }
   if ('notas' in body) patch.notas = L.clean(body.notas, 'notas') || null;
+  // Qualificação registrada pelo painel depois da conversa (cargo, tamanho, faturamento, uso de IA)
+  L.QUALIFICACAO.forEach((k) => { if (k in body) patch[k] = L.clean(body[k], k) || null; });
   if (!Object.keys(patch).length) return L.send(res, 400, { ok: false });
-  const rows = await L.sb(`leads?id=eq.${id}`, { method: 'PATCH', body: patch, prefer: 'return=representation' });
+  let rows;
+  try {
+    rows = await L.sb(`leads?id=eq.${id}`, { method: 'PATCH', body: patch, prefer: 'return=representation' });
+  } catch (err) {
+    // Coluna nova ainda não existe no banco: o SQL atualizado precisa ser rodado
+    if (err && err.status === 400) return L.send(res, 409, { ok: false, error: 'sql' });
+    throw err;
+  }
   if (!rows || !rows.length) return L.send(res, 404, { ok: false });
   return L.send(res, 200, { ok: true, lead: rows[0] });
 }
@@ -134,14 +143,15 @@ async function stats(req, res) {
   }
   let leads = [];
   try {
-    leads = await L.sb(`leads?select=created_at,canal,campanha,pagina_entrada,parcial,mensagem&created_at=gte.${iso}&order=created_at.desc&limit=5000`);
+    leads = await L.sb(`leads?select=created_at,canal,campanha,pagina_entrada,parcial,mensagem,cargo,tamanho_empresa,faturamento,ja_ia&created_at=gte.${iso}&order=created_at.desc&limit=5000`)
+      .catch((err) => { if (err && err.status === 400) return L.sb(`leads?select=created_at,canal,campanha,pagina_entrada,parcial,mensagem&created_at=gte.${iso}&order=created_at.desc&limit=5000`); throw err; });
   } catch (err) {
     if (!(err && (err.status === 400 || err.status === 404))) throw err;
     leads = await L.sb(`leads?select=created_at,parcial,mensagem&created_at=gte.${iso}&order=created_at.desc&limit=5000`).catch(() => L.sb(`leads?select=created_at,parcial&created_at=gte.${iso}&limit=5000`));
   }
 
   const daily = new Map(), pages = new Map(), canais = new Map(), paises = new Map(), cidades = new Map(), devs = new Map(), camps = new Map(), refs = new Map();
-  const navs = new Map(), sists = new Map(), regs = new Map(), cliques = new Map(), horas = Array(24).fill(0), semana = Array(7).fill(0);
+  const navs = new Map(), sists = new Map(), regs = new Map(), cliques = new Map(), casos = new Map(), horas = Array(24).fill(0), semana = Array(7).fill(0);
   const visitors = new Set(), leadsByCanal = new Map(), sess = new Map();
   let pageviews = 0, whats = 0, emails = 0, visits = 0;
   const brt = (t) => new Date(new Date(t).getTime() - 3 * 3600000);
@@ -155,6 +165,7 @@ async function stats(req, res) {
     if (v.tipo === 'email') { emails += 1; if (ss) { ss.ev = true; ss.whats = true; } return; }
     if (v.tipo === 'tempo') { if (ss) { ss.dur += v.duracao || 0; ss.scroll[v.path] = Math.max(ss.scroll[v.path] || 0, v.rolagem || 0); } return; }
     if (v.tipo === 'clique') { bump(cliques, v.clique); if (ss) ss.ev = true; return; }
+    if (v.tipo === 'case_view') { bump(casos, v.clique); return; }
     if (v.tipo === 'form_inicio') { if (ss) { ss.ev = true; ss.inicio = true; } return; }
     if (v.tipo === 'envio') { if (ss) { ss.ev = true; ss.envio = true; } return; }
     pageviews += 1; if (slot) slot.views += 1;
@@ -179,11 +190,11 @@ async function stats(req, res) {
     leadCount += 1;
     const slot = daily.get(day(l.created_at)); if (slot) slot.leads += 1;
     bump(leadsByCanal, l.canal || 'Sem origem registrada');
-    if (!l.parcial) {
-      bump(perfil.tamanho, field(l.mensagem, 'Tamanho da empresa', 'Company size'));
-      bump(perfil.faturamento, field(l.mensagem, 'Faturamento mensal', 'Monthly revenue'));
-      bump(perfil.jaIa, field(l.mensagem, 'Já implementou IA', 'Already implemented AI'));
-      bump(perfil.cargo, field(l.mensagem, 'Cargo', 'Role'));
+    {
+      bump(perfil.tamanho, l.tamanho_empresa || field(l.mensagem, 'Tamanho da empresa', 'Company size'));
+      bump(perfil.faturamento, l.faturamento || field(l.mensagem, 'Faturamento mensal', 'Monthly revenue'));
+      bump(perfil.jaIa, l.ja_ia || field(l.mensagem, 'Já implementou IA', 'Already implemented AI'));
+      bump(perfil.cargo, l.cargo || field(l.mensagem, 'Cargo', 'Role'));
     }
   });
 
@@ -216,7 +227,7 @@ async function stats(req, res) {
     metricas, funil,
     diario: Array.from(daily.entries()).sort((a, b) => a[0].localeCompare(b[0])).map(([dia, v]) => ({ dia, ...v })),
     canais: canalTabela, paginas: top(pages, 12), paises: top(paises, 8), cidades: top(cidades, 8), dispositivos: top(devs, 4), campanhas: top(camps, 8), origens: top(refs, 10),
-    navegadores: top(navs, 6), sistemas: top(sists, 6), regioes: top(regs, 10), cliques: top(cliques, 10),
+    navegadores: top(navs, 6), sistemas: top(sists, 6), regioes: top(regs, 10), cliques: top(cliques, 10), casos: top(casos, 10),
     horas, semana: semana.map((total, i) => ({ nome: DIAS[i], total })),
     perfil: { tamanho: top(perfil.tamanho, 6), faturamento: top(perfil.faturamento, 6), jaIa: top(perfil.jaIa, 4), cargo: top(perfil.cargo, 8) },
   });

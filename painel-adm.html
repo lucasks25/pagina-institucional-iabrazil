@@ -168,6 +168,25 @@
         <dl class="drawer-data" id="d-dados"></dl>
       </section>
 
+      <section class="drawer-sec" aria-labelledby="d-qualif-t">
+        <h3 class="adm-kicker" id="d-qualif-t">Qualificação</h3>
+        <p class="drawer-hint">Preencha durante a conversa. Esses dados não são pedidos no formulário do site.</p>
+        <div class="drawer-qualif" id="d-qualif">
+          <label class="adm-field">Cargo<input type="text" id="q-cargo" maxlength="80" list="q-cargo-op" autocomplete="off"></label>
+          <label class="adm-field">Tamanho da empresa<input type="text" id="q-tamanho_empresa" maxlength="80" list="q-tamanho-op" autocomplete="off"></label>
+          <label class="adm-field">Faturamento mensal<input type="text" id="q-faturamento" maxlength="80" list="q-fat-op" autocomplete="off"></label>
+          <label class="adm-field">Já usa IA ou automação<input type="text" id="q-ja_ia" maxlength="80" list="q-ia-op" autocomplete="off"></label>
+        </div>
+        <datalist id="q-cargo-op"><option value="Sócio(a) ou fundador(a)"><option value="Diretor(a)"><option value="Gerente"><option value="Coordenador(a)"><option value="Analista"></datalist>
+        <datalist id="q-tamanho-op"><option value="1 a 10 pessoas"><option value="11 a 50 pessoas"><option value="51 a 200 pessoas"><option value="201 a 500 pessoas"><option value="Mais de 500 pessoas"></datalist>
+        <datalist id="q-fat-op"><option value="Até R$ 50 mil"><option value="R$ 50 mil a R$ 200 mil"><option value="R$ 200 mil a R$ 1 milhão"><option value="Acima de R$ 1 milhão"><option value="Prefere não informar"></datalist>
+        <datalist id="q-ia-op"><option value="Não"><option value="Testando"><option value="Sim, em uso"></datalist>
+        <div class="drawer-notes-bar">
+          <button class="btn btn-line btn-sm" type="button" id="q-salvar" aria-disabled="true">Salvar qualificação</button>
+          <span class="drawer-hint" id="q-info" aria-live="polite"></span>
+        </div>
+      </section>
+
       <section class="drawer-sec">
         <h3 class="adm-kicker"><label for="d-notas">Notas internas</label></h3>
         <textarea id="d-notas" rows="5" maxlength="5000" placeholder="O que foi conversado, próximos passos, valores..."></textarea>

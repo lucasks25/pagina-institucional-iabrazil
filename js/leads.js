@@ -10,6 +10,7 @@
   const REQUIRED = ['nome', 'empresa', 'email', 'whatsapp', 'interesse'];
   const MULTILINE = ['mensagem', 'notas'];
   const STATUS = ['novo', 'em_contato', 'proposta', 'fechado', 'perdido'];
+  const QUALIFICACAO = ['cargo', 'tamanho_empresa', 'faturamento', 'ja_ia'];
   const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   const EXPIRED = 'Sua sessão expirou. Entre de novo para continuar.';
 
@@ -39,7 +40,7 @@
       status: STATUS.includes(x.status) ? x.status : 'novo',
       parcial: !!x.parcial,
     };
-    FORM_FIELDS.concat('notas', 'canal', 'campanha', 'pagina_entrada', 'referencia').forEach((f) => { out[f] = x[f] == null ? '' : String(x[f]); });
+    FORM_FIELDS.concat('notas', 'canal', 'campanha', 'pagina_entrada', 'referencia', 'clique_id', ...QUALIFICACAO).forEach((f) => { out[f] = x[f] == null ? '' : String(x[f]); });
     return out;
   };
 
@@ -88,7 +89,9 @@
       throw new AuthError(EXPIRED);
     }
     if (!res.ok || !data.ok) {
-      const err = new Error(res.status === 429 ? 'Muitas tentativas seguidas. Espere alguns minutos e tente de novo.' : 'O servidor não conseguiu concluir. Tente de novo em instantes.');
+      const err = new Error(res.status === 429 ? 'Muitas tentativas seguidas. Espere alguns minutos e tente de novo.'
+        : res.status === 409 ? 'O banco ainda não tem esses campos. Rode de novo o arquivo scripts/supabase-leads.sql no Supabase.'
+        : 'O servidor não conseguiu concluir. Tente de novo em instantes.');
       err.status = res.status;
       throw err;
     }
@@ -173,6 +176,7 @@
       body.status = patch.status;
     }
     if (patch && 'notas' in patch) body.notas = clean(patch.notas, 'notas') || null;
+    QUALIFICACAO.forEach((k) => { if (patch && k in patch) body[k] = String(patch[k] || '').replace(/\s+/g, ' ').trim().slice(0, 80) || null; });
     if (!Object.keys(body).length) throw new Error('Nada para salvar.');
     const data = await admin('update', { method: 'PATCH', id: key, body });
     return normalize(data.lead);
