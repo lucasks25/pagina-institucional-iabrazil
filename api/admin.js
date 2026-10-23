@@ -162,8 +162,9 @@ async function stats(req, res) {
   }
 
   const daily = new Map(), pages = new Map(), canais = new Map(), paises = new Map(), cidades = new Map(), devs = new Map(), camps = new Map(), refs = new Map();
-  const navs = new Map(), sists = new Map(), regs = new Map(), cliques = new Map(), casos = new Map(), horas = Array(24).fill(0), semana = Array(7).fill(0);
+  const navs = new Map(), sists = new Map(), regs = new Map(), cliques = new Map(), casos = new Map(), abandonos = new Map(), horas = Array(24).fill(0), semana = Array(7).fill(0);
   const visitors = new Set(), leadsByCanal = new Map(), sess = new Map();
+  const secoes = new Map(), sessPorPagina = new Map(); // seção -> visitas que chegaram; página -> visitas que abriram
   let pageviews = 0, whats = 0, emails = 0, visits = 0;
   // Estágios comerciais: cada um vale diferente e nenhum é somado com o outro
   const etapa = { interesse: 0, recebidos: 0, qualificados: 0, propostas: 0, vendas: 0, perdidos: 0, valorPropostas: 0, valorVendas: 0 };
@@ -180,11 +181,15 @@ async function stats(req, res) {
     if (v.tipo === 'tempo') { if (ss) { ss.dur += v.duracao || 0; ss.scroll[v.path] = Math.max(ss.scroll[v.path] || 0, v.rolagem || 0); } return; }
     if (v.tipo === 'clique') { bump(cliques, v.clique); if (ss) ss.ev = true; return; }
     if (v.tipo === 'case_view') { bump(casos, v.clique); return; }
+    // As linhas vêm da mais nova para a mais antiga: o primeiro campo visto em cada visita é o último que a pessoa preencheu
+    if (v.tipo === 'campo') { if (ss && !ss.ultimoCampo) ss.ultimoCampo = v.clique; return; }
+    if (v.tipo === 'secao') { if (v.sessao && v.clique) { if (!secoes.has(v.clique)) secoes.set(v.clique, new Set()); secoes.get(v.clique).add(v.sessao); } return; }
     if (v.tipo === 'form_inicio') { if (ss) { ss.ev = true; ss.inicio = true; } return; }
     if (v.tipo === 'envio') { if (ss) { ss.ev = true; if (v.clique === 'topo') ss.topo = true; else ss.envio = true; } return; }
     pageviews += 1; if (slot) slot.views += 1;
     if (ss) ss.views += 1;
     bump(pages, v.path);
+    if (v.sessao) { const k = v.path === '/' ? '/index' : v.path.replace(/\.html$/, ''); if (!sessPorPagina.has(k)) sessPorPagina.set(k, new Set()); sessPorPagina.get(k).add(v.sessao); }
     if (v.vid) visitors.add(d + v.vid);
     const b = brt(v.at); horas[b.getUTCHours()] += 1; semana[b.getUTCDay()] += 1;
     if (v.entrada) {
@@ -220,6 +225,8 @@ async function stats(req, res) {
     }
   });
 
+  sess.forEach((x) => { if (x.ultimoCampo && !x.envio) bump(abandonos, x.ultimoCampo); });
+
   // Visita = o que acontece na mesma aba. Só visitas com código (dados novos) entram nestas contas.
   const lista = Array.from(sess.values()).filter((x) => x.views > 0);
   const n = lista.length;
@@ -250,7 +257,15 @@ async function stats(req, res) {
     metricas, funil,
     diario: Array.from(daily.entries()).sort((a, b) => a[0].localeCompare(b[0])).map(([dia, v]) => ({ dia, ...v })),
     canais: canalTabela, paginas: top(pages, 12), paises: top(paises, 8), cidades: top(cidades, 8), dispositivos: top(devs, 4), campanhas: top(camps, 8), origens: top(refs, 10),
-    navegadores: top(navs, 6), sistemas: top(sists, 6), regioes: top(regs, 10), cliques: top(cliques, 10), casos: top(casos, 10),
+    navegadores: top(navs, 6), sistemas: top(sists, 6), regioes: top(regs, 10), cliques: top(cliques, 10), casos: top(casos, 10), abandonos: top(abandonos, 10),
+    // Alcance: % das visitas de cada página que chegaram a cada seção (só home e landing de anúncios)
+    alcance: ['/index', '/software-sob-medida'].map((pg) => {
+      const base = (sessPorPagina.get(pg) || new Set()).size;
+      const linhas = Array.from(secoes.entries()).filter(([k]) => k.startsWith(`${pg}#`))
+        .map(([k, set]) => ({ nome: k.split('#')[1], total: set.size, pct: base ? Math.round((set.size / base) * 100) : 0 }))
+        .sort((a, b) => b.total - a.total);
+      return { pagina: pg === '/index' ? 'Home' : 'Landing de anúncios', visitas: base, secoes: linhas };
+    }).filter((x) => x.secoes.length),
     horas, semana: semana.map((total, i) => ({ nome: DIAS[i], total })),
     perfil: { tamanho: top(perfil.tamanho, 6), faturamento: top(perfil.faturamento, 6), jaIa: top(perfil.jaIa, 4), cargo: top(perfil.cargo, 8) },
   });

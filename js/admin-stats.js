@@ -186,6 +186,8 @@
       d.extra ? barras('Navegadores', d.navegadores, t.paginasVistas) : null,
       d.extra ? barras('Sistemas', d.sistemas, t.paginasVistas) : null,
       d.extra ? tabela('Botões mais clicados', d.cliques, [{ t: 'Botão', v: (l) => l.nome }, { t: 'Cliques', v: (l) => num(l.total) }]) : null,
+      d.extra && d.abandonos && d.abandonos.length ? tabela('Onde abandonam o formulário', d.abandonos, [{ t: 'Página : último campo', v: (l) => l.nome }, { t: 'Abandonos', v: (l) => num(l.total) }]) : null,
+      ...(d.alcance || []).map((a) => tabela(`Até onde chegam: ${a.pagina} (${num(a.visitas)} visitas)`, a.secoes, [{ t: 'Seção', v: (l) => l.nome }, { t: 'Visitas', v: (l) => num(l.total) }, { t: '% das visitas', v: (l) => `${l.pct}%` }])),
       d.extra && d.casos && d.casos.length ? tabela('Cases mais vistos', d.casos, [{ t: 'Case', v: (l) => l.nome }, { t: 'Visitas que viram', v: (l) => num(l.total) }]) : null));
     const pf = d.perfil || {};
     const soma = (arr) => (arr || []).reduce((a, b) => a + b.total, 0);

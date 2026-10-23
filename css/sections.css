@@ -165,6 +165,11 @@ a:hover .ph img, .offer:hover .ph img { transform: scale(1.04); filter: saturate
 
 /* ---------- Fundador (home e Sobre): um retrato grande à esquerda; cargo, nome, frase e bio à direita (estilo página de liderança) */
 .founder-block { padding-block: clamp(120px, 14vw, 220px); }
+/* Versão curta (landing): foto menor, sem citação */
+.founder-compact { grid-template-columns: minmax(0, 3fr) minmax(0, 7fr); max-width: 980px; }
+.founder-compact .founder-name { font-size: clamp(32px, 4vw, 52px); }
+.founder-compact .founder-bio { margin-top: var(--sp-4); }
+.founder-compact .founder-links { margin-top: var(--sp-5); }
 .founder { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--sp-6) clamp(48px, 7vw, 112px); align-items: center; }
 .founder-photo { position: relative; margin: 0; aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid rgba(255, 255, 255, .1); border-radius: 24px; background: var(--surface); box-shadow: 0 50px 100px -50px rgba(var(--accent-rgb), .55); }
 .founder-photo img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.92) contrast(1.04); }
@@ -249,6 +254,7 @@ a:hover .ph img, .offer:hover .ph img { transform: scale(1.04); filter: saturate
 @media (max-width: 960px) {
   .hero-copy { max-width: 600px; }
   .founder { grid-template-columns: minmax(0, 1fr); }
+  .founder-compact .founder-photo { max-width: 240px; }
   .founder-photo { max-width: 440px; }
   .index { grid-template-columns: 1fr; }
   .split { grid-template-columns: 1fr; }

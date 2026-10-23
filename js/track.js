@@ -132,6 +132,25 @@
     else if (f.matches('#form-contato, .lead-form, form[data-compose]')) step('form_inicio', 'formulario');
   });
 
+  /* Abandono do formulário: cada campo conta uma vez por visita quando a pessoa termina de preenchê-lo (sai dele com algo escrito).
+     Vai só o nome do campo, nunca o que foi digitado. O painel cruza com os envios para mostrar onde as pessoas param. */
+  const page = location.pathname.replace(/\.html$/, '').replace(/^\/$/, '/index') || '/index';
+  document.addEventListener('focusout', (e) => {
+    const el = e.target;
+    const f = el && el.closest && el.closest('form');
+    if (!f || !el.name || el.name === 'site' || !f.matches('#form-contato, .lead-form, form[data-compose]')) return;
+    if (String(el.value || '').trim()) step('campo', `${page}:${el.name}`.slice(0, 40));
+  });
+
+  /* Até onde a pessoa chega: cada seção conta uma vez por visita quando cruza o meio da tela */
+  const secoes = document.querySelectorAll('main section[id]');
+  if (secoes.length && 'IntersectionObserver' in window) {
+    const so = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { step('secao', `${page}#${e.target.id}`.slice(0, 40)); so.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -50% 0px' });
+    secoes.forEach((s) => so.observe(s));
+  }
+
   /* Cases vistos: conta uma vez por visita quando metade do case aparece na tela */
   const cases = document.querySelectorAll('article.case-row[id]');
   if (cases.length && 'IntersectionObserver' in window) {
