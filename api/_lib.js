@@ -106,24 +106,6 @@ async function sb(path, { method = 'GET', body, prefer } = {}) {
   }
 }
 
-/* Aviso de contato novo no celular (ex.: ntfy.sh). Vai só o tipo de contato e a origem, nunca nome, e-mail ou telefone.
-   Sem a variável NOTIFY_URL na Vercel, não faz nada. Espera no máximo 2,5 s para não atrasar a resposta. */
-async function notify(title, text) {
-  const url = String(process.env.NOTIFY_URL || '').trim();
-  if (!/^https:\/\/[^\s]+$/.test(url)) return;
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 2500);
-  try {
-    // Título e opções no endereço: cabeçalhos HTTP não levam acento com segurança
-    const q = `title=${encodeURIComponent(title)}&tags=bell&priority=high&click=${encodeURIComponent('https://www.iabrazil.com/adminn')}`;
-    await fetch(`${url}${url.includes('?') ? '&' : '?'}${q}`, { method: 'POST', body: text, headers: { 'Content-Type': 'text/plain; charset=utf-8' }, signal: ctrl.signal });
-  } catch (err) {
-    console.error('notify:', err && err.name);
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
 /* Limite de tentativas por visitante */
 async function tooMany(bucket, key, max, windowSec) {
   const since = new Date(Date.now() - windowSec * 1000).toISOString();
@@ -267,4 +249,4 @@ const geo = (req) => {
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-module.exports = { notify, QUALIFICACAO, isBot, uaInfo, deviceOf, hostOnly, classify, dailyVisitor, geo, cut, LIMITS, STATUS, UUID, EMAIL, clean, send, readBody, originOk, visitor, sb, tooMany, hit, session, setSession, clearSession, checkPassword, equalText, wait };
+module.exports = { QUALIFICACAO, isBot, uaInfo, deviceOf, hostOnly, classify, dailyVisitor, geo, cut, LIMITS, STATUS, UUID, EMAIL, clean, send, readBody, originOk, visitor, sb, tooMany, hit, session, setSession, clearSession, checkPassword, equalText, wait };

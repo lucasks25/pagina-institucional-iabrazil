@@ -51,9 +51,6 @@ module.exports = async (req, res) => {
       ? { email: data.email, origem: data.origem, parcial: true }
       : { ...data, parcial: false };
     await withAttr((x) => L.sb('leads', { method: 'POST', body: { ...row, ...x }, prefer: 'return=minimal' }));
-    // Aviso imediato: responder rápido é o que mais pesa para o contato virar cliente
-    const origem = [attr.canal, attr.pagina_entrada].filter(Boolean).join(' · ') || 'origem não registrada';
-    await L.notify(onlyEmail ? 'Novo interesse no site (só e-mail)' : 'Novo pedido de orçamento', `${onlyEmail ? 'Deixou só o e-mail no topo da home' : `Formulário completo: ${data.interesse || 'serviço não informado'}`}. Veio de: ${origem}. Abra o painel para ver os dados.`);
     return L.send(res, 200, { ok: true });
   } catch (err) {
     // Sem detalhes para quem chamou; o motivo fica só no log da Vercel
