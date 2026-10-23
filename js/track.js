@@ -21,7 +21,9 @@
   if (Object.keys(ads).length && !utm.utm_source) Object.assign(utm, { utm_source: 'google', utm_medium: 'cpc' });
 
   // Limpa o endereço: depois de lida, a campanha não precisa ficar visível na barra do navegador
-  if (Object.keys(utm).length || Object.keys(ads).length) {
+  // Com a tag do Google (Ads/GA4) na página, o endereço fica intacto: ela precisa ler gclid e UTM para atribuir a conversão
+  const googleTag = !!document.querySelector('script[src*="googletagmanager.com"]');
+  if (!googleTag && (Object.keys(utm).length || Object.keys(ads).length)) {
     try {
       Object.keys(utm).concat(Object.keys(ads)).forEach((k) => q.delete(k));
       const rest = q.toString();
@@ -71,14 +73,17 @@
   /* Eventos no formato do Google (dataLayer). Ficam parados até existir um GA4/Google Ads configurado;
      nunca levam nome, e-mail, telefone ou texto digitado. Clique no WhatsApp não é contato recebido. */
   const layer = (event, params) => { try { window.dataLayer.push({ event, page_path: location.pathname, ...params }); } catch {} };
-  const LAYER = { form_inicio: 'lead_form_start', envio: 'generate_lead', case_view: 'case_view' };
+  const LAYER = { form_inicio: 'lead_form_start', case_view: 'case_view' };
 
   const once = new Set(); // cada etapa do funil conta uma vez por visita
   const step = (t, label) => {
     const k = t + label;
     try { if (sessionStorage.getItem('iabr-' + k)) return; sessionStorage.setItem('iabr-' + k, '1'); } catch { if (once.has(k)) return; once.add(k); }
     send({ t, label });
-    if (LAYER[t]) layer(LAYER[t], t === 'case_view' ? { case_id: label } : { form_location: label || 'formulario' });
+    // Só o formulário completo é generate_lead. O e-mail do topo é interesse inicial (lead_interest) e vale menos.
+    if (t === 'envio' && label === 'topo') layer('lead_interest', { form_location: 'topo', lead_stage: 'interesse_inicial' });
+    else if (t === 'envio') layer('generate_lead', { form_location: label || 'formulario', lead_stage: 'lead_recebido' });
+    else if (LAYER[t]) layer(LAYER[t], t === 'case_view' ? { case_id: label } : { form_location: label || 'formulario' });
   };
   window.IABRTrack = (t, label) => step(t, label || '');
 

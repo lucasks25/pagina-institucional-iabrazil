@@ -109,7 +109,7 @@ a.btn[aria-disabled="true"] { pointer-events: none; }
 .adm-sync { display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: 13px; }
 
 /* Resumo: "Novos" em destaque, os outros números em linha */
-.adm-stats { display: grid; grid-template-columns: 1.7fr repeat(3, 1fr); margin-top: 28px; border: 1px solid var(--line); border-radius: 4px; background: var(--white); overflow: hidden; }
+.adm-stats { display: grid; grid-template-columns: 1.5fr repeat(5, 1fr); margin-top: 28px; border: 1px solid var(--line); border-radius: 4px; background: var(--white); overflow: hidden; }
 .stat { display: flex; flex-direction: column; gap: 8px; padding: 22px 24px; border-left: 1px solid var(--line); }
 .stat-label { color: var(--muted); font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .stat-n { min-height: 1em; color: var(--ink); font-size: 38px; font-weight: 300; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -125,7 +125,7 @@ a.btn[aria-disabled="true"] { pointer-events: none; }
 .stat-main :focus-visible { outline-color: var(--brand-soft); }
 
 /* Busca, filtros e exportação */
-.adm-tools { display: grid; grid-template-columns: minmax(260px, 1fr) 200px 240px auto; align-items: end; gap: 12px; margin-top: 32px; }
+.adm-tools { display: grid; grid-template-columns: minmax(240px, 1fr) 180px 220px auto auto; align-items: end; gap: 12px; margin-top: 32px; }
 .adm-tools .btn { height: 44px; }
 .adm-search-box { position: relative; display: block; }
 .adm-search-box svg { position: absolute; top: 50%; left: 12px; width: 18px; height: 18px; color: var(--muted); transform: translateY(-50%); pointer-events: none; }
@@ -270,7 +270,7 @@ tr.is-new .lead-open { font-weight: 700; }
   .adm-head { flex-direction: column; align-items: flex-start; }
   .adm-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .stat { gap: 6px; padding: 16px; border-top: 1px solid var(--line); }
-  .stat:nth-child(2) { border-left: 0; }
+  .stat:nth-child(2), .stat:nth-child(5) { border-left: 0; }
   .stat:not(.stat-main) .stat-sub { display: none; }
   .stat-n { font-size: 30px; }
   .stat-main { grid-column: 1 / -1; padding: 20px; border-top: 0; }

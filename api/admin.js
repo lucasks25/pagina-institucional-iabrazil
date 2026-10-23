@@ -83,6 +83,15 @@ async function update(req, res) {
   if ('notas' in body) patch.notas = L.clean(body.notas, 'notas') || null;
   // Qualificação registrada pelo painel depois da conversa (cargo, tamanho, faturamento, uso de IA)
   L.QUALIFICACAO.forEach((k) => { if (k in body) patch[k] = L.clean(body[k], k) || null; });
+  // Valor da proposta ou do contrato, em reais (vai junto das conversões importadas no Google Ads)
+  if ('valor' in body) {
+    if (body.valor === null || body.valor === '') patch.valor = null;
+    else {
+      const v = Number(body.valor);
+      if (!Number.isFinite(v) || v < 0 || v >= 1e9) return L.send(res, 400, { ok: false });
+      patch.valor = Math.round(v * 100) / 100;
+    }
+  }
   if (!Object.keys(patch).length) return L.send(res, 400, { ok: false });
   let rows;
   try {
@@ -143,21 +152,26 @@ async function stats(req, res) {
   }
   let leads = [];
   try {
-    leads = await L.sb(`leads?select=created_at,canal,campanha,pagina_entrada,parcial,mensagem,cargo,tamanho_empresa,faturamento,ja_ia&created_at=gte.${iso}&order=created_at.desc&limit=5000`)
-      .catch((err) => { if (err && err.status === 400) return L.sb(`leads?select=created_at,canal,campanha,pagina_entrada,parcial,mensagem&created_at=gte.${iso}&order=created_at.desc&limit=5000`); throw err; });
+    const q = (cols) => L.sb(`leads?select=created_at,status,canal,campanha,pagina_entrada,parcial,mensagem${cols}&created_at=gte.${iso}&order=created_at.desc&limit=5000`);
+    leads = await q(',cargo,tamanho_empresa,faturamento,ja_ia,valor,qualificado_em,proposta_em,fechado_em')
+      .catch((err) => { if (err && err.status === 400) return q(',cargo,tamanho_empresa,faturamento,ja_ia'); throw err; })
+      .catch((err) => { if (err && err.status === 400) return q(''); throw err; });
   } catch (err) {
     if (!(err && (err.status === 400 || err.status === 404))) throw err;
-    leads = await L.sb(`leads?select=created_at,parcial,mensagem&created_at=gte.${iso}&order=created_at.desc&limit=5000`).catch(() => L.sb(`leads?select=created_at,parcial&created_at=gte.${iso}&limit=5000`));
+    leads = await L.sb(`leads?select=created_at,status,parcial,mensagem&created_at=gte.${iso}&order=created_at.desc&limit=5000`).catch(() => L.sb(`leads?select=created_at,parcial&created_at=gte.${iso}&limit=5000`));
   }
 
   const daily = new Map(), pages = new Map(), canais = new Map(), paises = new Map(), cidades = new Map(), devs = new Map(), camps = new Map(), refs = new Map();
   const navs = new Map(), sists = new Map(), regs = new Map(), cliques = new Map(), casos = new Map(), horas = Array(24).fill(0), semana = Array(7).fill(0);
   const visitors = new Set(), leadsByCanal = new Map(), sess = new Map();
   let pageviews = 0, whats = 0, emails = 0, visits = 0;
+  // Estágios comerciais: cada um vale diferente e nenhum é somado com o outro
+  const etapa = { interesse: 0, recebidos: 0, qualificados: 0, propostas: 0, vendas: 0, perdidos: 0, valorPropostas: 0, valorVendas: 0 };
+  const QUAL = ['qualificado', 'proposta', 'fechado'];
   const brt = (t) => new Date(new Date(t).getTime() - 3 * 3600000);
   const day = (t) => brt(t).toISOString().slice(0, 10); // dia no horário de Brasília
   for (let i = 0; i < days; i += 1) daily.set(day(Date.now() - i * 86400000), { views: 0, leads: 0 });
-  const S = (id) => { if (!id) return null; if (!sess.has(id)) sess.set(id, { views: 0, dur: 0, ev: false, whats: false, inicio: false, envio: false, scroll: {} }); return sess.get(id); };
+  const S = (id) => { if (!id) return null; if (!sess.has(id)) sess.set(id, { views: 0, dur: 0, ev: false, whats: false, inicio: false, envio: false, topo: false, scroll: {} }); return sess.get(id); };
 
   views.forEach((v) => {
     const d = day(v.at); const slot = daily.get(d); const ss = S(v.sessao);
@@ -167,7 +181,7 @@ async function stats(req, res) {
     if (v.tipo === 'clique') { bump(cliques, v.clique); if (ss) ss.ev = true; return; }
     if (v.tipo === 'case_view') { bump(casos, v.clique); return; }
     if (v.tipo === 'form_inicio') { if (ss) { ss.ev = true; ss.inicio = true; } return; }
-    if (v.tipo === 'envio') { if (ss) { ss.ev = true; ss.envio = true; } return; }
+    if (v.tipo === 'envio') { if (ss) { ss.ev = true; if (v.clique === 'topo') ss.topo = true; else ss.envio = true; } return; }
     pageviews += 1; if (slot) slot.views += 1;
     if (ss) ss.views += 1;
     bump(pages, v.path);
@@ -187,9 +201,17 @@ async function stats(req, res) {
   const perfil = { tamanho: new Map(), faturamento: new Map(), jaIa: new Map(), cargo: new Map() };
   let leadCount = 0;
   leads.forEach((l) => {
-    leadCount += 1;
-    const slot = daily.get(day(l.created_at)); if (slot) slot.leads += 1;
-    bump(leadsByCanal, l.canal || 'Sem origem registrada');
+    const slot = daily.get(day(l.created_at));
+    if (l.parcial) { etapa.interesse += 1; } else {
+      leadCount += 1; etapa.recebidos += 1;
+      if (slot) slot.leads += 1;
+      bump(leadsByCanal, l.canal || 'Sem origem registrada');
+    }
+    const valor = Number(l.valor) || 0;
+    if (QUAL.includes(l.status) || l.qualificado_em) etapa.qualificados += 1;
+    if (l.status === 'proposta' || l.status === 'fechado' || l.proposta_em) { etapa.propostas += 1; etapa.valorPropostas += valor; }
+    if (l.status === 'fechado') { etapa.vendas += 1; etapa.valorVendas += valor; }
+    if (l.status === 'perdido') etapa.perdidos += 1;
     {
       bump(perfil.tamanho, l.tamanho_empresa || field(l.mensagem, 'Tamanho da empresa', 'Company size'));
       bump(perfil.faturamento, l.faturamento || field(l.mensagem, 'Faturamento mensal', 'Monthly revenue'));
@@ -216,14 +238,15 @@ async function stats(req, res) {
     { etapa: 'Visitaram o site', total: n },
     { etapa: 'Exploraram (2+ páginas ou 30s+)', total: engajou },
     { etapa: 'Começaram um contato (WhatsApp, e-mail ou formulário)', total: lista.filter((x) => x.whats || x.inicio).length },
-    { etapa: 'Enviaram e-mail ou formulário', total: lista.filter((x) => x.envio).length },
+    { etapa: 'Enviaram o formulário completo', total: lista.filter((x) => x.envio).length },
   ] : null;
 
   const canalTabela = top(canais, 12).map((c) => ({ ...c, contatos: leadsByCanal.get(c.nome) || 0 }));
   leadsByCanal.forEach((cnt, nome) => { if (!canais.has(nome)) canalTabela.push({ nome, total: 0, contatos: cnt }); });
   return L.send(res, 200, {
     ok: true, ready: true, days, truncated, extra,
-    totais: { visitas: visits, paginasVistas: pageviews, visitantes: visitors.size, contatos: leadCount, cliquesWhatsapp: whats, cliquesEmail: emails },
+    totais: { visitas: visits, paginasVistas: pageviews, visitantes: visitors.size, contatos: leadCount, interesses: etapa.interesse, cliquesWhatsapp: whats, cliquesEmail: emails },
+    etapas: etapa,
     metricas, funil,
     diario: Array.from(daily.entries()).sort((a, b) => a[0].localeCompare(b[0])).map(([dia, v]) => ({ dia, ...v })),
     canais: canalTabela, paginas: top(pages, 12), paises: top(paises, 8), cidades: top(cidades, 8), dispositivos: top(devs, 4), campanhas: top(camps, 8), origens: top(refs, 10),

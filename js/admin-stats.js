@@ -79,13 +79,14 @@
   const fmtTempo = (sec) => (sec >= 60 ? `${Math.floor(sec / 60)}min ${String(sec % 60).padStart(2, '0')}s` : `${sec}s`);
 
   // Funil: cada etapa mostra quantas pessoas chegaram e que parte da etapa anterior seguiu
-  function funil(linhas) {
-    const box = el('section', { class: 'vs-box vs-wide' }, el('h2', { text: 'Funil: da visita ao contato' }));
+  function funil(linhas, titulo = 'Funil: da visita ao contato', nota = '') {
+    const box = el('section', { class: 'vs-box vs-wide' }, el('h2', { text: titulo }));
     const max = Math.max(linhas[0].total, 1);
     box.append(el('ul', { class: 'vs-funil' }, linhas.map((l, i) => el('li', null,
       el('span', { class: 'vs-n', text: l.etapa }),
       el('span', { class: 'vs-trilho' }, el('i', { style: `width:${Math.max(2, Math.round((l.total / max) * 100))}%` })),
       el('span', { class: 'vs-v', text: `${num(l.total)} · ${pct(l.total, max)}${i ? ` (${pct(l.total, linhas[i - 1].total)} da etapa anterior)` : ''}` })))));
+    if (nota) box.append(el('p', { class: 'vs-leg', text: nota }));
     return box;
   }
 
@@ -145,8 +146,8 @@
       card('Visitas', num(t.visitas), 'pessoas que chegaram ao site'),
       card('Páginas vistas', num(t.paginasVistas), 'todas as páginas abertas'),
       card('Visitantes por dia', num(t.visitantes), 'únicos em cada dia, somados'),
-      card('Contatos', num(t.contatos), 'e-mails e formulários'),
-      card('Conversão', pct(t.contatos, t.visitas), 'contatos ÷ visitas'),
+      card('Leads recebidos', num(t.contatos), t.interesses ? `formulário completo · e ${num(t.interesses)} só com e-mail` : 'formulário completo'),
+      card('Conversão', pct(t.contatos, t.visitas), 'leads ÷ visitas'),
       card('Cliques no WhatsApp', num(t.cliquesWhatsapp), t.cliquesEmail ? `e ${num(t.cliquesEmail)} no e-mail` : '')));
     if (d.metricas) {
       const m = d.metricas;
@@ -158,6 +159,18 @@
     }
     corpo.append(el('section', { class: 'vs-box vs-wide' }, el('h2', { text: 'Páginas vistas por dia' }), grafico(d.diario), el('p', { class: 'vs-leg', text: 'Barra azul-escura com ponto: dia em que chegou algum contato.' })));
     if (d.funil) corpo.append(funil(d.funil));
+    const e = d.etapas;
+    if (e && e.recebidos) {
+      const brl = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      corpo.append(funil([
+        { etapa: 'Leads recebidos (formulário completo)', total: e.recebidos },
+        { etapa: 'Oportunidades qualificadas', total: e.qualificados },
+        { etapa: 'Propostas enviadas', total: e.propostas },
+        { etapa: 'Vendas (contratos fechados)', total: e.vendas },
+      ], 'Funil comercial: do lead à venda',
+      `Só com e-mail no topo (interesse inicial, não conta como lead): ${num(e.interesse)}. Perdidos: ${num(e.perdidos)}.`
+        + (e.valorPropostas ? ` Em propostas: ${brl(e.valorPropostas)}.` : '') + (e.valorVendas ? ` Vendido: ${brl(e.valorVendas)}.` : '')));
+    }
     if (d.extra) corpo.append(el('div', { class: 'vs-grid vs-grid-top' },
       colunas('Horário de pico (horário de Brasília)', d.horas, (i) => `${i}h`),
       barras('Dia da semana', d.semana, t.paginasVistas)));

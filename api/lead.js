@@ -29,7 +29,8 @@ module.exports = async (req, res) => {
     campanha: L.cut(ft.utm_campaign, 80) || null,
     pagina_entrada: String(ft.landing || '').startsWith('/') ? L.cut(String(ft.landing).split('?')[0], 200) : null,
     referencia: c.referencia || null,
-    clique_id: L.cut(ft.gclid || ft.gbraid || ft.wbraid, 200) || null, // só quando a pessoa chegou por um anúncio
+    // Só quando a pessoa chegou por um anúncio. gbraid/wbraid (iPhone) levam o tipo na frente, porque o Google importa cada um num campo
+    clique_id: L.cut(ft.gclid || (ft.gbraid && `gbraid:${ft.gbraid}`) || (ft.wbraid && `wbraid:${ft.wbraid}`), 200) || null,
   };
   const withAttr = async (fn) => {
     // Tenta com tudo; se o banco ainda não tem a coluna do anúncio, sem ela; se não tem nenhuma, sem atribuição

@@ -4,7 +4,7 @@
 
   const L = window.Leads;
   const $ = (id) => document.getElementById(id);
-  const STATUS = { novo: 'Novo', em_contato: 'Em contato', proposta: 'Proposta enviada', fechado: 'Fechado', perdido: 'Perdido' };
+  const STATUS = { novo: 'Novo', em_contato: 'Em contato', qualificado: 'Qualificado', proposta: 'Proposta enviada', fechado: 'Fechado (venda)', perdido: 'Perdido' };
   const LIST_PARTS = ['resumo', 'ferramentas', 'lista-topo', 'tabela'];
 
   let leads = [];       // contatos carregados
@@ -172,6 +172,8 @@
     $('n-total').textContent = String(leads.length);
     $('n-semana').textContent = count((l) => (toDate(l.created_at) || 0) >= monday);
     $('n-proposta').textContent = count((l) => l.status === 'proposta');
+    $('n-qualificados').textContent = count((l) => ['qualificado', 'proposta', 'fechado'].includes(l.status));
+    $('n-vendas').textContent = count((l) => l.status === 'fechado');
     $('ver-novos').hidden = $('n-novos').textContent === '0' || $('filtro-status').value === 'novo';
     $('resumo').hidden = false;
   }
@@ -311,10 +313,13 @@
     return m ? m[1].trim().slice(0, 80) : '';
   };
   const qualifValue = (l, k, label) => l[k] || fromMessage(l.mensagem, label);
-  const qualifDirty = () => !!current && QUALIF.some(([k]) => $(`q-${k}`).value.trim() !== (current[k] || '').trim());
+  const fMoney = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const qualifDirty = () => !!current && (QUALIF.some(([k]) => $(`q-${k}`).value.trim() !== (current[k] || '').trim())
+    || $('q-valor').value.trim() !== (current.valor == null ? '' : fMoney.format(current.valor)));
 
   function fillQualif(l) {
     QUALIF.forEach(([k, label]) => { $(`q-${k}`).value = qualifValue(l, k, label); });
+    $('q-valor').value = l.valor == null ? '' : fMoney.format(l.valor);
     // Valor tirado da mensagem ainda não está salvo nas colunas: o botão já fica liberado
     $('q-salvar').setAttribute('aria-disabled', String(!qualifDirty()));
     $('q-info').textContent = qualifDirty() ? 'Preenchido a partir da mensagem. Salve para registrar.' : '';
@@ -324,10 +329,12 @@
     const here = () => current === l;
     const patch = {};
     QUALIF.forEach(([k]) => { patch[k] = $(`q-${k}`).value; });
+    patch.valor = $('q-valor').value;
     if (here()) $('q-info').textContent = 'Salvando...';
     try {
       Object.assign(l, await L.update(l.id, patch));
       if (!here()) return toast('Qualificação salva.');
+      $('q-valor').value = l.valor == null ? '' : fMoney.format(l.valor);
       $('q-salvar').setAttribute('aria-disabled', String(!qualifDirty()));
       $('q-info').textContent = `Qualificação salva às ${fTime.format(new Date())}.`;
     } catch (err) {
@@ -408,22 +415,60 @@
       return `"${s.replace(/"/g, '""')}"`;
     };
     const head = ['Recebido em', 'Status', 'Nome', 'Sobrenome', 'Empresa', 'E-mail', 'WhatsApp', 'Interesse', 'Mensagem', 'Notas', 'Origem',
-      'Cargo', 'Tamanho da empresa', 'Faturamento mensal', 'Já usa IA', 'De onde veio', 'Campanha', 'Página de entrada', 'Site de origem', 'Veio de anúncio'];
+      'Cargo', 'Tamanho da empresa', 'Faturamento mensal', 'Já usa IA', 'Valor (R$)', 'Qualificado em', 'Proposta em', 'Fechado em', 'De onde veio', 'Campanha', 'Página de entrada', 'Site de origem', 'Veio de anúncio'];
     const body = rows.map((l) => {
       const d = toDate(l.created_at);
       return [d ? `${fDate.format(d)} ${fTime.format(d)}` : '', STATUS[l.status], l.nome, l.sobrenome, l.empresa, l.email, l.whatsapp, l.interesse, l.mensagem, l.notas, l.origem,
-        ...QUALIF.map(([k, label]) => qualifValue(l, k, label)), l.canal, l.campanha, l.pagina_entrada, l.referencia, l.clique_id ? 'Sim' : ''];
+        ...QUALIF.map(([k, label]) => qualifValue(l, k, label)), l.valor == null ? '' : fMoney.format(l.valor), stageAt(l.qualificado_em), stageAt(l.proposta_em), stageAt(l.fechado_em), l.canal, l.campanha, l.pagina_entrada, l.referencia, l.clique_id ? 'Sim' : ''];
     });
     // BOM + ponto e vírgula: o Excel em português abre com acentos e colunas certos
-    const csv = `﻿${[head, ...body].map((r) => r.map(cell).join(';')).join('\r\n')}`;
-    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-    const stamp = new Date().toLocaleDateString('sv-SE'); // AAAA-MM-DD no fuso local
-    const a = el('a', { href: url, download: `contatos-ia-brazil-${stamp}.csv` });
+    download(`﻿${[head, ...body].map((r) => r.map(cell).join(';')).join('\r\n')}`, 'contatos-ia-brazil');
+    toast(`${plural(rows.length)} ${rows.length === 1 ? 'exportado' : 'exportados'} para CSV.`);
+  }
+
+  const stageAt = (iso) => { const d = toDate(iso); return d ? `${fDate.format(d)} ${fTime.format(d)}` : ''; };
+
+  function download(text, name) {
+    const url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+    const day = new Date().toLocaleDateString('sv-SE'); // AAAA-MM-DD no fuso local
+    const a = el('a', { href: url, download: `${name}-${day}.csv` });
     document.body.append(a);
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
-    toast(`${plural(rows.length)} ${rows.length === 1 ? 'exportado' : 'exportados'} para CSV.`);
+  }
+
+  /* Conversões off-line para o Google Ads (Metas > Conversões > Enviar). Cada etapa é uma conversão com nome próprio,
+     para o Ads não tratar um e-mail deixado no topo como venda. Os nomes precisam ser iguais aos criados no Google Ads. */
+  const ADS = [
+    ['Lead recebido', (l) => (!l.parcial ? l.created_at : '')],
+    ['Lead qualificado', (l) => l.qualificado_em || (['qualificado', 'proposta', 'fechado'].includes(l.status) ? l.updated_at : '')],
+    ['Proposta enviada', (l) => l.proposta_em || (['proposta', 'fechado'].includes(l.status) ? l.updated_at : ''), true],
+    ['Venda', (l) => l.fechado_em || (l.status === 'fechado' ? l.updated_at : ''), true],
+  ];
+
+  function exportAds() {
+    const sp = (iso) => { // horário de Brasília, no formato aceito pelo Google Ads
+      const d = new Date(new Date(iso).getTime() - 3 * 3600000);
+      return d.toISOString().slice(0, 19).replace('T', ' ');
+    };
+    const comAnuncio = leads.filter((l) => l.clique_id);
+    const outros = comAnuncio.filter((l) => /^(gbraid|wbraid):/.test(l.clique_id)).length;
+    const lines = [];
+    comAnuncio.filter((l) => !/^(gbraid|wbraid):/.test(l.clique_id)).forEach((l) => {
+      ADS.forEach(([nome, quando, comValor]) => {
+        const t = quando(l);
+        if (!t || !toDate(t)) return;
+        const v = comValor && l.valor != null ? String(l.valor) : '';
+        lines.push([l.clique_id, nome, sp(t), v, v ? 'BRL' : ''].join(','));
+      });
+    });
+    if (!lines.length) {
+      toast(comAnuncio.length ? 'Os contatos vindos de anúncio ainda não têm etapas para enviar.' : 'Nenhum contato veio de anúncio do Google ainda.');
+      return;
+    }
+    download(['Parameters:TimeZone=-0300', 'Google Click ID,Conversion Name,Conversion Time,Conversion Value,Conversion Currency', ...lines].join('\r\n'), 'conversoes-google-ads');
+    toast(`${lines.length} ${lines.length === 1 ? 'conversão exportada' : 'conversões exportadas'}.${outros ? ` ${outros} contato(s) de iPhone (gbraid/wbraid) ficam de fora: o Google só aceita esses pela API.` : ''}`);
   }
 
   /* ---------- Eventos ---------- */
@@ -465,6 +510,7 @@
     $('filtro-interesse').addEventListener('change', render);
     $('limpar').addEventListener('click', clearFilters);
     $('exportar').addEventListener('click', exportCsv);
+    $('exportar-ads').addEventListener('click', exportAds);
     $('ver-novos').addEventListener('click', () => {
       $('filtro-status').value = 'novo';
       render();

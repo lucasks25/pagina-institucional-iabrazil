@@ -77,7 +77,9 @@
           </li>
           <li class="stat"><span class="stat-label">Total</span><strong class="stat-n" id="n-total"></strong><span class="stat-sub">desde o início</span></li>
           <li class="stat"><span class="stat-label">Esta semana</span><strong class="stat-n" id="n-semana"></strong><span class="stat-sub">desde segunda-feira</span></li>
+          <li class="stat"><span class="stat-label">Qualificados</span><strong class="stat-n" id="n-qualificados"></strong><span class="stat-sub">oportunidades confirmadas</span></li>
           <li class="stat"><span class="stat-label">Em negociação</span><strong class="stat-n" id="n-proposta"></strong><span class="stat-sub">com proposta enviada</span></li>
+          <li class="stat"><span class="stat-label">Vendas</span><strong class="stat-n" id="n-vendas"></strong><span class="stat-sub">contratos fechados</span></li>
         </ul>
 
         <div class="adm-tools" id="ferramentas" role="search" hidden>
@@ -92,13 +94,15 @@
               <option value="">Todos</option>
               <option value="novo">Novo</option>
               <option value="em_contato">Em contato</option>
+              <option value="qualificado">Qualificado</option>
               <option value="proposta">Proposta enviada</option>
-              <option value="fechado">Fechado</option>
+              <option value="fechado">Fechado (venda)</option>
               <option value="perdido">Perdido</option>
             </select>
           </label>
           <label class="adm-field">Interesse<select id="filtro-interesse"><option value="">Todos</option></select></label>
           <button class="btn btn-line" type="button" id="exportar" title="Exporta os contatos da lista abaixo, com os filtros aplicados">Exportar CSV</button>
+          <button class="btn btn-line" type="button" id="exportar-ads" title="Arquivo no formato de importação de conversões off-line do Google Ads: só contatos que vieram de anúncio e avançaram de etapa">Conversões (Google Ads)</button>
         </div>
 
         <div class="adm-list-head" id="lista-topo" hidden>
@@ -176,6 +180,7 @@
           <label class="adm-field">Tamanho da empresa<input type="text" id="q-tamanho_empresa" maxlength="80" list="q-tamanho-op" autocomplete="off"></label>
           <label class="adm-field">Faturamento mensal<input type="text" id="q-faturamento" maxlength="80" list="q-fat-op" autocomplete="off"></label>
           <label class="adm-field">Já usa IA ou automação<input type="text" id="q-ja_ia" maxlength="80" list="q-ia-op" autocomplete="off"></label>
+          <label class="adm-field">Valor da proposta ou contrato (R$)<input type="text" id="q-valor" inputmode="decimal" maxlength="16" placeholder="12.500,00" autocomplete="off"></label>
         </div>
         <datalist id="q-cargo-op"><option value="Sócio(a) ou fundador(a)"><option value="Diretor(a)"><option value="Gerente"><option value="Coordenador(a)"><option value="Analista"></datalist>
         <datalist id="q-tamanho-op"><option value="1 a 10 pessoas"><option value="11 a 50 pessoas"><option value="51 a 200 pessoas"><option value="201 a 500 pessoas"><option value="Mais de 500 pessoas"></datalist>

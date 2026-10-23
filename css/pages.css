@@ -80,6 +80,8 @@
 /* ---------- Contato ---------- */
 
 .contact { padding: calc(var(--header-h) + var(--sp-11)) 0 var(--section-y); background: transparent; }
+.page-proof { max-width: var(--measure); margin-top: var(--sp-4); color: var(--muted); font-size: 14.5px; }
+.page-proof a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 .contact-grid { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: clamp(24px, 3vw, 40px); align-items: start; }
 
 .contact-aside { position: sticky; top: calc(var(--header-h) + 24px); padding-top: var(--sp-5); }

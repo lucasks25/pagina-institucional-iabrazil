@@ -9,7 +9,7 @@
   const FORM_FIELDS = ['nome', 'sobrenome', 'empresa', 'email', 'whatsapp', 'interesse', 'mensagem', 'origem'];
   const REQUIRED = ['nome', 'empresa', 'email', 'whatsapp', 'interesse'];
   const MULTILINE = ['mensagem', 'notas'];
-  const STATUS = ['novo', 'em_contato', 'proposta', 'fechado', 'perdido'];
+  const STATUS = ['novo', 'em_contato', 'qualificado', 'proposta', 'fechado', 'perdido'];
   const QUALIFICACAO = ['cargo', 'tamanho_empresa', 'faturamento', 'ja_ia'];
   const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   const EXPIRED = 'Sua sessão expirou. Entre de novo para continuar.';
@@ -40,7 +40,8 @@
       status: STATUS.includes(x.status) ? x.status : 'novo',
       parcial: !!x.parcial,
     };
-    FORM_FIELDS.concat('notas', 'canal', 'campanha', 'pagina_entrada', 'referencia', 'clique_id', ...QUALIFICACAO).forEach((f) => { out[f] = x[f] == null ? '' : String(x[f]); });
+    FORM_FIELDS.concat('notas', 'canal', 'campanha', 'pagina_entrada', 'referencia', 'clique_id', 'qualificado_em', 'proposta_em', 'fechado_em', ...QUALIFICACAO).forEach((f) => { out[f] = x[f] == null ? '' : String(x[f]); });
+    out.valor = x.valor == null || x.valor === '' ? null : Number(x.valor);
     return out;
   };
 
@@ -134,7 +135,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tipo: 'email', ft: firstTouch(), email: e, origem: `Topo do site (só e-mail) · ${clean(origem || location.pathname, 'origem')}`.slice(0, LIMITS.origem) }),
       });
-      if (res.ok) { try { window.IABRTrack && window.IABRTrack('envio', 'topo'); } catch {} }
+      if (res.ok) { try { window.IABRTrack && window.IABRTrack('envio', 'topo'); } catch {} } // interesse inicial, não é lead
       return res.ok;
     } catch {
       return false;
@@ -177,6 +178,13 @@
     }
     if (patch && 'notas' in patch) body.notas = clean(patch.notas, 'notas') || null;
     QUALIFICACAO.forEach((k) => { if (patch && k in patch) body[k] = String(patch[k] || '').replace(/\s+/g, ' ').trim().slice(0, 80) || null; });
+    if (patch && 'valor' in patch) {
+      // Aceita 12.500,00 ou 12500.00
+      const raw = String(patch.valor ?? '').replace(/[R$\s]/g, '');
+      const v = raw ? Number(/,/.test(raw) ? raw.replace(/\./g, '').replace(',', '.') : raw) : null;
+      if (v !== null && (!Number.isFinite(v) || v < 0 || v >= 1e9)) throw new Error('Valor inválido. Use, por exemplo, 12.500,00.');
+      body.valor = v;
+    }
     if (!Object.keys(body).length) throw new Error('Nada para salvar.');
     const data = await admin('update', { method: 'PATCH', id: key, body });
     return normalize(data.lead);

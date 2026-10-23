@@ -219,7 +219,7 @@ a:hover .ph img, .offer:hover .ph img { transform: scale(1.04); filter: saturate
   border-radius: 32px;
   background:
     linear-gradient(180deg, rgba(var(--bg-rgb), .35), rgba(var(--bg-rgb), .75)),
-    url(../assets/img/fundo-1.jpg) center / cover;
+    url(../assets/img/fundo-1.webp) center / cover;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 60px 120px -50px rgba(var(--accent-rgb), .6);
   color: var(--ink);
   text-align: center;
