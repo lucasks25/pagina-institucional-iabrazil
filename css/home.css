@@ -258,7 +258,7 @@ html[lang="pt-BR"] .a-hero h1 { font-size: clamp(40px, 6.1vw, 88px); }
 /* Composição centralizada e equilibrada na abertura. */
 html[lang="pt-BR"] .a-hero-copy { text-align: left; }
 html[lang="pt-BR"] .a-hero h1 { max-width: none; margin-inline: 0; text-wrap: wrap; }
-html[lang="pt-BR"] .a-hero-foot { max-width: 1060px; margin-inline: auto; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; text-align: left; }
+html[lang="pt-BR"] .a-hero-foot { max-width: none; margin-inline: 0; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; text-align: left; }
 html[lang="pt-BR"] .a-hero-act { justify-self: center; text-align: center; }
 html[lang="pt-BR"] .hero-alt { justify-content: center; margin-left: 0; }
 @media (max-width: 760px) {
