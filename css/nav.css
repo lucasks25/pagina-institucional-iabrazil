@@ -163,3 +163,9 @@
 .logo-image { display: block; width: 220px; height: 64px; object-fit: cover; object-position: 50% 52%; border-radius: 8px; }
 .site-header.is-scrolled .logo-image { width: 170px; height: 48px; }
 @media (max-width: 600px) { .logo-image { width: 170px; height: 54px; } }
+
+/* Categorias em texto, sem ícones nem painel de imagem. */
+.nav-sub.mega { grid-template-columns: 1fr; width: min(380px, calc(100vw - 40px)); }
+.mega-item { display: block; padding: 14px 16px; }
+@media (max-width: 960px) { .nav-sub.mega { width: 100%; } }
+.logo-image { object-fit: contain; object-position: center; border-radius: 0; }
