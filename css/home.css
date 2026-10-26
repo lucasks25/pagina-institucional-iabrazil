@@ -243,3 +243,17 @@ html[lang="pt-BR"] .a-hero h1 { font-size: clamp(40px, 6.1vw, 88px); }
 .hero-alt a:not(.arrow-link) { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
 .hero-alt a:not(.arrow-link):hover { color: var(--brand); }
 @media (max-width: 600px) { .hero-alt { margin-left: 0; } }
+
+/* Contato direto com movimento fluido contido no botão. */
+.hero-project-cta { position: relative; isolation: isolate; overflow: hidden; height: 56px; padding-inline: 28px; }
+.hero-project-cta > * { position: relative; z-index: 1; }
+.hero-project-cta::before, .hero-project-cta::after { content: ""; position: absolute; pointer-events: none; opacity: 0; transition: opacity .35s ease; }
+.hero-project-cta::before { z-index: 0; inset: -65% -20%; background: radial-gradient(ellipse at 25% 40%, rgba(77, 124, 254, .55), transparent 55%), radial-gradient(ellipse at 75% 65%, rgba(70, 170, 205, .4), transparent 55%); filter: blur(8px); }
+.hero-project-cta::after { z-index: 0; inset: -60% -20%; border: 1px solid rgba(77, 124, 254, .3); border-radius: 46% 54% 42% 58%; }
+.hero-project-cta:is(:hover, :focus-visible)::before { opacity: 1; animation: hero-liquid-drift 3s ease-in-out infinite alternate; }
+.hero-project-cta:is(:hover, :focus-visible)::after { opacity: .8; animation: hero-liquid-wave 5s linear infinite; }
+.hero-project-cta:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; }
+@keyframes hero-liquid-drift { from { transform: translate(-6%, -4%) rotate(-12deg) scale(.95); } to { transform: translate(6%, 4%) rotate(16deg) scale(1.12); } }
+@keyframes hero-liquid-wave { from { transform: translateX(-8%) rotate(0); } to { transform: translateX(8%) rotate(360deg); } }
+@media (max-width: 600px) { .hero-project-cta { width: 100%; height: auto; min-height: 56px; padding: 16px 20px; white-space: normal; text-align: center; } }
+@media (prefers-reduced-motion: reduce) { .hero-project-cta::before, .hero-project-cta::after { animation: none !important; transition: none; } }
