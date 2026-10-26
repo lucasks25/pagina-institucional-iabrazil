@@ -247,8 +247,8 @@ html[lang="pt-BR"] .a-hero h1 { font-size: clamp(40px, 6.1vw, 88px); }
 /* O botão revela a mesma atmosfera azul do fundo da página. */
 .hero-project-cta { position: relative; isolation: isolate; overflow: hidden; height: 56px; padding-inline: 28px; transition: color .4s ease, box-shadow .6s ease; }
 .hero-project-cta > * { position: relative; z-index: 1; }
-.hero-project-cta::before { content: ""; position: absolute; z-index: 0; inset: -90% -18%; pointer-events: none; background: linear-gradient(90deg, rgba(4, 20, 36, .3), rgba(5, 27, 45, .1)), url(../assets/img/fundo-1.webp) center / cover; opacity: 1; clip-path: ellipse(0% 160% at 0% 70%); transform: translateX(-5%) scale(1.08); transition: clip-path .8s cubic-bezier(.4, 0, .2, 1); }
-.hero-project-cta:is(:hover, :focus-visible) { color: #fff; transition-delay: .5s, 0s; box-shadow: 0 0 24px rgba(49, 139, 208, .18), inset 0 0 0 1px rgba(139, 201, 243, .25); }
+.hero-project-cta::before { content: ""; position: absolute; z-index: 0; inset: -90% -18%; pointer-events: none; background: linear-gradient(100deg, rgba(184, 224, 255, .78), rgba(130, 198, 244, .68)), url(../assets/img/fundo-1.webp) center / cover; opacity: 1; clip-path: ellipse(0% 160% at 0% 70%); transform: translateX(-5%) scale(1.08); transition: clip-path .8s cubic-bezier(.4, 0, .2, 1); }
+.hero-project-cta:is(:hover, :focus-visible) { color: #071522; transition-delay: 0s; box-shadow: 0 0 24px rgba(49, 139, 208, .18), inset 0 0 0 1px rgba(139, 201, 243, .25); }
 .hero-project-cta:is(:hover, :focus-visible)::before { clip-path: ellipse(150% 160% at 0% 70%); transition-duration: 1.9s; animation: hero-atmosphere 9s ease-in-out infinite alternate; }
 .hero-project-cta:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; }
 @keyframes hero-atmosphere { from { transform: translate(-5%, -3%) scale(1.08); } to { transform: translate(5%, 3%) scale(1.18); } }
