@@ -158,3 +158,8 @@
 @media (prefers-reduced-motion: reduce) {
   .site-header, .header-shell, .nav-glow, .nav-sub, .nav > * { transition: none !important; }
 }
+
+/* Logo oficial: enquadramento horizontal da imagem enviada. */
+.logo-image { display: block; width: 220px; height: 64px; object-fit: cover; object-position: 50% 52%; border-radius: 8px; }
+.site-header.is-scrolled .logo-image { width: 170px; height: 48px; }
+@media (max-width: 600px) { .logo-image { width: 170px; height: 54px; } }
