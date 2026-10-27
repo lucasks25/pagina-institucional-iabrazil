@@ -175,8 +175,8 @@
 .site-header.is-scrolled .logo-image { width: 210px; height: 50px; }
 @media (max-width: 600px) { .site-header .logo-image, .site-header.is-scrolled .logo-image { width: min(180px, 42vw); height: 54px; } }
 
-/* Marca somente tipográfica, com IA acima de BRAZIL. */
-.logo-image { width: 120px; height: 66px; object-position: left center; }
-.site-header .logo-image { width: 104px; height: 56px; }
-.site-header.is-scrolled .logo-image { width: 88px; height: 48px; }
-@media (max-width: 600px) { .site-header .logo-image, .site-header.is-scrolled .logo-image { width: 96px; height: 52px; } }
+/* Marca tipográfica em uma única linha. */
+.logo-image { width: 184px; height: 40px; object-position: left center; }
+.site-header .logo-image { width: 202px; height: 42px; }
+.site-header.is-scrolled .logo-image { width: 184px; height: 38px; }
+@media (max-width: 600px) { .site-header .logo-image, .site-header.is-scrolled .logo-image { width: min(158px, 38vw); height: 36px; } }
