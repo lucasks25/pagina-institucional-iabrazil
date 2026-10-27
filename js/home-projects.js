@@ -3,7 +3,9 @@
   'use strict';
   document.querySelectorAll('[data-project-carousel]').forEach((region) => {
     const track = region.querySelector('.project-track');
+    if (!track) return;
     const slides = Array.from(track.querySelectorAll('.project-slide'));
+    if (!slides.length) return;
     const prev = region.querySelector('[data-project-prev]');
     const next = region.querySelector('[data-project-next]');
     const position = region.querySelector('[data-project-position]');
@@ -11,10 +13,10 @@
     const update = () => {
       const bounds = track.getBoundingClientRect();
       const visible = slides.map((slide, index) => ({ index, box: slide.getBoundingClientRect() }))
-        .filter(({ box }) => box.right > bounds.left + 12 && box.left < bounds.right - 12);
+        .filter(({ box }) => box.left >= bounds.left - 12 && box.right <= bounds.right + 12);
       prev.disabled = track.scrollLeft <= 2;
       next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
-      if (visible.length) position.textContent = `${visible[0].index + 1}–${visible[visible.length - 1].index + 1} / ${slides.length}`;
+      if (visible.length) position.textContent = `${visible[0].index + 1} / ${slides.length}`;
     };
     const move = (direction) => {
       const step = slides[0].getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap);

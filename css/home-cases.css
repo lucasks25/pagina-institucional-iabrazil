@@ -1,0 +1,57 @@
+/* Cases: mesmos tokens, superfícies e tipografia do restante da home. */
+.case-showcase { position: relative; overflow: hidden; }
+.case-section-anchor { position: absolute; top: 0; scroll-margin-top: calc(var(--header-h) + var(--sp-6)); }
+.case-showcase .project-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 2 * var(--grid-gap)) / 3.1); gap: var(--grid-gap); margin: -8px -2px; padding: 8px 2px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 2px; scrollbar-width: none; list-style: none; }
+.case-showcase .project-track::-webkit-scrollbar { display: none; }
+.case-showcase .project-track:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: var(--radius-lg); }
+.case-showcase .project-slide { min-width: 0; scroll-snap-align: start; }
+.case-card { display: flex; flex-direction: column; height: 100%; overflow: hidden; border: 1px solid var(--line-dark); border-radius: var(--radius-lg); background: rgba(var(--bg-rgb), .66); transition: border-color .45s, background .45s, transform .45s cubic-bezier(.2,.7,.2,1); }
+.case-card:hover, .case-card:focus-within { border-color: rgba(var(--brand-rgb),.4); background: rgba(var(--navy-rgb),.82); }
+.case-art { position: relative; display: flex; flex-direction: column; justify-content: flex-end; aspect-ratio: 1.55; min-height: 180px; padding: var(--card-pad); overflow: hidden; isolation: isolate; background: var(--navy); border-bottom: 1px solid var(--line-dark); }
+.case-art::before { content: ""; position: absolute; z-index: -2; inset: -12%; background: url('../assets/img/fundo-1.webp') center / cover; opacity: .6; }
+.case-art::after { content: ""; position: absolute; z-index: -1; inset: 0; background: linear-gradient(180deg,rgba(var(--navy-rgb),.15),rgba(var(--navy-rgb),.1) 30%,rgba(var(--navy-rgb),.9)); }
+.project-slide:nth-child(2n) .case-art::before { background-position: 75% 25%; }
+.project-slide:nth-child(3n) .case-art::before { background-position: 25% 75%; }
+.case-art-index { position: absolute; top: var(--card-pad); right: var(--card-pad); color: var(--on-dark-muted); font: 400 11px/1 var(--font-mono); letter-spacing: .06em; }
+.case-art-name { color: var(--ink); font-size: clamp(26px,2.5vw,36px); font-weight: 500; letter-spacing: -.04em; line-height: 1.1; }
+.case-art-caption { margin-top: var(--sp-3); color: var(--on-dark-muted); font: 400 10px/1.5 var(--font-mono); letter-spacing: .07em; text-transform: uppercase; }
+/* Trocar o bloco .case-art por <img class="case-art"> mantém o layout. */
+img.case-art { width: 100%; object-fit: cover; padding: 0; }
+.case-card-body { display: flex; flex-direction: column; flex: 1; padding: var(--card-pad); }
+.case-card h3 { color: var(--ink); font-size: clamp(22px,2vw,28px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.case-card-body > p { margin-top: var(--sp-4); margin-bottom: var(--sp-6); color: var(--text); font-size: var(--fs-sm); line-height: 1.65; }
+.case-card-link { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-top: auto; padding-top: var(--sp-4); border-top: 1px solid var(--line-dark); color: var(--brand); font-size: var(--fs-xs); }
+.case-card-link svg, .case-showcase-arrow svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; transition: transform .35s; }
+.case-card-link:hover svg { transform: translateX(4px); }
+.case-card-link:focus-visible { outline: 2px solid var(--brand); outline-offset: 5px; }
+.case-showcase-footer { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-5); margin-top: var(--sp-6); }
+.case-showcase-footer > a { font-size: var(--fs-sm); }
+.case-showcase-controls { display: flex; align-items: center; gap: var(--sp-3); }
+.case-showcase-position { margin-right: var(--sp-3); color: var(--muted); font: 400 11px/1 var(--font-mono); font-variant-numeric: tabular-nums; }
+.case-showcase-arrow { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--hairline); border-radius: var(--radius-pill); color: var(--ink); background: rgba(255,255,255,.03); cursor: pointer; transition: background .25s,border-color .25s,opacity .25s; }
+.case-showcase-arrow[data-project-prev] svg { transform: rotate(180deg); }
+.case-showcase-arrow:hover:not(:disabled) { background: var(--blue-50); border-color: var(--brand); }
+.case-showcase-arrow:disabled { opacity: .3; cursor: default; }
+.case-showcase-arrow:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; }
+@media (max-width: 1000px) { .case-showcase .project-track { grid-auto-columns: calc((100% - var(--grid-gap)) / 2.1); } }
+@media (max-width: 600px) { .case-showcase .project-track { grid-auto-columns: 88%; gap: var(--sp-4); } .case-art { min-height: 170px; } .case-art-name { font-size: 30px; } .case-showcase-controls { gap: var(--sp-2); } .case-showcase-position { margin-right: 0; font-size: 10px; } .case-showcase-arrow { width: 38px; height: 38px; } .case-showcase-footer { gap: var(--sp-3); } .case-showcase-footer > a { font-size: var(--fs-xs); } }
+
+/* Um projeto por vez: prévia do sistema à esquerda e conteúdo à direita. */
+.case-showcase .project-track { grid-auto-columns: 100%; }
+.case-card { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); min-height: 360px; }
+.case-art { min-height: 360px; height: 100%; aspect-ratio: auto; border-bottom: 0; border-right: 1px solid var(--line-dark); padding: var(--sp-7); }
+.case-art-name { font-size: clamp(32px, 3.5vw, 48px); }
+.case-art-caption { font-size: 11px; }
+.case-card-body { justify-content: center; padding: clamp(28px, 4vw, 52px); }
+.case-card-body .label { margin-bottom: var(--sp-4); color: var(--brand); font-size: 11px; }
+.case-card h3 { font-size: clamp(26px, 2.8vw, 38px); line-height: 1.12; }
+.case-card-body > p { margin-top: var(--sp-5); margin-bottom: var(--sp-6); font-size: var(--fs-body); }
+.case-card-link { margin-top: auto; }
+@media (max-width: 700px) {
+ .case-card { grid-template-columns: 1fr; min-height: 0; }
+ .case-art { min-height: 0; height: auto; aspect-ratio: 16 / 9; border-right: 0; border-bottom: 1px solid var(--line-dark); padding: var(--sp-5); }
+ .case-art-name { font-size: 32px; }
+ .case-card-body { padding: var(--sp-5); }
+ .case-card h3 { font-size: 26px; }
+ .case-card-body > p { font-size: var(--fs-sm); }
+}
