@@ -271,3 +271,28 @@ html:has(.subnav) { scroll-padding-top: calc(var(--header-h) + 76px); }
 .answer-top { max-width: 860px; margin-bottom: var(--head-gap); }
 .see-also { margin-top: var(--sp-3); }
 .see-also a + a { margin-left: 2px; }
+
+/* Sobre: apresentação curta, sem seções institucionais repetidas. */
+.about-brief .page-hero { padding-bottom: 56px; }
+.about-brief .page-hero .label { margin-top: 36px; }
+.about-brief .page-hero h1 { max-width: 22ch; }
+.about-person { padding-block: 24px 80px; }
+.about-person-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.3fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+.about-person figure { max-width: 350px; }
+.about-person img { width: 100%; height: auto; aspect-ratio: 4/4.3; object-fit: cover; object-position: center 25%; border-radius: 24px; }
+.about-person h2 { margin-top: 14px; font-size: clamp(32px, 4vw, 46px); font-weight: 500; letter-spacing: -.04em; }
+.about-person p:not(.label) { max-width: 54ch; color: var(--text); line-height: 1.7; margin-top: 18px; }
+.about-person p.about-role { margin-top: 8px; color: var(--brand-soft); }
+.about-commitments { display: grid; gap: 12px; margin-block: 24px; color: var(--text); font-size: 15px; line-height: 1.6; }
+.about-commitments li { padding-left: 18px; position: relative; }
+.about-commitments li::before { content: ""; position: absolute; left: 0; top: .65em; width: 5px; height: 5px; border-radius: 50%; background: var(--brand); }
+.about-next { padding-block: 64px 96px; }
+.about-next > div { display: flex; align-items: center; justify-content: space-between; gap: 36px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,.15); }
+.about-next h2 { max-width: 24ch; font-size: clamp(26px, 3vw, 36px); font-weight: 500; letter-spacing: -.035em; line-height: 1.2; }
+.about-next > div > div { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
+@media (max-width: 760px) { .about-person-grid { grid-template-columns: 1fr; } .about-person figure { max-width: 220px; } .about-next > div { align-items: start; flex-direction: column; } }
+.about-brief .page-hero > .container { display: block; }
+.about-brief .page-hero > .container::after { display: none; }
+.about-brief .page-hero { padding-top: calc(var(--header-h) + 64px); }
+.about-brief .page-hero h1 { margin-top: 20px; }
+.about-brief .page-hero .page-lead { max-width: 60ch; margin-top: 24px; }

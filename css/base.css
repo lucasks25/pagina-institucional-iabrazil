@@ -10,8 +10,8 @@
 
 :root {
   /* Cores — tema escuro: fundo quase preto, texto claro, azul de destaque */
-  --bg: #08090a;
-  --bg-rgb: 8, 9, 10;
+  --bg: #0d1014;
+  --bg-rgb: 13, 16, 20;
   --surface: #0f1011;            /* cartões, campos e painéis */
   --gray-50: #161718;            /* superfície um degrau acima */
   --panel: #161718;
@@ -198,7 +198,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round
 .fundo span:nth-child(3) { background-image: url(../assets/img/fundo-4.webp); animation-delay: -16s, -13s; }
 .fundo span:nth-child(4) { background-image: url(../assets/img/fundo-2.webp); animation-delay: -24s, -19s; }
 /* Véu escuro por cima, para o texto continuar legível */
-.fundo::after { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 85% at 70% 25%, rgba(var(--bg-rgb), .05), rgba(var(--bg-rgb), .8) 72%), linear-gradient(180deg, rgba(var(--bg-rgb), .1), rgba(var(--bg-rgb), .5)); }
+.fundo::after { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 85% at 70% 25%, rgba(var(--bg-rgb), .05), rgba(var(--bg-rgb), .75) 72%), linear-gradient(180deg, rgba(var(--bg-rgb), .08), rgba(var(--bg-rgb), .46)); }
 @keyframes fundo-troca { 0% { opacity: 0; } 12.5%, 25% { opacity: .7; } 37.5%, 100% { opacity: 0; } }
 @keyframes fundo-deriva { from { transform: scale(1.05) rotate(0deg) translate3d(0, 0, 0); } to { transform: scale(1.18) rotate(2deg) translate3d(-3%, 2%, 0); } }
 @media (prefers-reduced-motion: reduce) { .fundo span { animation: none; } .fundo span:first-child { opacity: .7; } }
