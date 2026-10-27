@@ -33,7 +33,7 @@
   max-width: 20ch;
   margin-top: var(--sp-6);
   font-size: clamp(40px, 5.6vw, 80px);
-  font-weight: 500;
+  font-weight: var(--weight-heading);
   letter-spacing: -.05em;
   line-height: 1;
 }
@@ -62,10 +62,10 @@
 .case-client { margin-bottom: var(--sp-4); color: var(--ink); font: 600 15px/1.3 var(--font); letter-spacing: .14em; text-transform: uppercase; }
 .case-logo { display: block; height: 30px; width: auto; max-width: 180px; object-fit: contain; }
 .case-row .pill { background: none; padding: 0; color: var(--tone); }
-.case-row h2 { margin-top: var(--sp-3); font-size: clamp(28px, 3vw, 40px); font-weight: 500; letter-spacing: -.035em; line-height: 1.1; }
+.case-row h2 { margin-top: var(--sp-3); font-size: clamp(28px, 3vw, 40px); font-weight: var(--weight-heading); letter-spacing: -.035em; line-height: 1.1; }
 .case-row .case-result { margin-top: var(--sp-4); color: var(--text); font-size: var(--fs-lede); line-height: 1.6; }
 .case-detail { display: grid; gap: var(--sp-5); align-content: start; }
-.case-detail h3 { color: var(--tone); font: 500 12.5px/1.5 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.case-detail h3 { color: var(--tone); font: var(--weight-heading) 12.5px/1.5 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
 .case-detail p { margin-top: 4px; color: var(--text); font-size: 16px; line-height: 1.6; }
 .case-detail .tags li { padding: 5px 12px; box-shadow: none; background: var(--gray-50); font-size: 13px; }
 
@@ -85,7 +85,7 @@
 .contact-grid { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: clamp(24px, 3vw, 40px); align-items: start; }
 
 .contact-aside { position: sticky; top: calc(var(--header-h) + 24px); padding-top: var(--sp-5); }
-.contact-aside h2 { font-size: 18px; font-weight: 600; }
+.contact-aside h2 { font-size: 18px; font-weight: var(--weight-heading); }
 .next-steps { display: grid; gap: var(--sp-4); margin-top: var(--sp-5); counter-reset: step; }
 .next-steps li { display: grid; grid-template-columns: 32px 1fr; gap: var(--sp-3); align-items: start; color: var(--text); font-size: 15px; line-height: 1.5; counter-increment: step; }
 .next-steps li::before {
@@ -107,7 +107,7 @@
 .badge { color: var(--tone); font: 500 12.5px/1.5 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
 /* Superfície de vidro: base.css */
 .contact-main { padding: clamp(24px, 4vw, 56px); }
-.contact-main h1 { max-width: 18ch; margin-top: var(--sp-3); font-size: clamp(32px, 3.8vw, 52px); font-weight: 500; letter-spacing: -.045em; line-height: 1.04; }
+.contact-main h1 { max-width: 18ch; margin-top: var(--sp-3); font-size: clamp(32px, 3.8vw, 52px); font-weight: var(--weight-heading); letter-spacing: -.045em; line-height: 1.04; }
 .contact-main > p:not(.badge) { max-width: var(--measure); margin-top: var(--sp-3); color: var(--text); }
 
 .form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 16px; margin-top: var(--sp-6); }
@@ -135,7 +135,7 @@
 /* Respostas do formulário (criadas por js/main.js): agradecimento, aviso de erro e botão enquanto envia */
 .form-done { margin-top: var(--sp-6); padding-top: var(--sp-6); border-top: 1px solid var(--line); }
 .form-done:focus { outline: none; }
-.form-done h2 { max-width: 640px; margin-top: var(--sp-4); font-size: clamp(24px, 2.4vw, 30px); font-weight: 600; letter-spacing: -.03em; line-height: 1.2; }
+.form-done h2 { max-width: 640px; margin-top: var(--sp-4); font-size: clamp(24px, 2.4vw, 30px); font-weight: var(--weight-heading); letter-spacing: -.03em; line-height: 1.2; }
 .form-done h2 + p { max-width: var(--measure); margin-top: var(--sp-3); color: var(--text); line-height: 1.65; }
 .form-done .btn { margin-top: var(--sp-6); }
 .form-error { display: grid; justify-items: start; gap: var(--sp-3); padding: var(--sp-4) var(--sp-5); border-radius: var(--radius-sm); background: var(--gray-50); color: var(--ink); font-size: 14.5px; line-height: 1.55; }
@@ -158,7 +158,7 @@
 
 .note { margin-bottom: var(--sp-6); padding: var(--sp-4) var(--sp-5); border-radius: var(--radius-sm); background: var(--gray-50); color: var(--brand); font-size: 14.5px; line-height: 1.55; }
 .legal { max-width: 720px; }
-.legal h2 { margin-top: var(--sp-8); font-size: 22px; font-weight: 600; letter-spacing: -.015em; scroll-margin-top: calc(var(--header-h) + 24px); }
+.legal h2 { margin-top: var(--sp-8); font-size: 22px; font-weight: var(--weight-heading); letter-spacing: -.015em; scroll-margin-top: calc(var(--header-h) + 24px); }
 .legal p, .legal li { color: var(--text); font-size: 16px; line-height: 1.75; }
 .legal p { margin-top: 14px; }
 .legal ul { margin-top: 12px; padding-left: 22px; list-style: disc; }
@@ -234,7 +234,7 @@ html:has(.subnav) { scroll-padding-top: calc(var(--header-h) + 76px); }
 
 .guide-meta { color: var(--tone); font: 500 12.5px/1.5 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
 .guide-body { max-width: 740px; }
-.guide-body > h2 { margin-top: var(--sp-10); font-size: clamp(26px, 2.6vw, 34px); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; scroll-margin-top: calc(var(--header-h) + 24px); }
+.guide-body > h2 { margin-top: var(--sp-10); font-size: clamp(26px, 2.6vw, 34px); font-weight: var(--weight-heading); letter-spacing: -.03em; line-height: 1.15; scroll-margin-top: calc(var(--header-h) + 24px); }
 .guide-body > p { margin-top: var(--sp-5); color: #d3d6db; font-size: 18px; line-height: 1.75; }
 .guide-body > ul, .guide-body > ol { display: grid; gap: var(--sp-3); margin-top: var(--sp-5); }
 .guide-body > ul li, .guide-body > ol li { position: relative; padding-left: 28px; color: #d3d6db; font-size: 17.5px; line-height: 1.65; }
@@ -280,7 +280,7 @@ html:has(.subnav) { scroll-padding-top: calc(var(--header-h) + 76px); }
 .about-person-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.3fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
 .about-person figure { max-width: 350px; }
 .about-person img { width: 100%; height: auto; aspect-ratio: 4/4.3; object-fit: cover; object-position: center 25%; border-radius: 24px; }
-.about-person h2 { margin-top: 14px; font-size: clamp(32px, 4vw, 46px); font-weight: 500; letter-spacing: -.04em; }
+.about-person h2 { margin-top: 14px; font-size: clamp(32px, 4vw, 46px); font-weight: var(--weight-heading); letter-spacing: -.04em; }
 .about-person p:not(.label) { max-width: 54ch; color: var(--text); line-height: 1.7; margin-top: 18px; }
 .about-person p.about-role { margin-top: 8px; color: var(--brand-soft); }
 .about-commitments { display: grid; gap: 12px; margin-block: 24px; color: var(--text); font-size: 15px; line-height: 1.6; }
@@ -288,7 +288,7 @@ html:has(.subnav) { scroll-padding-top: calc(var(--header-h) + 76px); }
 .about-commitments li::before { content: ""; position: absolute; left: 0; top: .65em; width: 5px; height: 5px; border-radius: 50%; background: var(--brand); }
 .about-next { padding-block: 64px 96px; }
 .about-next > div { display: flex; align-items: center; justify-content: space-between; gap: 36px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,.15); }
-.about-next h2 { max-width: 24ch; font-size: clamp(26px, 3vw, 36px); font-weight: 500; letter-spacing: -.035em; line-height: 1.2; }
+.about-next h2 { max-width: 24ch; font-size: clamp(26px, 3vw, 36px); font-weight: var(--weight-heading); letter-spacing: -.035em; line-height: 1.2; }
 .about-next > div > div { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
 @media (max-width: 760px) { .about-person-grid { grid-template-columns: 1fr; } .about-person figure { max-width: 220px; } .about-next > div { align-items: start; flex-direction: column; } }
 .about-brief .page-hero > .container { display: block; }

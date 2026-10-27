@@ -32,7 +32,7 @@
 .hero h1 {
   margin-top: var(--sp-4);
   font-size: var(--fs-display);
-  font-weight: 600;
+  font-weight: var(--weight-heading);
   line-height: 1.02;
   letter-spacing: -.035em;
 }
@@ -76,7 +76,7 @@
 /* ---------- Frase central ---------- */
 
 .statement { text-align: center; }
-.statement h2 { max-width: 900px; margin-inline: auto; font-size: clamp(32px, 4vw, 52px); font-weight: 600; letter-spacing: -.035em; line-height: 1.08; }
+.statement h2 { max-width: 900px; margin-inline: auto; font-size: clamp(32px, 4vw, 52px); font-weight: var(--weight-heading); letter-spacing: -.035em; line-height: 1.08; }
 .statement p:not(.label) { max-width: var(--measure-lede); margin: var(--sp-5) auto 0; color: var(--text); font-size: var(--fs-lede); }
 
 /* ---------- Componentes sem caixa: estrutura com tipografia, espaço e divisórias finas ---------- */
@@ -94,7 +94,7 @@
 div.index-item { grid-template-columns: 28px minmax(0, 1fr); counter-increment: idx; }
 a.index-item { grid-template-columns: minmax(0, 1fr) 20px; color: inherit; text-decoration: none; } /* item com link: texto + seta */
 div.index-item::before { content: counter(idx, decimal-leading-zero); margin-top: 4px; color: var(--brand); font: 500 12.5px/1.5 var(--font-mono); letter-spacing: .06em; }
-.index-item h3 { font-size: var(--fs-h3); font-weight: 500; letter-spacing: -.015em; line-height: 1.3; transition: color .2s; }
+.index-item h3 { font-size: var(--fs-h3); font-weight: var(--weight-heading); letter-spacing: -.015em; line-height: 1.3; transition: color .2s; }
 .index-item p { margin-top: 6px; color: var(--text); font-size: 15.5px; line-height: 1.6; }
 .index-arrow { width: 20px; height: 20px; margin-top: 4px; color: var(--muted); stroke-width: 2; transition: transform .2s, color .2s; }
 a.index-item:hover h3, a.index-item:hover .index-arrow { color: var(--brand); }
@@ -105,14 +105,14 @@ a.index-item:hover .index-arrow { transform: translateX(4px); }
 .step { position: relative; padding-top: var(--sp-6); }
 .step::before { content: ""; position: absolute; top: -5px; left: 0; width: 9px; height: 9px; border-radius: 50%; background: var(--brand); }
 .step-n { display: block; color: var(--brand); font-size: clamp(40px, 4vw, 56px); font-weight: 300; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
-.step h3 { margin-top: var(--sp-5); font-size: var(--fs-h3); font-weight: 500; letter-spacing: -.015em; }
+.step h3 { margin-top: var(--sp-5); font-size: var(--fs-h3); font-weight: var(--weight-heading); letter-spacing: -.015em; }
 .step p { margin-top: var(--sp-2); color: var(--text); font-size: 15.5px; line-height: 1.6; }
 
 /* Pontos: lista vertical com divisórias (por que nós, entregas, valores); título à esquerda, texto à direita */
 .points { border-bottom: 1px solid var(--line); }
 .points li, .points > div { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: var(--sp-2) var(--sp-6); padding: var(--sp-6) 0; border-top: 1px solid var(--line); }
 .points li > div { display: contents; }
-.points h3 { font-size: 19px; font-weight: 500; letter-spacing: -.015em; line-height: 1.35; }
+.points h3 { font-size: 19px; font-weight: var(--weight-heading); letter-spacing: -.015em; line-height: 1.35; }
 .points p { color: var(--text); font-size: 16px; line-height: 1.6; }
 
 /* Duas colunas: cabeçalho à esquerda (gruda ao rolar), conteúdo à direita */
@@ -136,7 +136,7 @@ a.index-item:hover .index-arrow { transform: translateX(4px); }
   padding: var(--sp-7) 0 var(--sp-8);
   border-top: 1px solid var(--line);
 }
-.case-feature h3 { margin-top: var(--sp-3); font-size: clamp(30px, 3.6vw, 48px); font-weight: 400; letter-spacing: -.035em; line-height: 1.08; }
+.case-feature h3 { margin-top: var(--sp-3); font-size: clamp(30px, 3.6vw, 48px); font-weight: var(--weight-heading); letter-spacing: -.035em; line-height: 1.08; }
 .case-feature p { color: var(--text); font-size: var(--fs-lede); line-height: 1.6; }
 .case-feature .arrow-link { margin-top: var(--sp-4); }
 .case-rows { border-bottom: 1px solid var(--line); }
@@ -234,7 +234,7 @@ a:hover .ph img, .offer:hover .ph img { transform: scale(1.04); filter: saturate
 .cta-light { position: absolute; top: -30%; left: 20%; z-index: -1; width: 60%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, rgba(120, 170, 255, .35), rgba(120, 170, 255, 0)); animation: cta-luz 20s ease-in-out infinite alternate; pointer-events: none; }
 @keyframes cta-luz { from { transform: translate3d(-20%, 0, 0); } to { transform: translate3d(20%, 25%, 0); } }
 .cta-box .label { color: var(--brand-soft); }
-.cta-box h2 { max-width: 22ch; margin: var(--sp-4) auto 0; font-size: clamp(32px, 4.2vw, 56px); font-weight: 500; letter-spacing: -.045em; line-height: 1.05; }
+.cta-box h2 { max-width: 22ch; margin: var(--sp-4) auto 0; font-size: clamp(32px, 4.2vw, 56px); font-weight: var(--weight-heading); letter-spacing: -.045em; line-height: 1.05; }
 .cta-box .tone { color: rgba(255, 255, 255, .62); }
 .cta-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-3); margin-top: var(--sp-8); }
 .cta-box .btn-outline { border-color: rgba(255, 255, 255, .3); background: rgba(255, 255, 255, .04); color: var(--white); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }

@@ -168,12 +168,12 @@ tr.is-new .lead-open { font-weight: 700; }
 /* Carregando, vazio, sem resultado e erro */
 .adm-state { display: grid; justify-items: start; gap: 10px; padding: 40px 36px; border: 1px dashed #98a2b3; background: var(--white); }
 .adm-tools[hidden] ~ .adm-state { margin-top: 28px; }
-.adm-state h2 { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; }
+.adm-state h2 { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: var(--weight-heading); }
 .adm-state h2::before { content: ""; flex: none; width: 8px; height: 8px; background: var(--brand); }
 .adm-state p { max-width: 600px; color: var(--text); font-size: 14.5px; line-height: 1.6; }
 .adm-state .btn { margin-top: 10px; }
 .adm-state.is-loading { border-style: solid; border-color: var(--line); }
-.adm-state.is-loading h2 { color: var(--muted); font-weight: 500; }
+.adm-state.is-loading h2 { color: var(--muted); font-weight: var(--weight-heading); }
 
 /* ---------- Painel lateral de detalhes ---------- */
 
@@ -205,7 +205,7 @@ tr.is-new .lead-open { font-weight: 700; }
 .drawer-close:hover { border-color: var(--ink); }
 .drawer-close svg { width: 20px; height: 20px; stroke-width: 1.8; }
 
-.drawer h2 { margin-top: 28px; font-size: 30px; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; overflow-wrap: anywhere; }
+.drawer h2 { margin-top: 28px; font-size: 30px; font-weight: var(--weight-heading); letter-spacing: -.02em; line-height: 1.15; overflow-wrap: anywhere; }
 .drawer-company { margin-top: 6px; color: var(--text); font-size: 16px; overflow-wrap: anywhere; }
 .drawer-status { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
 .drawer-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; padding-bottom: 26px; border-bottom: 1px solid var(--line); }
@@ -322,7 +322,7 @@ tr.is-new .lead-open { font-weight: 700; }
 .vs-card strong { color: var(--ink); font-size: 30px; font-weight: 500; letter-spacing: -.03em; line-height: 1.1; }
 .vs-card small { color: var(--muted); font-size: 12.5px; line-height: 1.35; }
 .vs-box { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: #fff; min-width: 0; }
-.vs-box h2 { margin: 0 0 14px; color: var(--ink); font-size: 15px; font-weight: 600; letter-spacing: 0; }
+.vs-box h2 { margin: 0 0 14px; color: var(--ink); font-size: 15px; font-weight: var(--weight-heading); letter-spacing: 0; }
 .vs-wide { margin-bottom: 20px; }
 .vs-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-bottom: 56px; }
 .vs-vazio { margin: 0; color: var(--muted); font-size: 14px; }

@@ -18,7 +18,7 @@
 /* Trocar o bloco .case-art por <img class="case-art"> mantém o layout. */
 img.case-art { width: 100%; object-fit: cover; padding: 0; }
 .case-card-body { display: flex; flex-direction: column; flex: 1; padding: var(--card-pad); }
-.case-card h3 { color: var(--ink); font-size: clamp(22px,2vw,28px); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+.case-card h3 { color: var(--ink); font-size: clamp(22px,2vw,28px); font-weight: var(--weight-heading); line-height: 1.2; letter-spacing: -.03em; }
 .case-card-body > p { margin-top: var(--sp-4); margin-bottom: var(--sp-6); color: var(--text); font-size: var(--fs-sm); line-height: 1.65; }
 .case-card-link { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); margin-top: auto; padding-top: var(--sp-4); border-top: 1px solid var(--line-dark); color: var(--brand); font-size: var(--fs-xs); }
 .case-card-link svg, .case-showcase-arrow svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; transition: transform .35s; }

@@ -142,14 +142,12 @@
   <link rel="apple-touch-icon" href="../assets/favicon-orbital-v3-180.png" sizes="180x180">
   <link rel="manifest" href="../site-orbital-v3.webmanifest">
   <meta name="theme-color" content="#0d1014">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="../css/base.css?v=20261027-footer-orbita">
-  <link rel="stylesheet" href="../css/nav.css?v=20261027-marca-horizontal">
-  <link rel="stylesheet" href="../css/sections.css">
-  <link rel="stylesheet" href="../css/pages.css?v=20261027-pages-v2">
-  <link rel="stylesheet" href="../css/home.css?v=20261026-alinhado">
+  <link rel="preload" href="../assets/fonts/aeonik/Aeonik-Roman-VF.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/base.css?v=20261027-fueled-final">
+  <link rel="stylesheet" href="../css/nav.css?v=20261027-fueled-final">
+  <link rel="stylesheet" href="../css/sections.css?v=20261027-fueled-final">
+  <link rel="stylesheet" href="../css/pages.css?v=20261027-fueled-final">
+  <link rel="stylesheet" href="../css/home.css?v=20261027-fueled-final">
   <link rel="stylesheet" href="../css/ofertas-motion.css">
   <script src="../js/leads.js" defer></script>
   <script src="../js/main.js" defer></script>
@@ -160,29 +158,16 @@
        Mesma estrutura de ../index.html: ao mudar a home, atualize esta página também. -->
   <!-- layout:header -->
   <a class="skip-link" href="#conteudo">Skip to content</a>
-  <header class="site-header">
+  <header class="site-header nav--fueled">
     <div class="header-shell">
-      <a class="logo" href="index.html" aria-label="IA BRAZIL, home"><img class="logo-image" src="../assets/logo-ia-brazil-texto-hd.png" alt="IA BRAZIL" width="202" height="42"></a>
-      <nav class="nav" id="menu" aria-label="Main menu">
-        <span class="nav-glow" aria-hidden="true"></span>
-        <div class="nav-item has-sub">
-          <a class="nav-link" href="#servicos">Solutions <svg class="i-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
-          <div class="nav-sub mega">
-            <div class="mega-list">
-            <a class="mega-item" href="#diagnostico"><span class="mega-txt"><strong>AI Assessment</strong><small>In 30 days, where AI pays off and by how much.</small></span></a>
-            <a class="mega-item" href="#implementacao"><span class="mega-txt"><strong>Custom implementation</strong><small>Platforms, integrations and automations in your operation.</small></span></a>
-            <a class="mega-item" href="#sites"><span class="mega-txt"><strong>Website development</strong><small>Institutional websites and digital experiences.</small></span></a>
-            </div>
-          </div>
-        </div>
+      <a class="logo" href="index.html" aria-label="IA BRAZIL, home"><img class="logo-image" src="../assets/logo-ia-brazil-texto-hd.png" alt="IA BRAZIL" width="160" height="34"></a>
+      <nav class="nav" id="menu" aria-label="Main navigation">
+        <a class="nav-link" href="#servicos">Solutions</a>
+        <a class="nav-link" href="#cases">Work</a>
         <a class="nav-link" href="#metodo">Method</a>
-        <a class="nav-link" href="#cases">Cases</a>
         <a class="nav-link" href="#quem-somos">About</a>
         <a class="nav-link" href="#analise">Contact</a>
-        <a class="btn btn-primary nav-cta" href="#analise">Book a free assessment <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h16M14 7l5 5-5 5"/></svg></a>
       </nav>
-      <a class="lang-switch" href="../index.html" hreflang="pt-BR" lang="pt-BR" aria-label="Versão em português">PT</a>
-      <a class="btn btn-primary btn-header" href="#analise">Talk to us <svg class="i-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h16M14 7l5 5-5 5"/></svg></a>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><span></span><span></span></button>
     </div>
   </header>
@@ -579,9 +564,8 @@
     </div>
   </footer>
 
-  <script src="../js/vendor/lenis.min.js" defer></script>
-  <script src="../js/smooth.js" defer></script>
-  <script src="../js/fundo.js" defer></script>
+  <script src="../js/smooth.js?v=20261027-fueled-final" defer></script>
+  <script src="../js/fundo.js?v=20261027-fueled-final" defer></script>
   <script src="../js/track.js" defer></script>
   <!-- /layout:footer -->
 </body>

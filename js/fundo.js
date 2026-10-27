@@ -1,13 +1,205 @@
-/* IA BRAZIL — fundo da página inteira: a fumaça azul do vídeo original, em quatro quadros
-   (vídeo Mixkit 101438, licença livre) que se dissolvem um no outro em sequência e derivam devagar.
-   Todo o movimento é CSS (css/base.css, .fundo): só opacidade e transform, ciclos longos, sem salto.
-   Para quem prefere menos movimento, fica parado. */
+/* Fundo: vídeo e quadros visuais da referência Fueled, hospedados localmente.
+   Origem e parâmetros registrados em scripts/dados/background-fueled.json.
+   O layout e as interações do site permanecem independentes do background. */
 (() => {
   'use strict';
-  const fundo = document.createElement('div');
-  fundo.className = 'fundo';
-  fundo.setAttribute('aria-hidden', 'true');
-  fundo.innerHTML = '<span></span><span></span><span></span><span></span>';
-  document.body.prepend(fundo);
+  if (document.querySelector('.fundo')) return;
+  // As páginas editoriais mantêm sua superfície branca e a leitura original.
+  if (document.body.classList.contains('theme-light')) return;
+  const scriptURL = new URL(document.currentScript.src);
+  const assets = new URL('../assets/backgrounds/fueled/', scriptURL);
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const main = document.querySelector('main');
+  const hero = document.querySelector('.a-hero, .page-hero') || main;
+  const layer = document.createElement('div');
+  layer.className = 'fundo';
+  layer.setAttribute('aria-hidden', 'true');
+  const video = document.createElement('video');
+  video.className = 'fundo-planet';
+  video.autoplay = true; video.loop = true; video.muted = true; video.defaultMuted = true;
+  video.playsInline = true; video.preload = 'metadata'; video.playbackRate = 1;
+  video.disablePictureInPicture = true;
+  video.setAttribute('muted', ''); video.setAttribute('playsinline', '');
+  video.setAttribute('fetchpriority', 'high'); video.tabIndex = -1;
+  video.poster = new URL('planet-poster.jpg', assets).href;
+  layer.append(video);
+  document.body.prepend(layer);
   document.body.classList.add('has-net');
+  document.documentElement.classList.add('has-fueled-background');
+
+  const bands = [];
+  // Os três capítulos centrais recebem a passagem clara da referência.
+  const lightSections = document.querySelector('.a-hero')
+    ? [...document.querySelectorAll('main > #servicos, main > #metodo, main > #por-que')]
+    : [];
+  let fill;
+  if (lightSections.length) {
+    lightSections.forEach(section => section.classList.add('bg-is-light'));
+    fill = document.createElement('div'); fill.className = 'fundo-light-fill'; layer.append(fill);
+    [false, true].forEach(flipped => {
+      const element = document.createElement('div');
+      element.className = 'fundo-transition' + (flipped ? ' is-flipped' : '');
+      const poster = document.createElement('img');
+      poster.src = new URL('transition/frame_0001.webp', assets).href;
+      poster.alt = ''; poster.width = 192; poster.height = 216; poster.loading = 'lazy';
+      const canvas = document.createElement('canvas'); canvas.width = 192; canvas.height = 216;
+      element.append(poster, canvas); layer.append(element);
+      bands.push({ element, canvas, context: canvas.getContext('2d', { willReadFrequently: true }), visible: false, started: 0, frame: -1, scale: flipped ? .7 : .8 });
+    });
+  }
+  let heroTop = 0, heroHeight = 1, scrollQueued = false, animation = 0;
+  let images, preparing, heroVisible = true;
+  const positionPlanet = () => {
+    scrollQueued = false;
+    const progress = Math.max(0, Math.min(1, (scrollY - heroTop) / heroHeight));
+    video.style.setProperty('--planet-y', `${reduced.matches ? 0 : -300 * progress}px`);
+  };
+  const layout = () => {
+    if (hero) {
+      const rect = hero.getBoundingClientRect(); heroTop = rect.top + scrollY; heroHeight = rect.height || 1;
+    }
+    if (fill) {
+      const start = lightSections[0].getBoundingClientRect().top + scrollY;
+      const last = lightSections[lightSections.length - 1].getBoundingClientRect();
+      const end = last.bottom + scrollY;
+      const height = Math.min(1440, innerWidth * 1.125);
+      fill.style.top = `${start}px`; fill.style.height = `${end - start}px`;
+      bands.forEach((band, index) => {
+        band.element.style.height = `${height}px`;
+        band.element.style.top = `${(index ? end : start) - height * (index ? .44 : .56)}px`;
+        band.element.style.setProperty('--transition-scale-y', band.scale);
+      });
+    }
+    positionPlanet();
+  };
+  const loadVideo = () => {
+    if (video.querySelector('source')) return;
+    const sources = [['720', 506], ['1080', 760], ['1440', 1012], ['2160', 1518], ['3160', 2222], ['no-resize', 0]];
+    sources.forEach(([size, max]) => {
+      const source = document.createElement('source');
+      source.src = new URL(`planet-${size}.mp4`, assets).href; source.type = 'video/mp4';
+      if (max) source.media = `(max-width: ${max}px)`;
+      video.append(source);
+    });
+    video.load();
+  };
+  const syncVideo = () => {
+    if (reduced.matches || document.hidden || !heroVisible) { video.pause(); return; }
+    loadVideo(); video.play().catch(() => {});
+  };
+  const draw = (band, index) => {
+    if (!images || !band.context || band.frame === index) return;
+    band.context.clearRect(0, 0, 192, 216);
+    band.context.drawImage(images[index], 0, 0, 192, 216);
+    band.frame = index; band.element.classList.add('is-loaded');
+  };
+  const tick = (now) => {
+    animation = 0;
+    if (reduced.matches || document.hidden || !images) return;
+    const visible = bands.filter(band => band.visible);
+    visible.forEach(band => {
+      if (!band.started) band.started = now;
+      // Mesma sequência de 118 quadros, ciclo linear de 118/30 segundos.
+      const frame = Math.round((((now - band.started) / 1000) % (118 / 30)) / (118 / 30) * 117);
+      draw(band, frame);
+    });
+    if (visible.length) animation = requestAnimationFrame(tick);
+  };
+  const start = () => { if (!animation && images && !reduced.matches && !document.hidden && bands.some(b => b.visible)) animation = requestAnimationFrame(tick); };
+  const prepare = async () => {
+    if (preparing || images || reduced.matches) return;
+    preparing = true;
+    try {
+      const module = await import(new URL('vendor/stackblur-es.min.js', scriptURL).href);
+      const loaded = new Array(118); let cursor = 0;
+      const worker = async () => {
+        while (cursor < 118) {
+          const index = cursor++;
+          const image = new Image(); image.decoding = 'async';
+          image.src = new URL(`transition/frame_${String(index + 1).padStart(4, '0')}.webp`, assets).href;
+          await image.decode();
+          // O desfoque original é calculado uma única vez por quadro.
+          // Na reprodução, cada frame só precisa de uma operação drawImage.
+          const prepared = document.createElement('canvas'); prepared.width = 192; prepared.height = 216;
+          const context = prepared.getContext('2d', { willReadFrequently: true });
+          if (!context) throw new Error('Canvas unavailable');
+          context.drawImage(image, 0, 0, 192, 216);
+          module.canvasRGBA(prepared, 0, 0, 192, 216, 10);
+          if (typeof createImageBitmap === 'function') {
+            loaded[index] = await createImageBitmap(prepared); prepared.width = 0; prepared.height = 0;
+          } else loaded[index] = prepared;
+          image.removeAttribute('src');
+        }
+      };
+      await Promise.all(Array.from({ length: 6 }, worker));
+      images = loaded;
+      bands.forEach(band => draw(band, 0)); start();
+    } catch { /* O primeiro quadro permanece visível quando a rede está indisponível. */ }
+    preparing = false;
+  };
+  if ('IntersectionObserver' in window) {
+    const videoObserver = new IntersectionObserver(entries => { heroVisible = entries[0].isIntersecting; syncVideo(); });
+    videoObserver.observe(video);
+    const preloader = new IntersectionObserver(entries => { if (entries.some(entry => entry.isIntersecting)) prepare(); }, { rootMargin: '800px 0px' });
+    const visibility = new IntersectionObserver(entries => {
+      entries.forEach(entry => { const band = bands.find(item => item.element === entry.target); band.visible = entry.isIntersecting; band.started = 0; });
+      start();
+    });
+    bands.forEach(band => { preloader.observe(band.element); visibility.observe(band.element); });
+  } else { bands.forEach(band => { band.visible = true; }); prepare(); }
+  window.addEventListener('scroll', () => { if (!scrollQueued) { scrollQueued = true; requestAnimationFrame(positionPlanet); } }, { passive: true });
+  window.addEventListener('resize', layout, { passive: true });
+  if (main && 'ResizeObserver' in window) new ResizeObserver(layout).observe(main);
+  document.fonts?.ready.then(layout);
+  document.addEventListener('visibilitychange', () => { syncVideo(); start(); });
+  reduced.addEventListener('change', () => {
+    positionPlanet(); syncVideo();
+    if (reduced.matches) { cancelAnimationFrame(animation); animation = 0; bands.forEach(band => draw(band, 0)); }
+    else { prepare(); start(); }
+  });
+  // Contraste sem sombras: o texto usa preto ou branco conforme a luminosidade do vídeo.
+  const contrastRegions = [...document.querySelectorAll('.proof-line, .a-hero-text, .hero-alt .arrow-link')];
+  let contrastTimer = 0;
+  const contrastVisible = new Set();
+  if (contrastRegions.length && 'IntersectionObserver' in window) {
+    const sample = document.createElement('canvas'); sample.width = 48; sample.height = 68;
+    const context = sample.getContext('2d', { willReadFrequently: true });
+    const linear = channel => { const value = channel / 255; return value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4; };
+    const contrast = () => {
+      if (!contrastVisible.size || document.hidden || !context || video.readyState < 2) return;
+      const bounds = video.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      try {
+        context.drawImage(video, 0, 0, 48, 68);
+        const pixels = context.getImageData(0, 0, 48, 68).data;
+        const targets = [...contrastVisible].flatMap(region => {
+          const words = [...region.querySelectorAll('.sw')]; return words.length ? words : [region];
+        });
+        const changes = targets.map(word => {
+          const box = word.getBoundingClientRect();
+          const x = Math.floor(((box.left + box.right) / 2 - bounds.left) / bounds.width * 48);
+          const y = Math.floor(((box.top + box.bottom) / 2 - bounds.top) / bounds.height * 68);
+          if (x < 0 || y < 0 || x >= 48 || y >= 68) return [word, false];
+          const offset = (y * 48 + x) * 4;
+          const luminance = .2126 * linear(pixels[offset]) + .7152 * linear(pixels[offset + 1]) + .0722 * linear(pixels[offset + 2]);
+          return [word, luminance > .2];
+        });
+        changes.forEach(([word, bright]) => word.classList.toggle('is-on-bright', bright));
+      } catch { /* Mantém as cores padrão quando o navegador não permite ler o vídeo. */ }
+    };
+    const observeContrast = () => {
+      clearInterval(contrastTimer);
+      if (contrastVisible.size) { contrast(); contrastTimer = setInterval(contrast, 250); }
+    };
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => { if (entry.isIntersecting) contrastVisible.add(entry.target); else contrastVisible.delete(entry.target); });
+      observeContrast();
+    });
+    contrastRegions.forEach(region => observer.observe(region));
+    window.addEventListener('pagehide', () => clearInterval(contrastTimer));
+    window.addEventListener('pageshow', observeContrast);
+  }
+  window.addEventListener('pagehide', () => { video.pause(); cancelAnimationFrame(animation); animation = 0; });
+  window.addEventListener('pageshow', () => { layout(); syncVideo(); start(); });
+  layout(); syncVideo();
 })();
