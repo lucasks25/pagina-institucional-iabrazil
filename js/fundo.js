@@ -9,6 +9,8 @@
   const scriptURL = new URL(document.currentScript.src);
   const assets = new URL('../assets/backgrounds/fueled/', scriptURL);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const PLANET_PLAYBACK_RATE = .5;
+  const TRANSITION_SECONDS = 12;
   const main = document.querySelector('main');
   const hero = document.querySelector('.a-hero, .page-hero') || main;
   const layer = document.createElement('div');
@@ -17,7 +19,8 @@
   const video = document.createElement('video');
   video.className = 'fundo-planet';
   video.autoplay = true; video.loop = true; video.muted = true; video.defaultMuted = true;
-  video.playsInline = true; video.preload = 'metadata'; video.playbackRate = 1;
+  video.playsInline = true; video.preload = 'metadata';
+  video.defaultPlaybackRate = PLANET_PLAYBACK_RATE; video.playbackRate = PLANET_PLAYBACK_RATE;
   video.disablePictureInPicture = true;
   video.setAttribute('muted', ''); video.setAttribute('playsinline', '');
   video.setAttribute('fetchpriority', 'high'); video.tabIndex = -1;
@@ -85,7 +88,7 @@
   };
   const syncVideo = () => {
     if (reduced.matches || document.hidden || !heroVisible) { video.pause(); return; }
-    loadVideo(); video.play().catch(() => {});
+    loadVideo(); video.playbackRate = PLANET_PLAYBACK_RATE; video.play().catch(() => {});
   };
   const draw = (band, index) => {
     if (!images || !band.context || band.frame === index) return;
@@ -99,8 +102,8 @@
     const visible = bands.filter(band => band.visible);
     visible.forEach(band => {
       if (!band.started) band.started = now;
-      // Mesma sequência de 118 quadros, ciclo linear de 118/30 segundos.
-      const frame = Math.round((((now - band.started) / 1000) % (118 / 30)) / (118 / 30) * 117);
+      // A sequência original de 118 quadros avança lentamente em um ciclo de 12 segundos.
+      const frame = Math.round((((now - band.started) / 1000) % TRANSITION_SECONDS) / TRANSITION_SECONDS * 117);
       draw(band, frame);
     });
     if (visible.length) animation = requestAnimationFrame(tick);
@@ -157,48 +160,6 @@
     if (reduced.matches) { cancelAnimationFrame(animation); animation = 0; bands.forEach(band => draw(band, 0)); }
     else { prepare(); start(); }
   });
-  // Contraste sem sombras: o texto usa preto ou branco conforme a luminosidade do vídeo.
-  const contrastRegions = [...document.querySelectorAll('.proof-line, .a-hero-text, .hero-alt .arrow-link')];
-  let contrastTimer = 0;
-  const contrastVisible = new Set();
-  if (contrastRegions.length && 'IntersectionObserver' in window) {
-    const sample = document.createElement('canvas'); sample.width = 48; sample.height = 68;
-    const context = sample.getContext('2d', { willReadFrequently: true });
-    const linear = channel => { const value = channel / 255; return value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4; };
-    const contrast = () => {
-      if (!contrastVisible.size || document.hidden || !context || video.readyState < 2) return;
-      const bounds = video.getBoundingClientRect();
-      if (!bounds.width || !bounds.height) return;
-      try {
-        context.drawImage(video, 0, 0, 48, 68);
-        const pixels = context.getImageData(0, 0, 48, 68).data;
-        const targets = [...contrastVisible].flatMap(region => {
-          const words = [...region.querySelectorAll('.sw')]; return words.length ? words : [region];
-        });
-        const changes = targets.map(word => {
-          const box = word.getBoundingClientRect();
-          const x = Math.floor(((box.left + box.right) / 2 - bounds.left) / bounds.width * 48);
-          const y = Math.floor(((box.top + box.bottom) / 2 - bounds.top) / bounds.height * 68);
-          if (x < 0 || y < 0 || x >= 48 || y >= 68) return [word, false];
-          const offset = (y * 48 + x) * 4;
-          const luminance = .2126 * linear(pixels[offset]) + .7152 * linear(pixels[offset + 1]) + .0722 * linear(pixels[offset + 2]);
-          return [word, luminance > .2];
-        });
-        changes.forEach(([word, bright]) => word.classList.toggle('is-on-bright', bright));
-      } catch { /* Mantém as cores padrão quando o navegador não permite ler o vídeo. */ }
-    };
-    const observeContrast = () => {
-      clearInterval(contrastTimer);
-      if (contrastVisible.size) { contrast(); contrastTimer = setInterval(contrast, 250); }
-    };
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => { if (entry.isIntersecting) contrastVisible.add(entry.target); else contrastVisible.delete(entry.target); });
-      observeContrast();
-    });
-    contrastRegions.forEach(region => observer.observe(region));
-    window.addEventListener('pagehide', () => clearInterval(contrastTimer));
-    window.addEventListener('pageshow', observeContrast);
-  }
   window.addEventListener('pagehide', () => { video.pause(); cancelAnimationFrame(animation); animation = 0; });
   window.addEventListener('pageshow', () => { layout(); syncVideo(); start(); });
   layout(); syncVideo();

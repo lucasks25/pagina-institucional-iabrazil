@@ -473,10 +473,7 @@ html.lenis.lenis-smooth { scroll-behavior: auto; }
 .bg-is-light .calc-out .btn-primary { background: #e6e7e8; color: #08090a; }
 .bg-is-light .calc-out .btn-primary:hover { background: #fff; }
 
-.has-net .proof-line .sw.is-on-bright { color: rgba(23,23,23,.25); }
-.has-net .proof-line .sw.is-on-bright.is-lit { color: #171717; }
 
 .has-net .footer-clean { background: transparent; }
 
-.has-net .a-hero-text.is-on-bright,.has-net .hero-alt .arrow-link.is-on-bright { color: #171717; }
 .bg-is-light .steps4:has(.is-active) .s4:not(.is-active) { opacity: 1; }
