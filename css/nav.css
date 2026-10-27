@@ -169,3 +169,8 @@
 .mega-item { display: block; padding: 14px 16px; }
 @media (max-width: 960px) { .nav-sub.mega { width: 100%; } }
 .logo-image { object-fit: contain; object-position: center; border-radius: 0; }
+
+/* Marca enviada: símbolo e nome completos no cabeçalho. */
+.site-header .logo-image { width: 154px; height: 60px; object-position: left center; }
+.site-header.is-scrolled .logo-image { width: 120px; height: 54px; }
+@media (max-width: 600px) { .site-header .logo-image { width: 124px; height: 60px; } }
