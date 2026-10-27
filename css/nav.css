@@ -159,18 +159,24 @@
   .site-header, .header-shell, .nav-glow, .nav-sub, .nav > * { transition: none !important; }
 }
 
-/* Categorias somente em texto. */
+/* Logo oficial: enquadramento horizontal da imagem enviada. */
+.logo-image { display: block; width: 220px; height: 64px; object-fit: cover; object-position: 50% 52%; border-radius: 8px; }
+.site-header.is-scrolled .logo-image { width: 170px; height: 48px; }
+@media (max-width: 600px) { .logo-image { width: 170px; height: 54px; } }
+
+/* Categorias em texto, sem ícones nem painel de imagem. */
 .nav-sub.mega { grid-template-columns: 1fr; width: min(380px, calc(100vw - 40px)); }
 .mega-item { display: block; padding: 14px 16px; }
 @media (max-width: 960px) { .nav-sub.mega { width: 100%; } }
+.logo-image { object-fit: contain; object-position: center; border-radius: 0; }
 
-/* Marca vetorial: composição centralizada e respiro no menu. */
-.logo-image { display: block; width: 140px; height: 78px; object-fit: contain; object-position: center; }
-.site-header .logo { margin-left: 12px; }
-.site-header .logo-image { width: 142px; height: 64px; }
-.site-header.is-scrolled .logo { margin-left: 0; }
-.site-header.is-scrolled .logo-image { width: 126px; height: 52px; }
-@media (max-width: 600px) {
- .site-header .logo, .site-header.is-scrolled .logo { margin-left: 4px; }
- .site-header .logo-image, .site-header.is-scrolled .logo-image { width: 126px; height: 58px; }
-}
+/* Marca enviada: símbolo e nome completos no cabeçalho. */
+.site-header .logo-image { width: 242px; height: 60px; object-position: left center; }
+.site-header.is-scrolled .logo-image { width: 210px; height: 50px; }
+@media (max-width: 600px) { .site-header .logo-image, .site-header.is-scrolled .logo-image { width: min(180px, 42vw); height: 54px; } }
+
+/* Marca somente tipográfica, com IA acima de BRAZIL. */
+.logo-image { width: 120px; height: 66px; object-position: left center; }
+.site-header .logo-image { width: 104px; height: 56px; }
+.site-header.is-scrolled .logo-image { width: 88px; height: 48px; }
+@media (max-width: 600px) { .site-header .logo-image, .site-header.is-scrolled .logo-image { width: 96px; height: 52px; } }

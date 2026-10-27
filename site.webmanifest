@@ -9,13 +9,13 @@
   "theme_color": "#0d1014",
   "icons": [
     {
-      "src": "/assets/icon-192.png",
+      "src": "/assets/icon-192.png?v=20261027-orbital",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/icon-512.png",
+      "src": "/assets/icon-512.png?v=20261027-orbital",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
