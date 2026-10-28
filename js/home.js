@@ -109,43 +109,50 @@
     new IntersectionObserver(([e]) => el.classList.toggle('is-live', e.isIntersecting), { threshold: 0.25 }).observe(el);
   });
 
-  /* Frase grande: as palavras acendem uma a uma conforme a pessoa rola a página */
-  document.querySelectorAll('[data-scroll-text]').forEach((el) => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    // Quebra o texto em palavras (mantendo os <strong>), cada uma num <span>
-    const wrapWords = (node) => {
-      Array.from(node.childNodes).forEach((child) => {
+  /* A frase aparece por palavras, sem animar a cor do texto. */
+  document.querySelectorAll('[data-scroll-reveal]').forEach(el => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (reduced.matches || el.classList.contains('is-word-reveal')) return;
+    const wrap = node => {
+      [...node.childNodes].forEach(child => {
         if (child.nodeType === 3) {
-          const frag = document.createDocumentFragment();
-          child.textContent.split(/(\s+)/).forEach((part) => {
+          const fragment = document.createDocumentFragment();
+          child.textContent.split(/(\s+)/).forEach(part => {
             if (!part) return;
-            if (/^\s+$/.test(part)) { frag.append(part); return; }
-            const w = document.createElement('span');
-            w.className = 'sw';
-            w.textContent = part;
-            frag.append(w);
+            if (/^\s+$/.test(part)) { fragment.append(part); return; }
+            const word = document.createElement('span'); word.className = 'reveal-word'; word.textContent = part; fragment.append(word);
           });
-          child.replaceWith(frag);
-        } else if (child.nodeType === 1) wrapWords(child);
+          child.replaceWith(fragment);
+        } else if (child.nodeType === 1) wrap(child);
       });
     };
-    wrapWords(el);
-    const words = Array.from(el.querySelectorAll('.sw'));
-    el.classList.add('is-scrolly');
-    let ticking = false;
-    const update = () => {
-      ticking = false;
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      // Começa quando o topo da frase passa de 85% da tela e termina quando o fim passa de 40%
-      const k = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.45)));
-      const lit = Math.round(k * words.length);
-      words.forEach((w, i) => w.classList.toggle('is-lit', i < lit));
+    wrap(el); el.classList.add('is-word-reveal');
+    const words = [...el.querySelectorAll('.reveal-word')];
+    let revealed = 0, queued = false, observer;
+    const cleanup = () => {
+      window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll);
+      reduced.removeEventListener('change', onMotion); observer?.disconnect();
     };
-    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    const show = count => {
+      for (let i = revealed; i < count; i++) words[i].classList.add('is-shown');
+      revealed = count;
+      if (revealed === words.length) cleanup();
+    };
+    const update = () => {
+      queued = false;
+      const bounds = el.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, (innerHeight * .85 - bounds.top) / (bounds.height + innerHeight * .35)));
+      show(Math.max(revealed, Math.ceil(progress * words.length)));
+    };
+    const onScroll = () => { if (!queued && revealed < words.length) { queued = true; requestAnimationFrame(update); } };
+    const onMotion = () => { if (reduced.matches) show(words.length); };
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(entries => { if (entries.some(entry => entry.isIntersecting)) update(); }, { rootMargin: '100px 0px' });
+      observer.observe(el);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll, { passive: true });
+    reduced.addEventListener('change', onMotion);
+    document.fonts?.ready.then(update); update();
   });
 
   /* Calculadora do custo do trabalho manual: atualiza na hora, sem pedir contato.

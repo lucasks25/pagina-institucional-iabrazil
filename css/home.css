@@ -59,11 +59,10 @@ html[lang="pt-BR"] .a-hero h1 { font-size: clamp(40px, 6.1vw, 88px); }
 .proof { padding-block: var(--section-y); }
 .proof-line { max-width: 26ch; font-size: clamp(32px, 4.4vw, 60px); font-weight: 400; letter-spacing: -.04em; line-height: 1.18; color: var(--muted); }
 .proof-line strong { color: var(--ink); font-weight: 500; }
-/* Com JS (js/main.js): cada palavra começa apagada e acende conforme a rolagem */
-.proof-line.is-scrolly, .proof-line.is-scrolly strong { color: inherit; }
-.proof-line.is-scrolly .sw { color: rgba(255, 255, 255, .14); transition: color .35s ease; }
-.proof-line.is-scrolly .sw.is-lit { color: var(--muted); }
-.proof-line.is-scrolly strong .sw.is-lit { color: var(--ink); }
+/* Revelação só por opacidade e posição: as cores permanecem fixas. */
+.proof-line.is-word-reveal .reveal-word { display: inline-block; opacity: 0; transform: translateY(.12em); transition: opacity .35s ease-out, transform .45s cubic-bezier(.2,.7,.2,1); }
+.proof-line.is-word-reveal .reveal-word.is-shown { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .proof-line.is-word-reveal .reveal-word { opacity: 1; transform: none; transition: none; } }
 
 /* ---------- Ofertas: duas colunas com foto grande ---------- */
 

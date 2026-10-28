@@ -200,7 +200,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round
 html.has-fueled-background { background: #000; }
 body.has-net { position: relative; isolation: isolate; background: #000; }
 .fundo { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: #000; }
-.fundo-planet { position: absolute; top: var(--planet-anchor,474px); left: 0; display: block; width: 100%; max-width: none; height: auto; aspect-ratio: 2880 / 4096; object-fit: cover; translate: 0 calc(-50% + 35vw); transform: translate3d(0,var(--planet-y,0px),0); }
+.fundo-planet,.fundo-planet-canvas { position: absolute; top: var(--planet-anchor,474px); left: 0; display: block; width: 100%; max-width: none; height: auto; aspect-ratio: 2880 / 4096; object-fit: cover; translate: 0 calc(-50% + 35vw); transform: translate3d(0,var(--planet-y,0px),0); }
 .fundo-light-fill { position: absolute; left: 0; width: 100%; background: #fff; }
 .fundo-transition { position: absolute; left: 0; width: 100%; }
 .fundo-transition canvas,.fundo-transition img { position: absolute; top: 50%; left: 50%; width: 110%; height: calc(100% * var(--transition-scale-y,.8)); max-width: none; transform: translate(-50%,-50%); }
@@ -209,9 +209,9 @@ body.has-net { position: relative; isolation: isolate; background: #000; }
 .fundo-transition.is-loaded canvas { display: block; }
 .fundo-transition.is-loaded img { display: none; }
 .fundo-transition.is-flipped canvas,.fundo-transition.is-flipped img { transform: translate(-50%,-50%) scaleY(-1); }
-@media (max-width: 959px) { .fundo-planet { scale: 1.5; translate: 0 calc(-50% + 55vw); } }
-@media (max-width: 599px) { .fundo-planet { --planet-anchor: 450px; scale: 2; translate: 0 calc(-50% + 70vw); } }
-@media (prefers-reduced-motion: reduce) { .fundo-planet { transform: none; } }
+@media (max-width: 959px) { .fundo-planet,.fundo-planet-canvas { scale: 1.5; translate: 0 calc(-50% + 55vw); } }
+@media (max-width: 599px) { .fundo-planet,.fundo-planet-canvas { --planet-anchor: 450px; scale: 2; translate: 0 calc(-50% + 70vw); } }
+@media (prefers-reduced-motion: reduce) { .fundo-planet,.fundo-planet-canvas { transform: none; } }
 .block-dark { background: var(--navy); color: var(--white); }
 
 /* Etiqueta acima do título: monoespaçada, caixa alta, cinza */
@@ -477,3 +477,7 @@ html.lenis.lenis-smooth { scroll-behavior: auto; }
 .has-net .footer-clean { background: transparent; }
 
 .bg-is-light .steps4:has(.is-active) .s4:not(.is-active) { opacity: 1; }
+
+.fundo-planet-canvas { display: none; }
+.fundo.has-smooth-planet .fundo-planet-canvas { display: block; }
+.fundo.has-smooth-planet .fundo-planet { opacity: 0; }

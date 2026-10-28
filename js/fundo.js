@@ -29,6 +29,10 @@
   document.body.prepend(layer);
   document.body.classList.add('has-net');
   document.documentElement.classList.add('has-fueled-background');
+  if (!reduced.matches) {
+    import(new URL('planet-smooth.js?v=20261027-fluido', scriptURL).href)
+      .then(module => module.createPlanetRenderer(video, layer, reduced)).catch(() => {});
+  }
 
   const bands = [];
   // Os três capítulos centrais recebem a passagem clara da referência.
@@ -47,7 +51,7 @@
       poster.alt = ''; poster.width = 192; poster.height = 216; poster.loading = 'lazy';
       const canvas = document.createElement('canvas'); canvas.width = 192; canvas.height = 216;
       element.append(poster, canvas); layer.append(element);
-      bands.push({ element, canvas, context: canvas.getContext('2d', { willReadFrequently: true }), visible: false, started: 0, frame: -1, scale: flipped ? .7 : .8 });
+      bands.push({ element, canvas, context: canvas.getContext('2d', { alpha: false }), visible: false, started: 0, frame: -1, scale: flipped ? .7 : .8 });
     });
   }
   let heroTop = 0, heroHeight = 1, scrollQueued = false, animation = 0;
@@ -55,7 +59,7 @@
   const positionPlanet = () => {
     scrollQueued = false;
     const progress = Math.max(0, Math.min(1, (scrollY - heroTop) / heroHeight));
-    video.style.setProperty('--planet-y', `${reduced.matches ? 0 : -300 * progress}px`);
+    layer.style.setProperty('--planet-y', `${reduced.matches ? 0 : -300 * progress}px`);
   };
   const layout = () => {
     if (hero) {
@@ -90,11 +94,14 @@
     if (reduced.matches || document.hidden || !heroVisible) { video.pause(); return; }
     loadVideo(); video.playbackRate = PLANET_PLAYBACK_RATE; video.play().catch(() => {});
   };
-  const draw = (band, index) => {
-    if (!images || !band.context || band.frame === index) return;
-    band.context.clearRect(0, 0, 192, 216);
+  const draw = (band, position) => {
+    if (!images || !band.context || band.frame === position) return;
+    const index = Math.floor(position), next = Math.min(index + 1, images.length - 1), blend = position - index;
+    band.context.globalAlpha = 1;
     band.context.drawImage(images[index], 0, 0, 192, 216);
-    band.frame = index; band.element.classList.add('is-loaded');
+    if (blend > 0) { band.context.globalAlpha = blend; band.context.drawImage(images[next], 0, 0, 192, 216); }
+    band.context.globalAlpha = 1;
+    band.frame = position; band.element.classList.add('is-loaded');
   };
   const tick = (now) => {
     animation = 0;
@@ -103,7 +110,7 @@
     visible.forEach(band => {
       if (!band.started) band.started = now;
       // A sequência original de 118 quadros avança lentamente em um ciclo de 12 segundos.
-      const frame = Math.round((((now - band.started) / 1000) % TRANSITION_SECONDS) / TRANSITION_SECONDS * 117);
+      const frame = (((now - band.started) / 1000) % TRANSITION_SECONDS) / TRANSITION_SECONDS * 117;
       draw(band, frame);
     });
     if (visible.length) animation = requestAnimationFrame(tick);
