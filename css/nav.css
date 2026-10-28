@@ -1,5 +1,5 @@
 /* IA BRAZIL — navegação transparente e nativa. */
-.site-header { position: fixed; inset: 0 0 auto; z-index: 50; color: var(--ink); }
+.site-header { position: fixed; inset: 0 0 auto; z-index: 100; color: var(--ink); }
 .header-shell { display: flex; align-items: center; margin-inline: auto; }
 .logo { display: inline-flex; align-items: center; flex: none; }
 .logo-image { display: block; }
@@ -10,36 +10,42 @@
 /* Navegação da referência Fueled, com a marca e os links da IA BRAZIL. */
 :root { --header-h: 116px; }
 .site-header.nav--fueled,.site-header.nav--fueled.is-scrolled { padding: 32px 0 40px; background: transparent; border: 0; transition: transform .2s ease-in-out,color .2s; }
-.site-header.nav--fueled .header-shell,.site-header.nav--fueled.is-scrolled .header-shell { width: min(1360px,calc(100% - 32px)); height: 44px; padding: 0; gap: 24px; border: 0; border-radius: 0; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; }
+.site-header.nav--fueled .header-shell,.site-header.nav--fueled.is-scrolled .header-shell { width: min(1360px,calc(100% - 32px)); height: 44.4448px; padding: 0; gap: 24px; border: 0; border-radius: 0; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; }
 .site-header.nav--fueled .logo-image,.site-header.nav--fueled.is-scrolled .logo-image { width: 160px; height: 34px; object-fit: contain; object-position: left center; border-radius: 0; transition: filter .2s; }
 .nav--fueled .logo { position: relative; z-index: 2; }
-.site-header.nav--fueled .nav { display: flex; gap: 24px; margin: 0 0 0 auto; font-size: 15px; font-weight: 500; }
-.nav--fueled .nav-link { padding: 8px 24px; border-radius: 999px; color: #fff; font-size: 15px; font-weight: 500; line-height: 28px; isolation: isolate; transition: color .2s; }
+.site-header.nav--fueled .nav { display: flex; gap: 24px; margin: 0 0 0 auto; font-size: 16px; font-weight: 500; }
+.nav--fueled .nav-link { position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; padding: 8px 24px; border-radius: 999px; color: #fff; font-size: 16px; font-weight: 500; line-height: 1.7778; isolation: isolate; transition: color .2s; }
 .nav--fueled .nav-link::before { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; background: transparent; transition: background .2s,backdrop-filter .2s; }
 .nav--fueled .nav-link::after { display: none; }
 .nav--fueled .nav-link:hover::before,.nav--fueled .nav-link[aria-current="page"]::before,.nav--fueled .nav-link:focus-visible::before { background: rgba(255,255,255,.1); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); }
 .nav--fueled .nav-link:hover,.nav--fueled .nav-link.is-current { color: #fff; }
 .nav--fueled.is-hidden:not(.nav-open):not(:focus-within) { transform: translateY(-100%); pointer-events: none; }
-.nav--fueled.is-over-light .nav-link { color: #171717; }
-.nav--fueled.is-over-light .logo-image { filter: brightness(0); }
-.nav--fueled.is-over-light .nav-link:hover::before { background: rgba(0,0,0,.07); }
+
+
+
 .site-header.nav--fueled .menu-toggle { display: none; }
 @media (max-width: 1099px) {
- .site-header.nav--fueled,.site-header.nav--fueled.is-scrolled { padding: 24px 0; }
- .site-header.nav--fueled .header-shell,.site-header.nav--fueled.is-scrolled .header-shell { justify-content: flex-start; gap: 16px; height: 44px; }
- .site-header.nav--fueled .menu-toggle { display: flex; position: relative; z-index: 2; order: -1; flex: none; margin: 0; width: 32px; height: 44px; padding: 8px 4px; border: 0; border-radius: 0; background: transparent; }
+ .site-header.nav--fueled,.site-header.nav--fueled.is-scrolled { padding: 32px 0; }
+ .site-header.nav--fueled .header-shell,.site-header.nav--fueled.is-scrolled .header-shell { justify-content: flex-start; gap: 16px; height: 30.133px; }
+ .site-header.nav--fueled .menu-toggle { display: flex; position: relative; z-index: 2; order: -1; flex: none; margin: 0; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 0; background: transparent; }
  .nav--fueled .menu-toggle span { width: 20px; background: #fff; }
- .nav--fueled.is-over-light .menu-toggle span { background: #171717; }
- .site-header.nav--fueled .nav { position: fixed; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 16px; height: 100dvh; padding: 116px 16px 40px; margin: 0; background: #000; color: #fff; overflow-y: auto; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-8px); transition: opacity .25s,visibility .25s,transform .25s; }
+
+ .site-header.nav--fueled .nav { position: fixed; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 16px; height: 100dvh; padding: 133px 32px 40px; margin: 0; background: #000; color: #fff; overflow-y: auto; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-8px); transition: opacity .25s,visibility .25s,transform .25s; }
  .nav--fueled.nav-open .nav { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
  .nav--fueled.nav-open .logo,.nav--fueled.nav-open .menu-toggle { z-index: 2; }
- .nav--fueled .nav-link,.nav--fueled.is-over-light .nav-link { color: #fff; padding: 8px 24px; font-size: clamp(26px,4vw,40px); line-height: 1.35; transform: none; opacity: 1; }
+ .nav--fueled .nav-link,.nav--fueled.is-over-light .nav-link { color: #fff; padding: 8px 24px; font-size: 22px; letter-spacing: -.24px; line-height: 1.05; transform: none; opacity: 1; }
  .nav--fueled.nav-open .logo-image { filter: none; }
  .nav--fueled.nav-open .menu-toggle span { background: #fff; }
 }
 @media (prefers-reduced-motion: reduce) { .site-header.nav--fueled,.nav--fueled .nav,.nav--fueled .nav-link,.nav--fueled .nav-link::before { transition: none; } }
 
-@media (max-width: 1099px) { :root { --header-h: 92px; } }
+@media (max-width: 1099px) { :root { --header-h: 94.133px; } }
 
 .theme-light .site-header.nav--fueled.is-scrolled .header-shell { background: transparent; border: 0; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
 .nav--fueled.is-hidden ~ main .subnav { top: 0; }
+
+/* Degradê original da referência, separado do texto e dos hovers. */
+.nav--fueled::after {background:linear-gradient(180deg,#000 0,rgba(0,0,0,.987) 6.1%,rgba(0,0,0,.951) 12.8%,rgba(0,0,0,.896) 19.9%,rgba(0,0,0,.825) 27.4%,rgba(0,0,0,.741) 35%,rgba(0,0,0,.648) 42.8%,rgba(0,0,0,.55) 50.6%,rgba(0,0,0,.45) 58.3%,rgba(0,0,0,.352) 65.8%,rgba(0,0,0,.259) 73%,rgba(0,0,0,.175) 79.7%,rgba(0,0,0,.104) 85.9%,rgba(0,0,0,.049) 91.4%,rgba(0,0,0,.013) 96.1%,transparent);background-repeat:no-repeat;border-bottom:none;bottom:0;content:"";height:100px;left:0;pointer-events:none;position:absolute;right:0;top:0;transition:border-color .2s ease;width:100%;z-index:-1}
+@media (min-width:1100px) { .nav--fueled::after {background:linear-gradient(180deg,rgba(0,0,0,.88) 0,rgba(0,0,0,.869) 8.1%,rgba(0,0,0,.837) 15.5%,rgba(0,0,0,.788) 22.5%,rgba(0,0,0,.726) 29%,rgba(0,0,0,.652) 35.3%,rgba(0,0,0,.57) 41.2%,rgba(0,0,0,.484) 47.1%,rgba(0,0,0,.396) 52.9%,rgba(0,0,0,.31) 58.8%,rgba(0,0,0,.228) 64.7%,rgba(0,0,0,.154) 71%,rgba(0,0,0,.092) 77.5%,rgba(0,0,0,.043) 84.5%,rgba(0,0,0,.011) 91.9%,transparent);height:200px} .nav--fueled.is-hidden::after { height:100%; } }
+@media(max-width:1099px) { .site-header.nav--fueled .logo-image { height:30.133px; } .site-header.nav--fueled.nav-open { background:#000; } }
+ .nav--fueled.is-over-footer::after { background:#000; border-bottom:1px solid #fff; height:100%; }

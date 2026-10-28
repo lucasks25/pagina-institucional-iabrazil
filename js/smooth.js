@@ -13,12 +13,8 @@
     const locked = header.classList.contains('nav-open') || header.contains(document.activeElement);
     if (current < 120 || locked || direction < -6) header.classList.remove('is-hidden');
     else if (direction > 6) header.classList.add('is-hidden');
-    const center = header.getBoundingClientRect().height / 2;
-    const light = document.body.classList.contains('theme-light') || [...document.querySelectorAll('.bg-is-light')].some(section => {
-      const rect = section.getBoundingClientRect();
-      return rect.top + 100 < center && rect.bottom - 100 > center;
-    });
-    header.classList.toggle('is-over-light', light && !header.classList.contains('nav-open'));
+    const footer = document.querySelector('.site-footer');
+    header.classList.toggle('is-over-footer', !!footer && footer.getBoundingClientRect().top < header.offsetHeight);
     last = current;
   };
   window.addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
