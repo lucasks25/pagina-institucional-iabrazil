@@ -199,7 +199,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round
 /* Background da referência Fueled: os recursos visuais são locais. */
 html.has-fueled-background { background: #000; }
 body.has-net { position: relative; isolation: isolate; background: #000; }
-.fundo { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: #000; }
+.fundo { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: #050b18; }
 .fundo-planet,.fundo-planet-canvas { position: absolute; top: var(--planet-anchor,474px); left: 0; display: block; width: 100%; max-width: none; height: auto; aspect-ratio: 2880 / 4096; object-fit: cover; translate: 0 calc(-50% + 35vw); transform: translate3d(0,var(--planet-y,0px),0); }
 .fundo-light-fill { position: absolute; left: 0; width: 100%; background: #fff; }
 .fundo-transition { position: absolute; left: 0; width: 100%; }
@@ -481,3 +481,8 @@ html.lenis.lenis-smooth { scroll-behavior: auto; }
 .fundo-planet-canvas { display: none; }
 .fundo.has-smooth-planet .fundo-planet-canvas { display: block; }
 .fundo.has-smooth-planet .fundo-planet { opacity: 0; }
+
+/* Paleta azul: fallback do vídeo/pôster; o canvas usa as cores na GPU. */
+.fundo:not(.has-smooth-planet) .fundo-planet { filter: grayscale(1) sepia(1) hue-rotate(155deg) saturate(3); }
+
+.fundo-transition img { filter: grayscale(1) blur(min(5.729vw,82.5px)); }

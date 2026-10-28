@@ -13,7 +13,7 @@ export function createPlanetRenderer(video, layer, reduced) {
   let program, vertex, fragment;
   try {
     vertex = shader(gl.VERTEX_SHADER, 'attribute vec2 position; varying vec2 uv; void main(){uv=position*.5+.5;gl_Position=vec4(position,0.,1.);}');
-    fragment = shader(gl.FRAGMENT_SHADER, 'precision highp float; varying vec2 uv; uniform sampler2D previousFrame; uniform sampler2D currentFrame; uniform float progress; void main(){gl_FragColor=mix(texture2D(previousFrame,uv),texture2D(currentFrame,uv),progress);}');
+    fragment = shader(gl.FRAGMENT_SHADER, 'precision highp float; varying vec2 uv; uniform sampler2D previousFrame; uniform sampler2D currentFrame; uniform float progress; void main(){vec3 source=mix(texture2D(previousFrame,uv),texture2D(currentFrame,uv),progress).rgb;float light=dot(source,vec3(.2126,.7152,.0722));vec3 deep=vec3(.019608,.043137,.094118);vec3 blue=vec3(.145098,.388235,.921569);vec3 cyan=vec3(.133333,.827451,.933333);vec3 color=mix(deep,blue,smoothstep(0.,.6,light));color=mix(color,cyan,smoothstep(.55,.95,light));gl_FragColor=vec4(color,1.);}');
     program = gl.createProgram(); gl.attachShader(program, vertex); gl.attachShader(program, fragment); gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('Renderer unavailable');
   } catch { gl.deleteProgram(program); gl.deleteShader(vertex); gl.deleteShader(fragment); return null; }

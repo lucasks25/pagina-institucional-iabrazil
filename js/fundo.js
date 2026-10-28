@@ -30,7 +30,7 @@
   document.body.classList.add('has-net');
   document.documentElement.classList.add('has-fueled-background');
   if (!reduced.matches) {
-    import(new URL('planet-smooth.js?v=20261027-fluido', scriptURL).href)
+    import(new URL('planet-smooth.js?v=20261028-azul', scriptURL).href)
       .then(module => module.createPlanetRenderer(video, layer, reduced)).catch(() => {});
   }
 
@@ -135,6 +135,16 @@
           if (!context) throw new Error('Canvas unavailable');
           context.drawImage(image, 0, 0, 192, 216);
           module.canvasRGBA(prepared, 0, 0, 192, 216, 10);
+          // Recolore uma única vez; mantém os brancos e o playback leve.
+          const pixels = context.getImageData(0, 0, 192, 216), data = pixels.data;
+          const stops = [[0,5,11,24],[.35,37,99,235],[.65,34,211,238],[1,255,255,255]];
+          for (let p = 0; p < data.length; p += 4) {
+            const light = (data[p] * .2126 + data[p+1] * .7152 + data[p+2] * .0722) / 255;
+            const i = light < .35 ? 0 : light < .65 ? 1 : 2;
+            const a = stops[i], b = stops[i+1], t = (light-a[0])/(b[0]-a[0]);
+            for (let c = 0; c < 3; c++) data[p+c] = a[c+1] + (b[c+1]-a[c+1])*t;
+          }
+          context.putImageData(pixels, 0, 0);
           if (typeof createImageBitmap === 'function') {
             loaded[index] = await createImageBitmap(prepared); prepared.width = 0; prepared.height = 0;
           } else loaded[index] = prepared;
