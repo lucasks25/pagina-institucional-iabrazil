@@ -76,8 +76,9 @@
 }
 
 .circular-footer-form {
-  display: flex;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 8px;
   width: min(100%, 448px);
 }
 
@@ -90,7 +91,6 @@
 }
 
 .circular-footer-form input {
-  flex: 1;
   min-width: 0;
   background: #fff;
   color: var(--ink);
@@ -102,7 +102,6 @@
 }
 
 .circular-footer-form button {
-  flex-shrink: 0;
   border-color: var(--ink);
   background: var(--ink);
   color: #fff;
@@ -110,6 +109,35 @@
 
 .circular-footer-form button:hover {
   background: #303030;
+}
+
+.circular-footer-form input[aria-invalid="true"] {
+  border-color: #ab3c48;
+  outline-color: #ab3c48;
+}
+
+.circular-footer-error {
+  grid-column: 1 / -1;
+  padding-inline: 16px;
+  color: #9b2433;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.circular-footer-error:not(:empty) {
+  margin-top: 8px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .circular-footer-error:not(:empty) {
+    animation: footer-error-in .2s ease-out both;
+  }
+
+  @keyframes footer-error-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
 
 .circular-footer-legal {

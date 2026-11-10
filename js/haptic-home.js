@@ -24,11 +24,29 @@ document.querySelectorAll('[data-contact]').forEach(link=>link.addEventListener(
   const toggle=document.querySelector('.menu-toggle');toggle?.setAttribute('aria-expanded','false');toggle?.setAttribute('aria-label','Abrir menu');
 }));
 const footerForm = document.querySelector('.circular-footer-form');
+const footerEmail = footerForm?.querySelector('input[type=email]');
+const footerEmailError = footerForm?.querySelector('#footer-email-error');
 const contactEmail = dialog?.querySelector('input[name=email]');
-if (footerForm && contactEmail && dialog.showModal) {
-  footerForm.addEventListener('submit', event => {
+if (footerEmail && footerEmailError) {
+  const clearFooterEmailError = () => {
+    footerEmail.removeAttribute('aria-invalid');
+    footerEmailError.textContent = '';
+  };
+  footerEmail.addEventListener('invalid', event => {
     event.preventDefault();
-    contactEmail.value = footerForm.querySelector('input').value;
+    footerEmail.setAttribute('aria-invalid', 'true');
+    footerEmail.focus();
+    const message = footerEmail.validity.valueMissing
+      ? 'Informe seu e-mail para continuar.'
+      : 'Confira o formato do e-mail.';
+    if (footerEmailError.textContent !== message) footerEmailError.textContent = message;
+  });
+  footerEmail.addEventListener('input', clearFooterEmailError);
+  footerForm.addEventListener('submit', event => {
+    clearFooterEmailError();
+    if (!contactEmail || !dialog.showModal) return;
+    event.preventDefault();
+    contactEmail.value = footerEmail.value;
     openContact();
   });
 }
