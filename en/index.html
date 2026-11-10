@@ -152,21 +152,27 @@
   <script src="../js/leads.js" defer></script>
   <script src="../js/main.js" defer></script>
   <script src="../js/home.js?v=20261027-fluido" defer></script>
+  <link rel="stylesheet" href="../css/future.css?v=20261103-future">
+  <link rel="stylesheet" href="../css/footer-circular.css?v=20261110-v1">
+  <link rel="stylesheet" href="../css/site-interior.css?v=20261110-v1">
+  <link rel="stylesheet" href="../css/subpage-content.css?v=20261110-v1">
+  <link rel="stylesheet" href="../css/nav-motion.css?v=20261110-v1">
+  <link rel="stylesheet" href="../css/privacy-consent.css?v=20261110-v1">
 </head>
-<body>
+<body class="site-interior theme-light">
   <!-- Versão em inglês da home (uma página só). Header e rodapé vêm do scripts/sync_layout.py (header_en/footer_en).
        Mesma estrutura de ../index.html: ao mudar a home, atualize esta página também. -->
   <!-- layout:header -->
   <a class="skip-link" href="#conteudo">Skip to content</a>
-  <header class="site-header nav--fueled">
+  <header class="site-header interior-header">
     <div class="header-shell">
-      <a class="logo" href="index.html" aria-label="IA BRAZIL, home"><img class="logo-image" src="../assets/logo-ia-brazil-texto-hd.png" alt="IA BRAZIL" width="160" height="34"></a>
+      <a class="interior-brand" href="index.html" aria-label="IA BRAZIL, home"><img src="../assets/brand/ia-brazil-wordmark.svg" alt="" width="960" height="326"></a>
       <nav class="nav" id="menu" aria-label="Main navigation">
-        <a class="nav-link" href="#servicos">Solutions</a>
-        <a class="nav-link" href="#cases">Work</a>
-        <a class="nav-link" href="#metodo">Method</a>
-        <a class="nav-link" href="#quem-somos">About</a>
-        <a class="nav-link" href="#analise">Contact</a>
+        <a class="nav-link" href="#servicos"><span class="nav-roll"><span class="nav-roll-track"><span>Solutions</span><span aria-hidden="true">Solutions</span></span></span></a>
+        <a class="nav-link" href="#cases"><span class="nav-roll"><span class="nav-roll-track"><span>Work</span><span aria-hidden="true">Work</span></span></span></a>
+        <a class="nav-link" href="#metodo"><span class="nav-roll"><span class="nav-roll-track"><span>Method</span><span aria-hidden="true">Method</span></span></span></a>
+        <a class="nav-link" href="#quem-somos"><span class="nav-roll"><span class="nav-roll-track"><span>About</span><span aria-hidden="true">About</span></span></span></a>
+        <a class="nav-link" href="#analise"><span class="nav-roll"><span class="nav-roll-track"><span>Contact</span><span aria-hidden="true">Contact</span></span></span></a>
       </nav>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Open menu"><span></span><span></span></button>
     </div>
@@ -211,6 +217,8 @@
 
     <section class="proof" aria-label="How we work, in numbers">
       <div class="container">
+        <p class="platinum-label">Made for your business</p>
+        <h2 class="platinum-title">Your operation. Connected.<br>Intelligence that moves it forward.</h2>
         <p class="proof-line" data-scroll-reveal>In <strong>30 days</strong>, you identify where artificial intelligence can generate a return for your operation. In <strong>four phases</strong>, the solution is designed and put into operation, with the <strong>return projected before development</strong>, data handled in compliance with Brazil's <strong>LGPD</strong> and projects run with <strong>technical rigor, security and governance</strong>.</p>
       </div>
     </section>
@@ -451,7 +459,7 @@
             <blockquote class="founder-quote">“We don’t sell generic tools. We design, build and support platforms that change how a company works day to day.”</blockquote>
             <p class="founder-bio">Leading every IA BRAZIL project, from assessment to delivery.</p>
             <div class="founder-links">
-              <a class="btn btn-outline" href="https://www.linkedin.com/in/lucaskaufmannsapuppo" target="_blank" rel="noopener me">LinkedIn</a>
+              <a class="btn btn-outline" href="https://www.linkedin.com/company/iabrazil/" target="_blank" rel="noopener me">LinkedIn</a>
               <a class="arrow-link" href="#analise">Talk to the founder <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h16M14 7l5 5-5 5"/></svg></a>
             </div>
           </div>
@@ -535,38 +543,48 @@
   </main>
 
   <!-- layout:footer -->
-  <footer class="site-footer footer-clean" id="rodape">
-    <div class="container">
-      <div class="footer-main">
-        <div class="footer-brand">
-          <a class="footer-brand-link" href="index.html" aria-label="IA BRAZIL, home"><img class="footer-logo" src="../assets/logo-ia-brazil-horizontal-hd.png" alt="IA BRAZIL" width="1368" height="300" loading="lazy"></a>
-          <p class="footer-tagline">Your business. Your own system.</p>
-          <p class="footer-description">Software, integrations and AI built around your business.</p>
-        </div>
-        <div class="footer-links">
-        <nav class="footer-col" aria-label="Solutions"><h3>Solutions</h3><ul><li><a href="#implementacao">Custom software</a></li><li><a href="#implementacao">Automation & integrations</a></li><li><a href="#sites">Professional websites</a></li><li><a href="#diagnostico">AI assessment</a></li></ul></nav>
-        <nav class="footer-col" aria-label="Explore"><h3>Explore</h3><ul><li><a href="#cases">Projects</a></li><li><a href="#metodo">How we work</a></li><li><a href="#duvidas">FAQ</a></li><li><a href="#analise">Contact</a></li></ul></nav>
-        <nav class="footer-col" aria-label="IA BRAZIL"><h3>IA BRAZIL</h3><ul><li><a href="#quem-somos">About us</a></li><li><a href="../index.html">Português</a></li><li><a href="../privacidade.html">Privacy policy</a></li></ul></nav>
-        </div>
+  <footer class="circular-footer interior-footer" id="rodape">
+    <a class="circular-footer-brand" href="index.html" aria-label="IA BRAZIL, home">
+      <img src="../assets/brand/ia-brazil-orbital-lockup.svg" width="1405" height="349" alt="" loading="lazy">
+    </a>
+    <nav class="circular-footer-nav" aria-label="Footer navigation">
+      <a href="#servicos">Solutions</a>
+      <a href="#cases">Projects</a>
+      <a href="#metodo">How we work</a>
+      <a href="#quem-somos">About</a>
+      <a href="#duvidas">FAQ</a>
+      <a href="#analise">Contact</a>
+      <a href="../index.html">Português</a>
+    </nav>
+    <div class="circular-footer-channels">
+    <a href="https://wa.me/5511917092509" data-wa aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L4 20l1-3.9a8.5 8.5 0 1 1 15.5-4.6Z"/><path d="M9 8.2c-.7.3-.9 1-.7 1.8.4 1.8 2.5 3.9 4.4 4.6.9.3 1.7.2 2.2-.4l.3-.6-2.1-1.1-.8.8a6.2 6.2 0 0 1-2.4-2.4l.5-.8-.9-2Z"/></svg>
+    </a>
+    <a href="mailto:contato@iabrazil.com" aria-label="Email">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/company/iabrazil/" target="_blank" rel="noopener me" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10v8M6 6.5v.01M10 18v-8m0 4a4 4 0 0 1 8 0v4"/></svg>
+    </a>
+    <a href="https://www.instagram.com/iabrazil.ai/" target="_blank" rel="noopener" aria-label="IA BRAZIL on Instagram">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>
+    </a>
+  </div>
+    <a class="interior-footer-cta" href="#analise">Let’s talk</a>
+    <details class="interior-footer-directory">
+      <summary>Explore our solutions</summary>
+      <div class="interior-footer-groups">
+<nav class="interior-footer-group" aria-label="Solutions"><h3>Solutions</h3><ul><li><a href="#implementacao">Custom software</a></li><li><a href="#implementacao">Automation & integrations</a></li><li><a href="#sites">Professional websites</a></li><li><a href="#diagnostico">AI assessment</a></li></ul></nav>
       </div>
-      <div class="footer-contact-bar">
-        <p>Let’s talk about your business.</p>
-        <div class="footer-contact-actions">
-          <a href="#analise" data-wa aria-label="Talk on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8.2 18.9z"/><path d="M9.2 8.6c0 3.3 2.9 6.2 6.2 6.2l.9-1.5-1.9-1-1 .9c-1.2-.5-2.1-1.4-2.6-2.6l.9-1-1-1.9z"/></svg><span>+55 11 91709-2509</span></a>
-          <a href="mailto:contato@iabrazil.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 7 9 6 9-6"/></svg><span>contato@iabrazil.com</span></a>
-          <a href="https://www.linkedin.com/in/lucaskaufmannsapuppo" target="_blank" rel="noopener me"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10v8M6 6.5v.01M10 18v-8M10 13.5c0-2 1.3-3.5 3.2-3.5S16 11.3 16 13.5V18"/></svg><span>LinkedIn</span></a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© <span id="ano">2026</span> IA BRAZIL. All rights reserved.</p>
-        <div class="footer-legal"><a href="../privacidade.html">Privacy policy (PT)</a><a class="footer-top" href="#conteudo">Back to top <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
-      </div>
+    </details>
+    <div class="circular-footer-legal">
+      <p>© <span id="ano">2026</span> IA BRAZIL</p>
+      <a href="../privacidade.html">Privacy policy (PT)</a>
+      <a href="#conteudo">Back to top</a>
     </div>
   </footer>
-
-  <script src="../js/smooth.js?v=20261028-navbar" defer></script>
-  <script src="../js/fundo.js?v=20261028-azul" defer></script>
-  <script src="../js/track.js" defer></script>
   <!-- /layout:footer -->
+  <script src="../js/track.js?v=20261110-v1" defer></script>
+  <script src="../js/privacy-consent.js?v=20261110-v1" defer></script>
 </body>
 </html>

@@ -1,0 +1,146 @@
+/* Projetos IA BRAZIL. A tipografia e os componentes comuns vêm de haptic-home.css. */
+.haptic-projects{background:#fff;color:#080808;}
+.haptic-projects main{position:relative;}
+.page-top{position:absolute;top:0;left:0;}
+.collection-intro{padding-top:150px;padding-bottom:74px;}
+.collection-intro>.small-label{margin-bottom:32px;}
+.collection-intro h1{font-size:clamp(42px,5.2vw,80px);line-height:1;max-width:950px;letter-spacing:-.03em;}
+.collection-description{max-width:470px;color:#858585;font-size:16px;line-height:1.4;margin-top:28px;}
+.project-catalog{padding-bottom:100px;}
+.project-catalog .work-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.project-tile{min-width:0;scroll-margin-top:86px;}
+.project-catalog .work-card{display:block;position:relative;border-radius:12px;}
+.project-catalog .work-visual{aspect-ratio:.767778;border-radius:12px;isolation:isolate;}
+.project-catalog .work-visual::after{content:'';position:absolute;inset:40% 0 0;background:linear-gradient(transparent,#0004 45%,#000a);z-index:0;pointer-events:none;}
+.project-catalog .work-placeholder{font-size:clamp(26px,3.5vw,58px);color:#c8c9cd;letter-spacing:-.055em;transition:transform .5s;}
+.project-catalog .work-card:hover .work-placeholder{transform:scale(1.035);}
+.project-catalog .work-visual>.coming-tag{top:20px;right:20px;color:#777;background:#ffffff75;font-size:10px;}
+.project-catalog .work-caption{position:absolute;inset:auto 20px 20px;z-index:1;display:flex;align-items:center;justify-content:flex-start;gap:12px;padding:0;color:#fff;text-align:left;}
+.project-catalog .work-logo{width:44px;height:44px;flex:none;border-radius:8px;background:#080808;display:grid;place-items:center;overflow:hidden;}
+.project-catalog .work-logo img{width:34px;height:30px;object-fit:contain;filter:url(#client-logo-white);}
+.project-catalog .work-logo-nicodanny img{width:43px;height:39px;}
+.project-catalog .work-logo-icoracing img{width:33px;height:34px;}
+.project-catalog .work-logo-salute img{width:36px;height:26px;}
+.project-catalog .work-logo-clinica-bz img{width:40px;height:32px;}
+.project-initials{font:500 14px/1 var(--body);letter-spacing:-.03em;color:#fff;}
+.project-catalog .work-caption>div{min-width:0;}
+.project-catalog .work-caption h3{font:500 16px/1.2 var(--body);letter-spacing:0;}
+.project-catalog .work-caption p{font:400 16px/1.25 var(--body);color:#cecece;margin-top:4px;}
+.project-catalog .work-caption>svg{margin-left:auto;flex:none;}
+.catalog-note{font-size:12px;line-height:1.5;color:#858585;max-width:620px;margin-top:30px;}
+/* Uma única capa principal, seguida pelo conteúdo factual do projeto. */
+.project-main{padding-top:80px;}
+.project-cover{margin:0;position:relative;aspect-ratio:1.8;min-height:360px;max-height:calc(100svh - 100px);border-radius:12px;overflow:hidden;}
+.project-cover .coming-tag{top:20px;right:20px;color:#777;background:#ffffff75;font-size:10px;}
+.project-cover-mark{font-family:var(--heading);font-size:clamp(48px,9vw,150px);letter-spacing:-.06em;color:#c8c9cd;}
+.project-cover figcaption{position:absolute;bottom:20px;left:20px;right:20px;display:flex;justify-content:space-between;gap:20px;font-size:12px;line-height:1.3;color:#858585;}
+.project-cover>img{width:100%;height:100%;object-fit:cover;}
+.project-story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:80px;padding-top:70px;padding-bottom:100px;}
+.project-title{max-width:680px;}
+.project-back{display:inline-flex;align-items:center;gap:12px;color:#858585;font-size:13px;line-height:1.4;margin-bottom:50px;}
+.project-back svg{transform:rotate(225deg);}
+.project-back:hover{color:#080808;}
+.project-title>.small-label{margin-bottom:20px;}
+.project-title h1{font-size:clamp(32px,3.8vw,62px);line-height:1.05;letter-spacing:-.025em;}
+.project-category{font-size:15px;line-height:1.4;color:#858585;margin-top:24px;}
+.project-tags{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;}
+.project-tags li{border:1px solid #e5e5e7;padding:7px 10px;border-radius:6px;font-size:12px;line-height:1.2;color:#666;}
+.project-description{max-width:660px;padding-top:1px;}
+.project-summary{font-family:var(--heading);font-size:24px;line-height:1.25;letter-spacing:-.015em;}
+.project-paragraph{margin-top:32px;}
+.project-paragraph h2{font:500 15px/1.3 var(--body);letter-spacing:0;margin-bottom:12px;}
+.project-paragraph p{font-size:17px;line-height:1.5;color:#858585;}
+.project-next{display:flex;justify-content:space-between;align-items:center;gap:30px;border-top:1px solid #e5e5e7;padding-top:32px;padding-bottom:80px;}
+.project-next>a:first-child{font-size:14px;color:#858585;}
+.project-next>a:last-child{display:grid;grid-template-columns:1fr auto;gap:8px 30px;align-items:center;text-align:right;}
+.project-next span{font-size:12px;color:#858585;}
+.project-next strong{grid-column:1;font:500 24px/1.2 var(--heading);letter-spacing:-.02em;}
+.project-next svg{grid-column:2;grid-row:1/3;}
+.haptic-projects .site-header.nav-open{color:#080808;}
+.haptic-projects .site-header.nav-open .menu-toggle span{background:#080808;}
+@media(min-width:810px) and (max-width:999px){
+ .project-catalog .work-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+ .collection-intro{padding-top:130px;padding-bottom:60px;}
+ .project-story{gap:40px;}
+ .project-title h1{font-size:38px;}
+ .project-cover{min-height:320px;}
+ .project-summary{font-size:22px;}
+ .project-paragraph p{font-size:16px;}
+}
+@media(max-width:809px){
+ .collection-intro{padding-top:120px;padding-bottom:48px;}
+ .collection-intro>.small-label{margin-bottom:28px;}
+ .collection-intro h1{font-size:42px;}
+ .collection-description{font-size:15px;max-width:420px;margin-top:24px;}
+ .project-catalog{padding-bottom:70px;}
+ .project-catalog .work-grid{grid-template-columns:1fr;gap:12px;}
+ .project-catalog .work-visual{aspect-ratio:1.55281;}
+ .project-catalog .work-placeholder{font-size:36px;}
+ .project-catalog .work-caption{inset:auto 16px 16px;gap:12px;}
+ .project-catalog .work-caption h3{font-size:16px;}
+ .project-catalog .work-caption p{font-size:16px;margin-top:4px;}
+ .project-catalog .work-visual>.coming-tag{top:16px;right:16px;font-size:9px;}
+ .project-main{padding-top:74px;}
+ .project-cover{aspect-ratio:1.55281;min-height:0;max-height:none;}
+ .project-cover-mark{font-size:11vw;}
+ .project-cover .coming-tag{top:16px;right:16px;font-size:9px;}
+ .project-cover figcaption{bottom:16px;left:16px;right:16px;font-size:10px;}
+ .project-story{grid-template-columns:1fr;gap:40px;padding-top:36px;padding-bottom:60px;}
+ .project-back{margin-bottom:32px;}
+ .project-title h1{font-size:34px;max-width:600px;}
+ .project-title>.small-label{margin-bottom:16px;}
+ .project-category{margin-top:20px;}
+ .project-tags{margin-top:20px;}
+ .project-summary{font-size:22px;}
+ .project-paragraph{margin-top:28px;}
+ .project-paragraph p{font-size:16px;line-height:1.5;}
+ .project-next{padding-top:24px;padding-bottom:60px;gap:24px;}
+ .project-next strong{font-size:20px;}
+ .project-next>a:last-child{gap:8px 16px;}
+}
+@media(max-width:375px){
+ .collection-intro h1{font-size:36px;}
+ .project-catalog .work-caption{inset:auto 12px 12px;gap:9px;}
+ .project-catalog .work-logo{width:38px;height:38px;}
+ .project-catalog .work-caption h3{font-size:16px;}
+ .project-catalog .work-caption p{font-size:16px;}
+ .project-catalog .work-caption>svg{display:none;}
+ .project-title h1{font-size:30px;}
+}
+
+/* Página de case: cabeçalho próprio, uma capa e narrativa em coluna. */
+.project-detail .project-header{position:fixed;z-index:70;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:1200px;height:80px;padding:20px;background:#fff;display:flex;align-items:center;gap:12px;}
+.project-identity{display:flex;align-items:center;gap:12px;min-width:0;flex:1;}
+.project-brand-icon{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:8px;background:#080808;overflow:hidden;padding:5px;color:#fff;font:500 16px/1 var(--heading);}
+.project-brand-icon img{width:100%;height:100%;object-fit:contain;filter:url(#client-logo-white);}
+.project-brand-copy{display:flex;flex-direction:column;gap:6px;min-width:0;}
+.project-brand-copy strong,.project-brand-copy>span{font:500 15px/.8 var(--body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.project-brand-copy>span{opacity:.5;}
+.project-close{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:50%;background:#f2f2f2;transition:background .2s;}
+.project-close:hover{background:#e6e6e6;}
+.project-detail .project-main{width:100%;max-width:1200px;padding:80px 20px 0;margin-inline:auto;}
+.project-detail .project-cover{width:100%;height:auto;aspect-ratio:1.42356;min-height:0;max-height:none;border-radius:12px;}
+.project-detail .project-cover::after{display:none;}
+.project-detail .project-cover-mark{font-size:clamp(36px,8vw,100px);color:#fff9;}
+.project-detail .project-story{display:flex;flex-direction:column;gap:20px;padding:60px 0;margin:0;max-width:640px;}
+.project-story>h1{font:500 28px/1.1 var(--heading);letter-spacing:-.02em;}
+.project-copy{display:flex;flex-direction:column;gap:16px;color:#858585;font-size:15px;line-height:1.6;}
+.project-detail .project-tags{margin:0;gap:4px;}
+.project-detail .project-tags li{border:0;background:#f5f5f7;color:#858585;border-radius:40px;padding:6px 10px;font:400 12px/1.2 var(--body);}
+.project-detail .project-next{max-width:1200px;width:calc(100% - 40px);padding:24px 0 60px;}
+.project-detail .project-next strong{font-size:20px;}
+/* A apresentação abre com o texto; as capturas vêm em seguida. */
+.project-detail:has(.project-scene) .project-story{padding:60px 0;gap:20px;max-width:640px;}
+.project-detail:has(.project-scene) .project-story>h1{font:500 48px/48px var(--heading);letter-spacing:-.02em;max-width:640px;}
+.project-detail:has(.project-scene) .project-copy{font-size:16px;line-height:24px;font-weight:500;max-width:640px;gap:16px;}
+.project-detail:has(.project-scene) .project-tags li{font-size:13px;line-height:10.4px;font-weight:500;padding:8px 12px;}
+@media(max-width:809px){
+ .project-detail .project-header{padding-inline:16px;}
+ .project-detail .project-main{padding-inline:16px;}
+ .project-detail .project-story{padding:40px 0;}
+ .project-detail:has(.project-scene) .project-story{padding:40px 0;gap:24px;}
+ .project-detail:has(.project-scene) .project-story>h1{font-size:36px;line-height:36px;}
+ .project-detail .project-next{width:calc(100% - 32px);}
+ .project-brand-copy{max-width:calc(100vw - 136px);}
+ .project-brand-copy strong,.project-brand-copy>span{font-size:14px;}
+}

@@ -1,0 +1,340 @@
+/* As capturas mantêm a proporção original sobre superfícies fotográficas. */
+.work-visual.project-scene {
+  background-color: var(--scene-paper, #d8d8d5);
+  background-image: var(--scene-texture, none);
+  background-position: center;
+  background-size: cover;
+  isolation: isolate;
+}
+
+.project-scene--nicodanny,
+.project-scene--clinica-bz {
+  --scene-paper: #d8c9b6;
+  --scene-texture: url("../assets/project-previews/backgrounds/linen-sand.webp");
+}
+
+.project-scene--salute,
+.project-scene--superai,
+.project-detail .project-scene--icoracing {
+  --scene-paper: #464848;
+  --scene-texture: url("../assets/project-previews/backgrounds/graphite-matte.webp");
+}
+
+.project-scene--grupo-amp,
+.project-scene--vionex,
+.project-scene--flip-seguros {
+  --scene-paper: #a6b8c1;
+  --scene-texture: url("../assets/project-previews/backgrounds/slate-blue.webp");
+}
+
+.project-scene--agencia-retrato {
+  --scene-paper: #a7ab92;
+  --scene-texture: url("../assets/project-previews/backgrounds/olive-weave.webp");
+}
+
+.work-visual.project-scene::before {
+  display: none;
+}
+
+.work-card .work-visual.project-scene::after {
+  content: "";
+  position: absolute;
+  inset: 48% 0 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, #101317c9);
+}
+
+.work-card .project-scene .work-caption {
+  z-index: 2;
+}
+
+.work-card .work-logo:has(img),
+.project-detail .project-brand-icon:has(img) {
+  position: relative;
+  background: var(--brand-badge-background, #f4f3f1);
+}
+
+.work-card .work-logo img,
+.project-detail .project-brand-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: none;
+}
+
+.work-card .work-logo.brand-badge--moltochat,
+.project-detail .project-brand-icon.brand-badge--moltochat {
+  width: 68px;
+}
+
+.work-card .work-logo.brand-badge--grupo-amp,
+.project-detail .project-brand-icon.brand-badge--grupo-amp {
+  width: 86px;
+  padding-inline: 7px;
+}
+
+.work-card .work-logo.brand-badge--icoracing,
+.project-detail .project-brand-icon.brand-badge--icoracing {
+  padding: 2px;
+}
+
+.brand-badge--clinica-bz {
+  --brand-badge-background: #111;
+  --brand-badge-scale: 166%;
+  --brand-badge-shift: translate(-53%, -36%);
+  --brand-badge-clip: inset(0 0 30% 0);
+}
+
+.brand-badge--nicodanny {
+  --brand-badge-scale: 180%;
+  --brand-badge-shift: translate(-52%, -31%);
+  --brand-badge-clip: inset(0 0 35% 0);
+}
+
+.brand-badge--flip-seguros {
+  --brand-badge-background: #fff;
+  --brand-badge-scale: 525%;
+  --brand-badge-shift: translate(-13%, -46%);
+  --brand-badge-clip: inset(0 79.5% 0 0);
+}
+
+.work-card .brand-badge--crop img,
+.project-detail .project-brand-icon.brand-badge--crop img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--brand-badge-scale);
+  height: auto;
+  max-width: none;
+  max-height: none;
+  transform: var(--brand-badge-shift);
+  clip-path: var(--brand-badge-clip);
+}
+
+.project-scene .project-milestone {
+  position: absolute;
+  z-index: 2;
+  inset: 14px auto auto 14px;
+  margin: 0;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #101820;
+  color: #fff;
+  font: 500 11px/1.2 var(--body);
+}
+
+.work-card .project-scene--grupo-amp .project-scene__device {
+  margin-top: 22px;
+}
+
+.work-visual-phone .case-phone {
+  padding: 2px;
+  border-color: #7b7871;
+  box-shadow: 0 12px 22px #2a241e36, 0 2px 5px #17140e55;
+}
+
+.work-visual-phone .case-phone-screen {
+  border: 0;
+  border-radius: calc(clamp(24px, 3vw, 44px) - 3px);
+}
+
+.work-visual-phone .case-phone-brand img {
+  mix-blend-mode: normal;
+}
+
+.project-scene__device {
+  min-width: 0;
+}
+
+.project-scene__screen {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px #1018201a, 0 10px 28px #10182029;
+  object-fit: contain;
+}
+
+.work-card .project-scene__device {
+  position: absolute;
+  inset: clamp(12px, 1.4vw, 22px) clamp(12px, 1.4vw, 22px) 70px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.work-card .project-scene__screen {
+  flex: none;
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+@media (min-width: 810px) {
+  .haptic-home .work-card-nicodanny .project-scene__device {
+    inset: 14px 16px 68px;
+  }
+}
+
+@media (min-width: 810px) and (max-width: 1050px) {
+  .haptic-home #cases .work-caption {
+    inset-inline: 12px;
+    gap: 8px;
+  }
+
+  .haptic-home #cases .work-logo.brand-badge--grupo-amp,
+  .haptic-home #cases .work-logo.brand-badge--moltochat {
+    width: 58px;
+  }
+
+  .haptic-home #cases .work-caption p {
+    font-size: 14px;
+  }
+}
+
+/* A primeira captura ocupa toda a largura; os detalhes formam uma dupla. */
+.project-detail .project-cover.project-scene,
+.project-detail .project-gallery__item.project-scene {
+  display: block;
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: none;
+  aspect-ratio: auto;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.project-detail .project-cover.project-scene {
+  padding: clamp(18px, 2.8vw, 40px);
+}
+
+.project-detail .project-gallery__item.project-scene {
+  padding: clamp(12px, 1.7vw, 26px);
+}
+
+.project-detail .project-gallery__item.project-scene:nth-child(2) {
+  background-position: 75% center;
+}
+
+.project-detail .work-visual.project-scene::after,
+.project-detail .project-cover.project-scene figcaption {
+  display: none;
+}
+
+.project-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 10px;
+  margin: 10px 0 72px;
+}
+
+.project-gallery:has(+ .project-capture-note) {
+  margin-bottom: 12px;
+}
+
+.project-capture-note {
+  margin: 0 0 48px;
+  color: #65656a;
+  font-size: 12px;
+}
+
+.ico-mobile {
+  margin-bottom: 10px;
+  scroll-margin-top: 90px;
+}
+
+.project-detail .ico-mobile-scene {
+  display: block;
+  aspect-ratio: auto;
+  padding: clamp(28px, 5vw, 66px) clamp(18px, 5vw, 54px);
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+}
+
+.ico-mobile-scene h2 {
+  margin-bottom: clamp(24px, 4vw, 44px);
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.1;
+}
+
+.ico-mobile-views {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 320px));
+  justify-content: center;
+  gap: clamp(24px, 5vw, 64px);
+}
+
+.ico-mobile-views figure {
+  margin: 0;
+}
+
+.ico-mobile-frame {
+  padding: 3px;
+  border: 1px solid #858589;
+  border-radius: 27px;
+  background: #1c1c1d;
+  box-shadow: 0 14px 30px #10101166;
+}
+
+.ico-mobile-frame img {
+  width: 100%;
+  height: auto;
+  border-radius: 23px;
+}
+
+.ico-mobile-views figcaption {
+  margin-top: 16px;
+  font-size: 15px;
+}
+
+.ico-mobile-note {
+  margin-top: 24px;
+  color: #eeedf0;
+  font-size: 13px;
+}
+
+@media (max-width: 580px) {
+  .ico-mobile-views {
+    grid-template-columns: minmax(0, 320px);
+  }
+}
+
+@media (max-width: 809px) {
+  .haptic-home #cases .work-grid-featured .work-visual.project-scene,
+  .project-catalog .work-card .work-visual.project-scene {
+    display: block;
+    height: auto;
+    aspect-ratio: auto;
+    padding: 12px 12px 68px;
+  }
+
+  .work-card .project-scene__device {
+    display: block;
+    position: relative;
+    inset: auto;
+  }
+
+  .work-card .project-scene__screen {
+    width: 100%;
+    max-height: none;
+  }
+
+  .project-detail .project-cover.project-scene,
+  .project-detail .project-gallery__item.project-scene {
+    padding: 12px;
+  }
+
+  .project-gallery {
+    grid-template-columns: minmax(0, 1fr);
+    margin-bottom: 44px;
+  }
+}

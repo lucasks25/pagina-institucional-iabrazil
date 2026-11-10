@@ -1,0 +1,208 @@
+/* Home portfolio. The catalog continues to use the shared project styles. */
+.haptic-home #cases {
+  --work-ease: cubic-bezier(.22, 1, .36, 1);
+  --featured-caption-space: 74px;
+  padding-bottom: clamp(52px, 7vw, 104px);
+  scroll-margin-top: 44px;
+}
+
+.featured-work-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 24px;
+  margin-bottom: clamp(24px, 3.5vw, 52px);
+}
+
+.featured-work-kicker {
+  color: #55555b;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.featured-work-header h2 {
+  font: 500 clamp(34px, 5.1vw, 80px)/.99 var(--heading);
+  letter-spacing: -.054em;
+}
+
+.featured-work-intro {
+  max-width: 30ch;
+  color: #55555b;
+  font-size: clamp(15px, 1.3vw, 19px);
+  line-height: 1.42;
+}
+
+.haptic-home #cases .work-grid-featured {
+  --case-row: clamp(256px, 24vw, 420px);
+}
+
+.haptic-home #cases .work-card {
+  border-radius: 12px;
+}
+
+.haptic-home #cases .work-visual::after {
+  inset: 50% 0 0;
+  background: linear-gradient(transparent, #101317d9);
+}
+
+.haptic-home #cases .project-scene__device {
+  inset: clamp(10px, 1.3vw, 22px) clamp(10px, 1.3vw, 22px) var(--featured-caption-space);
+  margin: 0;
+}
+
+.haptic-home #cases .project-scene--grupo-amp .project-scene__device {
+  top: clamp(39px, 3vw, 52px);
+}
+
+.haptic-home #cases .project-milestone {
+  inset: 10px auto auto 10px;
+}
+
+.haptic-home #cases .work-caption h3 {
+  font-size: clamp(15px, 1.2vw, 18px);
+}
+
+.haptic-home #cases .work-caption p {
+  font-size: 14px;
+  color: #e2e2e2;
+}
+
+.featured-project-label {
+  min-width: 0;
+}
+
+.featured-phone {
+  position: relative;
+  z-index: 1;
+  width: min(76%, 318px, calc((var(--case-row) * 2 - 112px) * 828 / 1448));
+  aspect-ratio: 828 / 1448;
+  overflow: hidden;
+  border: 3px solid #1a1919;
+  border-radius: clamp(16px, 2.2vw, 30px);
+  background: #121519;
+  box-shadow: 0 18px 36px #201a1540, 0 2px 6px #201a1547;
+  transform: translateY(-25px);
+}
+
+.featured-phone img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.featured-phone-detail {
+  opacity: 0;
+  transition: opacity .34s ease;
+}
+
+.featured-work-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px 20px;
+  margin-top: clamp(24px, 3vw, 44px);
+  padding-top: 16px;
+  font-size: 15px;
+}
+
+.featured-work-footer a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.featured-work-footer a:first-child {
+  color: #55555b;
+}
+
+.featured-work-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 1180px) {
+  .haptic-home #cases .work-caption {
+    gap: 8px;
+  }
+
+  .haptic-home #cases .work-logo {
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+  }
+
+  .haptic-home #cases .work-logo.brand-badge--grupo-amp,
+  .haptic-home #cases .work-logo.brand-badge--moltochat {
+    width: 52px;
+  }
+
+}
+
+@media (max-width: 809px) {
+  .featured-work-header {
+    align-items: start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .haptic-home #cases .work-grid-featured .work-visual.project-scene {
+    padding: 12px 12px 62px;
+  }
+
+  .haptic-home #cases .work-visual.project-scene--grupo-amp {
+    padding-top: 39px;
+  }
+
+  .haptic-home #cases .work-card .project-scene__device {
+    inset: auto;
+  }
+
+  .haptic-home #cases .work-card-icoracing .work-visual {
+    aspect-ratio: 1;
+  }
+
+  .featured-phone {
+    width: min(46%, 280px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #cases .work-card.is-awaiting-reveal:not(:focus-within) .work-visual {
+    opacity: 0;
+  }
+
+  #cases .work-card.is-entering .work-visual {
+    animation: featured-work-reveal .7s var(--work-ease) var(--work-delay, 0ms) both;
+  }
+
+  @keyframes featured-work-reveal {
+    from {
+      clip-path: inset(6% 0 16% round 12px);
+      opacity: 0;
+      transform: translateY(7px);
+    }
+    to {
+      clip-path: inset(0 round 12px);
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #cases .project-scene__screen {
+    transition: transform .52s var(--work-ease);
+  }
+
+  #cases .work-card:hover .project-scene__screen {
+    transform: translateY(-3px) scale(1.025);
+  }
+
+  #cases .work-card:hover .featured-phone-detail {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,49 @@
+/* IA BRAZIL — futurismo discreto: preto, aurora, platina e superfícies brancas. */
+@font-face {font-family:'Space Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url('../assets/fonts/space-grotesk/SpaceGrotesk-Variable.ttf') format('truetype');}
+body.theme-future {--font-heading:'Space Grotesk','Aeonik',sans-serif;--weight-heading:600;}
+.theme-future :is(h1,h2,h3) {font-family:var(--font-heading);font-weight:600;}
+.fundo.fundo-future {background:#05070b;}
+.theme-future .future-hero {position:relative;isolation:isolate;overflow:clip;background:radial-gradient(ellipse at 85% 45%,rgba(22,82,145,.16),transparent 56%);}
+.future-hero>.container {position:relative;z-index:1;}
+.future-aurora {position:relative;isolation:isolate;overflow:clip;}
+.aurora-field {position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+.aurora-field::before,.aurora-field::after {content:'';position:absolute;width:100%;height:100%;inset:0;opacity:.6;background:radial-gradient(ellipse at 75% 30%,rgba(24,82,220,.22),transparent 48%),radial-gradient(ellipse at 25% 70%,rgba(0,189,222,.12),transparent 50%);animation:aurora-drift 24s ease-in-out infinite alternate;animation-play-state:paused;}
+.aurora-field::after {opacity:.35;transform:scaleX(-1);animation-name:aurora-counter;animation-duration:32s;}
+.future-visible .aurora-field::before,.future-visible .aurora-field::after {animation-play-state:running;}
+.future-paused .aurora-field::before,.future-paused .aurora-field::after {animation-play-state:paused;}
+@keyframes aurora-drift {from{transform:translate3d(-5%,-3%,0) scale(1.05)}to{transform:translate3d(6%,4%,0) scale(1.15)}}
+@keyframes aurora-counter {from{transform:translate3d(5%,3%,0) scaleX(-1)}to{transform:translate3d(-5%,-4%,0) scaleX(-1.1)}}
+.theme-future #servicos,.theme-future #metodo,.theme-future #por-que {background:#fff;}
+.theme-future #servicos {border-radius:48px 48px 0 0;}
+.theme-future #por-que {border-radius:0 0 48px 48px;}
+.theme-future #quem-somos,.theme-future #duvidas,.theme-future .site-footer {background:#05070b;}
+.theme-future .proof {padding-block:clamp(100px,12vw,190px);border-block:1px solid rgba(160,200,255,.08);}
+.platinum-label {color:#8bbdcb;font-size:12px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:28px;}
+.theme-future .platinum-title {max-width:1000px;font-size:clamp(40px,6.2vw,88px);line-height:1.06;letter-spacing:-.055em;margin:0 0 36px;color:#e2e8f0;}
+@supports (background-clip:text) or (-webkit-background-clip:text) {
+ .theme-future .platinum-title {background:linear-gradient(115deg,#f5f7fa 0%,#c4cbd6 18%,#7d8b9c 29%,#fff 39%,#a9e8f8 49%,#829cd1 57%,#e5e9f0 70%,#fff 82%,#b2c0d0 100%);background-size:240% 100%;background-clip:text;-webkit-background-clip:text;color:transparent;animation:platinum-reflection 14s ease-in-out infinite alternate;animation-play-state:paused;}
+ .theme-future .future-visible .platinum-title {animation-play-state:running;}
+}
+@keyframes platinum-reflection {from{background-position:0% 50%}to{background-position:100% 50%}}
+.theme-future .proof-line {max-width:65ch;font-size:clamp(18px,1.6vw,23px);letter-spacing:-.015em;line-height:1.65;color:#a2aebd;}
+.theme-future .proof-line strong {color:#e2eaf3;}
+@media(max-width:700px){.theme-future #servicos{border-radius:28px 28px 0 0}.theme-future #por-que{border-radius:0 0 28px 28px}.aurora-field::before{opacity:.45}}
+@media(prefers-reduced-motion:reduce){.aurora-field::before,.aurora-field::after,.theme-future .platinum-title{animation:none!important;}}
+@media(forced-colors:active){.theme-future .platinum-title{background:none;color:CanvasText;}.hero-atmosphere,.aurora-field{display:none;}}
+
+/* Direção revisada: luz orgânica, sem esfera, malha ou partículas. */
+.hero-atmosphere {position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none;mask-image:linear-gradient(to bottom,#000 65%,transparent 100%);}
+/* Original Paper God Rays: luz volumétrica da biblioteca, sem shader improvisado. */
+.paper-light {position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;mask-image:linear-gradient(90deg,rgba(0,0,0,.13),rgba(0,0,0,.65) 42%,#000 74%),linear-gradient(#000 65%,transparent);mask-composite:intersect;}
+.paper-light canvas {display:block;width:100%;height:100%;}
+.theme-future {--brand:#8acaff;--accent:#38bdf8;--brand-rgb:138,202,255;}
+.theme-future .a-hero h1 {font-weight:500;letter-spacing:-.065em;}
+.theme-future .a-hero .label {color:#a4c6d9;letter-spacing:.16em;}
+.theme-future .platinum-label::before {content:'';display:inline-block;width:6px;height:6px;margin-right:12px;border-radius:50%;background:#67e8f9;box-shadow:0 0 16px #38bdf870;}
+@media(max-width:700px){.paper-light{mask-image:linear-gradient(90deg,rgba(0,0,0,.2),rgba(0,0,0,.55)),linear-gradient(#000 65%,transparent);}}
+@media(forced-colors:active){.paper-light{display:none;}}
+
+.aurora-field[data-paper]::before,.aurora-field[data-paper]::after {display:none;}
+.aurora-field[data-paper] {opacity:.62;mask-image:linear-gradient(transparent,#000 20%,#000 80%,transparent);}
+.aurora-field canvas {display:block;width:100%;height:100%;}
+.theme-future #cases {background:#05070b;}

@@ -1,0 +1,31 @@
+/* Marcas em colunas fixas, conforme o componente fornecido. Sem trilho lateral. */
+.brand-partners{background:#fafafb;padding:38px 0 46px;}
+.brand-carousel{width:min(920px,100%);margin:auto;outline-offset:8px;}
+.brand-carousel:focus-visible{outline:2px solid #6c889a;border-radius:12px;}
+.brand-list{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:28px 44px;margin:0;padding:0;list-style:none;}
+.brand-list li{display:flex;align-items:center;justify-content:center;width:150px;height:96px;}
+.brand-carousel img{width:auto;height:auto;max-width:164px;max-height:46px;object-fit:contain;filter:url(#client-logo-gray);}
+.brand-carousel .brand-nicodanny img{max-height:100px;max-width:142px;}
+.brand-carousel .brand-icoracing img{max-height:92px;max-width:96px;}
+.brand-carousel .brand-bz img{max-height:74px;max-width:164px;}
+.brand-stage{display:none;}
+.brand-carousel.is-enhanced .brand-list{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+.brand-carousel.is-enhanced .brand-stage{display:grid;grid-template-columns:repeat(var(--brand-columns,3),minmax(0,1fr));gap:16px;}
+.brand-slot{height:112px;overflow:hidden;position:relative;}
+.brand-slot>div{height:100%;width:100%;display:flex;align-items:center;justify-content:center;list-style:none;}
+.brand-slot.is-leaving>div{animation:brand-out .3s ease-in both;}
+.brand-slot.is-entering>div{animation:brand-in .5s cubic-bezier(.22,1.2,.36,1) both;}
+@keyframes brand-out{to{opacity:0;transform:translateY(-20%);filter:blur(6px);}}
+@keyframes brand-in{from{opacity:0;transform:translateY(10%);filter:blur(8px);}to{opacity:1;transform:translateY(0);filter:blur(0);}}
+@media(max-width:640px){
+ .brand-partners{padding:25px 0 32px;}
+ .brand-carousel{max-width:420px;}
+ .brand-carousel img{max-width:134px;max-height:38px;}
+ .brand-carousel .brand-nicodanny img{max-height:82px;max-width:112px;}
+ .brand-carousel .brand-icoracing img{max-height:78px;max-width:80px;}
+ .brand-carousel .brand-bz img{max-height:62px;max-width:138px;}
+ .brand-slot{height:96px;}
+ .brand-list{gap:14px 24px;}
+ .brand-list li{width:128px;height:86px;}
+}
+@media(prefers-reduced-motion:reduce){.brand-stage{display:none!important;}.brand-list{position:static!important;width:auto!important;height:auto!important;margin:0!important;clip-path:none!important;white-space:normal!important;}}

@@ -1,0 +1,130 @@
+.circular-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: clamp(116px, 14vw, 192px) 20px 48px;
+  background: #fff;
+  text-align: center;
+}
+
+.circular-footer-brand {
+  display: grid;
+  place-items: center;
+  width: clamp(132px, 16vw, 168px);
+  min-height: 44px;
+}
+
+.circular-footer-brand img {
+  width: 100%;
+  height: auto;
+  filter: brightness(0);
+}
+
+.circular-footer-nav,
+.circular-footer-channels,
+.circular-footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.circular-footer-nav {
+  gap: 12px 24px;
+}
+
+.circular-footer-nav a {
+  padding-block: 4px;
+}
+
+.circular-footer-nav a:hover,
+.circular-footer-legal a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.circular-footer-channels {
+  gap: 12px;
+}
+
+.circular-footer-channels a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #dedee4;
+  border-radius: 50%;
+  background: #fff;
+  transition: background-color .18s, color .18s, border-color .18s;
+}
+
+.circular-footer-channels a:hover {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.circular-footer-channels svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.circular-footer-form {
+  display: flex;
+  gap: 8px;
+  width: min(100%, 448px);
+}
+
+.circular-footer-form input,
+.circular-footer-form button {
+  min-height: 44px;
+  border: 1px solid #dedee4;
+  border-radius: 999px;
+  padding: 10px 16px;
+}
+
+.circular-footer-form input {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  color: var(--ink);
+}
+
+.circular-footer-form input:focus-visible {
+  outline: 2px solid #637f99;
+  outline-offset: 2px;
+}
+
+.circular-footer-form button {
+  flex-shrink: 0;
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.circular-footer-form button:hover {
+  background: #303030;
+}
+
+.circular-footer-legal {
+  gap: 10px 16px;
+  color: #646464;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .circular-footer-nav {
+    max-width: 320px;
+    gap: 8px 16px;
+  }
+
+  .circular-footer-form input {
+    font-size: 16px;
+  }
+}

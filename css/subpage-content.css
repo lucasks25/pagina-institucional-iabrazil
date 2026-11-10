@@ -1,0 +1,248 @@
+/* Editorial layouts for the interior pages. */
+.site-interior main {
+  --section-y: clamp(64px, 8vw, 120px);
+  --head-gap: clamp(28px, 4vw, 56px);
+  --danger: #9f2921;
+  --danger-bg: #fff0ee;
+}
+
+.site-interior main :is(h1, h2, h3) {
+  font-family: var(--font-heading);
+  font-weight: 500;
+}
+
+.site-interior main .page-hero {
+  padding-block: clamp(64px, 9vw, 128px) clamp(48px, 6vw, 88px);
+  background: #fff;
+  color: var(--ink);
+}
+
+.site-interior main .page-hero h1 {
+  font-size: clamp(38px, 6.2vw, 84px);
+  line-height: 1;
+}
+
+.site-interior main .breadcrumb {
+  color: var(--muted);
+  font-family: var(--font);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.site-interior .page-hero > .container:not(.page-hero-grid)::after,
+.site-interior :is(.block-head, .a-head, .eyebrow)::before,
+.site-interior .page-hero-copy::after {
+  content: none;
+}
+
+.site-interior main :is(.block-head, .a-head, .a-hero-foot) {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.site-interior main .subnav {
+  background: #fff;
+}
+
+.site-interior main.contact {
+  padding-top: clamp(48px, 7vw, 104px);
+}
+
+.site-interior main .btn {
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.site-interior main .btn-primary {
+  background: #161616;
+  color: #fff;
+}
+
+.site-interior main .btn-primary:hover {
+  background: #333;
+}
+
+.site-interior main :is(.contact-main, .lead-box, .calc, .glass, .guide-answer, .news-points, .news-why, .news-quote) {
+  background: var(--surface);
+  border: 0;
+  border-radius: 12px;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.site-interior main :is(.contact-main, .lead-box, .calc, .glass, .calc-out)::before {
+  content: none;
+}
+
+.site-interior main .field :is(input, select, textarea) {
+  background: #fff;
+  border-color: #c9c9ce;
+  border-radius: 8px;
+  color: var(--ink);
+}
+
+.site-interior main .field :is(input, select, textarea):focus {
+  border-color: #616165;
+  box-shadow: 0 0 0 3px #16161612;
+}
+
+.site-interior main .form-note a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.site-interior main :is(.guide-body > p, .guide-body li, .news-article-body > p:not(.news-disclaimer, .news-lede), .news-why li) {
+  color: var(--text);
+}
+
+.site-interior main :is(.guide-table thead th, .news-tags li, .news-guide, .news-chip:hover) {
+  background: var(--surface);
+}
+
+.site-interior main .news-brand {
+  border: 0;
+}
+
+.site-interior main .news-byline-mark::before {
+  inset: 8px;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: url('../assets/brand/ia-brazil-orbital-mark.svg') center / contain no-repeat;
+  filter: brightness(0);
+}
+
+.site-interior main .news-byline-mark::after {
+  content: none;
+}
+
+.site-interior main .news-source-box:hover {
+  border-color: var(--ink);
+  box-shadow: none;
+}
+
+.site-interior main :is(.cta-box, .calc-out) {
+  --ink: #fff;
+  --text: #ddd;
+  --muted: #bfbfbf;
+  background: #111;
+  color: var(--ink);
+  border: 0;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.site-interior main .cta-light {
+  display: none;
+}
+
+.site-interior main .cta-box .label {
+  color: var(--muted);
+}
+
+.site-interior main :is(.cta-box, .calc-out) .btn-primary {
+  background: #fff;
+  color: #111;
+}
+
+.site-interior main :is(.cta-box, .calc-out) .btn-primary:hover {
+  background: #ddd;
+}
+
+.site-interior main .cta-box .btn-outline {
+  background: transparent;
+  color: #fff;
+  border-color: #8b8b8b;
+}
+
+.site-interior main .calc-gain strong {
+  color: #fff !important;
+}
+
+.site-interior main .calc-meter {
+  background: linear-gradient(90deg, #555 0 40%, #fff 40% 70%, #555 70%) !important;
+}
+
+/* Keep the English page's media captions readable over their original images. */
+.site-interior main :is(.s4, .offer-ph.is-scene) {
+  --bg-rgb: 8, 8, 8;
+  --surface: #141414;
+  --ink: #fff;
+  --brand: #e6e6e6;
+  --tone: #bfbfbf;
+  color: var(--ink);
+}
+
+.site-interior .about-person {
+  padding-block: var(--section-y);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.site-interior .about-brief :is(.about-person p:not(.eyebrow):not(.about-role), .about-commitments li, .arrow-link) {
+  color: var(--text);
+}
+
+.site-interior .about-commitments li {
+  border-top: 1px solid var(--line);
+}
+
+.site-interior .about-next {
+  padding-block: var(--section-y);
+  border: 0;
+}
+
+.site-interior .about-next h2 {
+  color: var(--ink);
+}
+
+.site-interior.legal-page :is(.page-hero > .container, .page) {
+  max-width: 1080px;
+}
+
+.site-interior.legal-page .page {
+  grid-template-columns: 208px minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 84px);
+}
+
+.site-interior.legal-page .toc {
+  display: block;
+}
+
+.site-interior.legal-page .toc nav {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.site-interior.legal-page .toc a:is(:hover, .is-active) {
+  background: #fff;
+  color: var(--ink);
+}
+
+.site-interior.legal-page .legal h2 {
+  font-size: clamp(24px, 2.7vw, 34px);
+}
+
+.site-interior.legal-page .legal > p:first-child {
+  margin-top: 0;
+  color: var(--ink);
+  font-size: clamp(18px, 1.9vw, 22px);
+  line-height: 1.55;
+}
+
+@media (max-width: 800px) {
+  .site-interior.legal-page .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .site-interior.legal-page .toc nav {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .site-interior.legal-page .toc a {
+    overflow-wrap: anywhere;
+  }
+}

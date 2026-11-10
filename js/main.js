@@ -36,6 +36,7 @@
   const header = document.querySelector('.site-header');
   const toggle = document.querySelector('.menu-toggle');
   const setMenu = (open) => {
+    if (!header || !toggle) return;
     header.classList.toggle('nav-open', open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? t('Fechar menu', 'Close menu') : t('Abrir menu', 'Open menu'));
@@ -46,15 +47,15 @@
     // Com o menu aberto no celular, a página por trás não rola
     document.documentElement.classList.toggle('menu-locked', open);
   };
-  toggle.addEventListener('click', () => setMenuLocked(!header.classList.contains('nav-open')));
+  toggle?.addEventListener('click', () => setMenuLocked(!header.classList.contains('nav-open')));
   document.querySelectorAll('.nav a').forEach((a) => a.addEventListener('click', () => setMenuLocked(false)));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenuLocked(false); });
   document.addEventListener('click', (e) => {
-    if (header.classList.contains('nav-open') && !header.contains(e.target)) setMenuLocked(false);
+    if (header?.classList.contains('nav-open') && !header.contains(e.target)) setMenuLocked(false);
   });
 
   /* Header ganha sombra depois que a página começa a rolar */
-  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -136,7 +137,6 @@
     const option = interesse && form.querySelector(`option[data-key="${CSS.escape(interesse)}"]`);
     if (option) option.selected = true;
 
-    const openedAt = Date.now();
     const submit = form.querySelector('button[type="submit"]');
     const submitContent = Array.from(submit.childNodes, (n) => n.cloneNode(true));
     const arrow = submit.querySelector('.i-arrow');
@@ -227,7 +227,17 @@
       const choose = t('Escolha uma opção.', 'Choose an option.');
       if (el.type === 'radio') return el.required && !picked(el) ? choose : '';
       const v = el.type === 'checkbox' ? el.checked : String(el.value || '').trim();
-      if (el.required && !v) return el.type === 'checkbox' ? t('Marque para continuar.', 'Check this to continue.') : el.tagName === 'SELECT' ? choose : t('Preencha este campo.', 'Please fill in this field.');
+      if (el.required && !v) {
+        if (el.type === 'checkbox') return t('Marque para continuar.', 'Check this to continue.');
+        if (el.tagName === 'SELECT') return choose;
+        const messages = {
+          nome: t('Informe seu nome.', 'Enter your name.'),
+          empresa: t('Informe o nome da empresa.', 'Enter your company name.'),
+          email: t('Informe seu e-mail.', 'Enter your e-mail.'),
+          whatsapp: t('Informe seu WhatsApp com DDD.', 'Enter your phone number with area code.'),
+        };
+        return messages[el.name] || t('Preencha este campo.', 'Please fill in this field.');
+      }
       if (!v) return '';
       if (el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return t('Confira o e-mail (ex.: nome@empresa.com.br).', 'Check the e-mail (e.g. name@company.com).');
       if (el.name === 'whatsapp' && v.replace(/\D/g, '').length < 10) return t('Informe o número com DDD.', 'Include the country and area code.');
@@ -264,6 +274,7 @@
     const valid = (scope = form) => {
       const bad = controls.filter((el) => scope.contains(el)).filter((el) => !check(el));
       if (bad.length) {
+        window.IABRTrack?.('clique', 'form_erro_validacao');
         const step = bad[0].closest('[data-step]');
         if (step && steps && !step.classList.contains('is-on')) goTo(steps.indexOf(step));
         bad[0].focus();
@@ -332,17 +343,15 @@
         if (!d.has('sobrenome')) d.set('sobrenome', '');
       }
 
+      // O campo anti-spam nunca produz confirmação de recebimento.
+      // Preenchimento automático e usuários rápidos seguem o envio normal.
+      if (d.get('site')) return;
+
       // Sem o leads.js, segue o fluxo antigo: abre o WhatsApp
       if (!window.Leads) {
         window.open(waLink(d), '_blank', 'noopener');
         return;
       }
-      // Robô: campo escondido preenchido ou envio rápido demais. Não salva e mostra o agradecimento
-      if (d.get('site') || Date.now() - openedAt < 3000) {
-        thanks(d);
-        return;
-      }
-
       sending = true;
       form.querySelector('.form-error')?.remove();
       submit.disabled = true;
@@ -361,6 +370,7 @@
         });
         thanks(d);
       } catch (err) {
+        window.IABRTrack?.('clique', 'form_erro_envio');
         console.error('IA BRAZIL: não foi possível salvar o contato.', err);
         submit.disabled = false;
         submit.replaceChildren(...submitContent.map((n) => n.cloneNode(true)));

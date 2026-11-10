@@ -1,0 +1,48 @@
+.nav-roll {
+  display: block;
+  height: 1.25em;
+  overflow: hidden;
+  line-height: 1.25;
+}
+
+.nav-roll-track,
+.nav-roll-track > span {
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nav-roll-track {
+    transform: translateY(var(--nav-roll-offset, 0%));
+    transition: transform 380ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .nav-roll-track > span {
+    transition: opacity 260ms ease;
+  }
+
+  .nav-roll-track > span:first-child {
+    opacity: var(--nav-roll-outgoing, 1);
+  }
+
+  .nav-roll-track > span + span {
+    opacity: var(--nav-roll-incoming, .3);
+  }
+
+  .nav-link:focus-visible {
+    --nav-roll-offset: -50%;
+    --nav-roll-outgoing: .3;
+    --nav-roll-incoming: 1;
+  }
+
+  @media (hover: hover) {
+    .nav-link:hover {
+      --nav-roll-offset: -50%;
+      --nav-roll-outgoing: .3;
+      --nav-roll-incoming: 1;
+    }
+
+    .haptic-home .site-header .nav-link:hover {
+      opacity: 1;
+    }
+  }
+}

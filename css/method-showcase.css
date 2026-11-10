@@ -1,0 +1,139 @@
+.method-showcase {
+  --method-ink: #000;
+  --method-line: #ebebed;
+  --method-ease: cubic-bezier(.22, 1, .36, 1);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 24px clamp(32px, 7vw, 112px);
+  padding-block: clamp(32px, 5vw, 80px) clamp(56px, 6vw, 96px);
+  scroll-margin-top: 52px;
+}
+
+.method-heading .method-kicker {
+  color: #656568;
+  font-size: 15px;
+  margin-bottom: 18px;
+}
+
+.method-heading h2 {
+  max-width: 14ch;
+  color: var(--method-ink);
+  font: 500 clamp(32px, 4vw, 56px)/1.02 var(--heading);
+  letter-spacing: -.035em;
+}
+
+.method-heading p:last-child {
+  max-width: 37ch;
+  margin-top: 16px;
+  color: #555558;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.method-steps {
+  list-style: none;
+  border-top: 1px solid var(--method-line);
+}
+
+.method-steps details {
+  border-bottom: 1px solid var(--method-line);
+}
+
+.method-steps summary {
+  display: grid;
+  grid-template-columns: 2.2ch minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  min-height: 66px;
+  padding: 12px 4px;
+  list-style: none;
+  cursor: pointer;
+  font: 500 clamp(18px, 1.9vw, 27px)/1.1 var(--heading);
+  letter-spacing: -.025em;
+}
+
+.method-steps summary::-webkit-details-marker {
+  display: none;
+}
+
+.method-steps summary:focus-visible {
+  outline: 2px solid #637f99;
+  outline-offset: -2px;
+}
+
+.method-step-number {
+  color: #656568;
+  font: 12px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0;
+}
+
+.method-step-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--method-line);
+  border-radius: 50%;
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+
+.method-step-icon::before,
+.method-step-icon::after {
+  content: "";
+  grid-area: 1 / 1;
+  width: 10px;
+  height: 1px;
+  background: currentColor;
+}
+
+.method-step-icon::after {
+  transform: rotate(90deg);
+  transition: transform .32s var(--method-ease), opacity .2s ease;
+}
+
+.method-steps details[open] .method-step-icon,
+.method-steps summary:hover .method-step-icon {
+  color: #fff;
+  background: var(--method-ink);
+  border-color: var(--method-ink);
+}
+
+.method-steps details[open] .method-step-icon::after {
+  transform: rotate(0);
+  opacity: 0;
+}
+
+.method-step-copy {
+  color: #555558;
+  font-size: 16px;
+  line-height: 1.45;
+  padding: 0 42px 19px 36px;
+  max-width: 54ch;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .method-steps details[open] .method-step-copy {
+    animation: method-copy-in .25s ease-out both;
+  }
+
+  @keyframes method-copy-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@media (max-width: 760px) {
+  .method-showcase {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .method-steps summary {
+    min-height: 58px;
+  }
+
+  .method-step-copy {
+    padding-right: 20px;
+  }
+}
