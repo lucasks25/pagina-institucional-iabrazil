@@ -1,5 +1,6 @@
 import {mountBrandCarousel} from './brand-carousel.js?v=20261105-h4';
 import Lenis from './vendor/lenis/lenis.mjs';
+import './decorative-video.js?v=20261111-v1';
 document.querySelectorAll('[data-brand-carousel]').forEach(mountBrandCarousel);
 const reduced=matchMedia('(prefers-reduced-motion:reduce)');
 const dialog=document.querySelector('#contact-dialog');
@@ -72,11 +73,6 @@ if(rail){
 let heroVisible=true;const syncHero=()=>{document.documentElement.classList.toggle('hero-running',heroVisible&&!document.hidden&&!reduced.matches);document.querySelector('.site-header')?.classList.toggle('is-on-light',!hero||!heroVisible);};
 if(hero&&'IntersectionObserver'in window)new IntersectionObserver(([entry])=>{heroVisible=entry.isIntersecting;syncHero();}).observe(hero);
 syncHero();reduced.addEventListener('change',syncHero);document.addEventListener('visibilitychange',syncHero);
-const videos=[...document.querySelectorAll('video[data-src]')];
-const syncVideos=()=>videos.forEach(video=>{if(!reduced.matches&&!document.hidden&&video.dataset.visible==='true'){if(!video.src){video.src=video.dataset.src;video.load();}video.play().catch(()=>{});}else video.pause();});
-// Observe each decorative loop separately; content remains visible without playback.
-if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>{entries.forEach(({target,isIntersecting})=>target.dataset.visible=String(isIntersecting));syncVideos();},{rootMargin:'100px'});videos.forEach(v=>observer.observe(v));}
-reduced.addEventListener('change',syncVideos);document.addEventListener('visibilitychange',syncVideos);
 
 // Mesmas molas declaradas nos dados de entrada da referência, amostradas em WAAPI.
 function springFrames(distance,stiffness,damping,mass){
@@ -94,26 +90,36 @@ if(!reduced.matches){
   [[document.querySelector('.hero-content h1'),50,60,200],[document.querySelector('.hero-content .button'),50,60,300],...Array.from(document.querySelectorAll('.floating-card'),el=>[el,40,30,1000])].forEach(([el,distance,damping,delay])=>{if(!el)return;const animation=el.animate(springFrames(distance,400,damping,1),{duration:1500,delay,fill:'both',easing:'linear'});entrances.push(animation);animation.finished.then(()=>animation.cancel()).catch(()=>{});});
   reduced.addEventListener('change',()=>{if(reduced.matches)entrances.forEach(animation=>animation.cancel());});
 }
-const introTitle = document.querySelector('#intro-title');
-if (introTitle) {
-  const title = introTitle.textContent.trim();
-  const words = title.split(/\s+/).map(word => {
-    const span = document.createElement('span');
-    span.className = 'intro-word';
-    span.textContent = word;
-    span.setAttribute('aria-hidden', 'true');
-    return span;
+const introLines = document.querySelectorAll('#intro-title, .intro-continuation');
+if (introLines.length) {
+  const lines = [...introLines].map(line => {
+    const walker = document.createTreeWalker(line, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    const words = [];
+    for (const node of textNodes) {
+      const parts = node.textContent.split(/(\s+)/).map(part => {
+        if (!part.trim()) return part;
+        const word = document.createElement('span');
+        word.className = 'intro-word';
+        word.textContent = part;
+        words.push(word);
+        return word;
+      });
+      node.replaceWith(...parts);
+    }
+    return { line, words };
   });
-  introTitle.setAttribute('aria-label', title);
-  introTitle.replaceChildren(...words.flatMap((word, index) => index ? [' ', word] : [word]));
 
   let queued = false;
   function revealIntro() {
     queued = false;
-    const top = introTitle.getBoundingClientRect().top;
-    const progress = Math.min(1, Math.max(0, (1 - top / innerHeight) * 1.6));
-    const count = reduced.matches ? words.length : Math.ceil(progress * words.length);
-    words.forEach((word, index) => word.classList.toggle('is-read', index < count));
+    for (const { line, words } of lines) {
+      const top = line.getBoundingClientRect().top;
+      const progress = Math.min(1, Math.max(0, (1 - top / innerHeight) * 1.6));
+      const count = reduced.matches ? words.length : Math.ceil(progress * words.length);
+      words.forEach((word, index) => word.classList.toggle('is-read', index < count));
+    }
   }
   function queueIntroReveal() {
     if (queued) return;

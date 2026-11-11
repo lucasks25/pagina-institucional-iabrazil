@@ -197,26 +197,26 @@
   color: var(--ink);
 }
 
-.site-interior.legal-page :is(.page-hero > .container, .page) {
+.site-interior:is(.legal-page, .service-detail) :is(.page-hero > .container, .page) {
   max-width: 1080px;
 }
 
-.site-interior.legal-page .page {
+.site-interior:is(.legal-page, .service-detail) .page {
   grid-template-columns: 208px minmax(0, 1fr);
   gap: clamp(32px, 6vw, 84px);
 }
 
-.site-interior.legal-page .toc {
+.site-interior:is(.legal-page, .service-detail) .toc {
   display: block;
 }
 
-.site-interior.legal-page .toc nav {
+.site-interior:is(.legal-page, .service-detail) .toc nav {
   padding: 12px;
   border-radius: 12px;
   background: var(--surface);
 }
 
-.site-interior.legal-page .toc a:is(:hover, .is-active) {
+.site-interior:is(.legal-page, .service-detail) .toc a:is(:hover, .is-active) {
   background: #fff;
   color: var(--ink);
 }
@@ -233,16 +233,124 @@
 }
 
 @media (max-width: 800px) {
-  .site-interior.legal-page .page {
+  .site-interior:is(.legal-page, .service-detail) .page {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .site-interior.legal-page .toc nav {
+  .site-interior:is(.legal-page, .service-detail) .toc nav {
     position: static;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .site-interior.legal-page .toc a {
+  .site-interior:is(.legal-page, .service-detail) .toc a {
     overflow-wrap: anywhere;
+  }
+}
+
+.site-interior.service-detail main .page-hero {
+  padding-bottom: clamp(30px, 4vw, 54px);
+}
+
+.service-lead {
+  max-width: 58ch;
+  margin-block: 20px 24px;
+  color: var(--text);
+  font-size: clamp(18px, 2vw, 22px);
+  line-height: 1.5;
+}
+
+.service-detail .toc nav > p {
+  padding: 4px 14px 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.service-article {
+  min-width: 0;
+}
+
+.service-article > section {
+  padding-block: 30px;
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 24px;
+}
+
+.service-article > section:last-child {
+  border-bottom: 0;
+}
+
+.service-article > section h2 {
+  margin: 0 0 14px;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.15;
+}
+
+.service-article ol {
+  margin-top: 14px;
+  padding-left: 22px;
+  list-style: decimal;
+}
+
+.service-article .faq {
+  margin-top: 12px;
+}
+
+.service-article .faq p {
+  margin-top: 0;
+}
+
+.service-article :is(.btn, .faq a) {
+  text-decoration: none;
+}
+
+.service-article .service-media {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.service-media video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.service-media button {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  min-height: 44px;
+  padding-inline: 14px;
+  border: 1px solid #fff7;
+  border-radius: 8px;
+  background: #141414db;
+  color: #fff;
+  font: 500 13px var(--body);
+  cursor: pointer;
+}
+
+.service-media button[hidden] {
+  display: none;
+}
+
+.service-article .service-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin-top: 18px;
+}
+
+.service-detail .service-budget {
+  padding-top: 0;
+}
+
+@media (max-width: 800px) {
+  .service-detail .toc nav > p {
+    grid-column: 1 / -1;
   }
 }
