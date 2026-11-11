@@ -100,7 +100,12 @@ function springFrames(distance,stiffness,damping,mass){
 }
 if(!reduced.matches){
   const entrances=[];
-  [[document.querySelector('.hero-content h1'),50,60,200],[document.querySelector('.hero-content .button'),50,60,300],...Array.from(document.querySelectorAll('.floating-card'),el=>[el,40,30,1000])].forEach(([el,distance,damping,delay])=>{if(!el)return;const animation=el.animate(springFrames(distance,400,damping,1),{duration:1500,delay,fill:'both',easing:'linear'});entrances.push(animation);animation.finished.then(()=>animation.cancel()).catch(()=>{});});
+  const heroEntrances = [
+    [document.querySelector('.hero-content h1'), 50, 60, 200],
+    [document.querySelector('.hero-description'), 50, 60, 250],
+    [document.querySelector('.hero-content .button'), 50, 60, 300],
+  ];
+  [...heroEntrances,...Array.from(document.querySelectorAll('.floating-card'),el=>[el,40,30,1000])].forEach(([el,distance,damping,delay])=>{if(!el)return;const animation=el.animate(springFrames(distance,400,damping,1),{duration:1500,delay,fill:'both',easing:'linear'});entrances.push(animation);animation.finished.then(()=>animation.cancel()).catch(()=>{});});
   reduced.addEventListener('change',()=>{if(reduced.matches)entrances.forEach(animation=>animation.cancel());});
 }
 const introLines = document.querySelectorAll('#intro-title, .intro-continuation');

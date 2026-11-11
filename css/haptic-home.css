@@ -479,7 +479,8 @@
 .site-header.nav-open{mix-blend-mode:normal;z-index:80;}
 .haptic-hero{height:100vh;min-height:0;}
 .hero-content{max-width:540px;left:max(20px,calc((100% - 1800px)/2 + 20px));bottom:32px;}
-.hero-content h1{max-width:540px;font-size:48px;line-height:1;}
+.hero-content h1{max-width:540px;margin-bottom:12px;font-size:48px;line-height:1;}
+.hero-description{max-width:390px;margin-bottom:20px;font-size:15px;line-height:1.45;text-wrap:balance;}
 .hero-content .button{font-size:14px;line-height:.8;min-height:44px;gap:0;}
 .hero-content .button-arrow{width:0;opacity:0;overflow:hidden;transition:width .25s,opacity .25s,margin .25s;}
 .hero-content .button:hover .button-arrow,.hero-content .button:focus-visible .button-arrow{width:12px;opacity:1;margin-left:12px;}
@@ -511,7 +512,7 @@
  .nav-open .nav{display:flex;}.mobile-contact{display:block;}
  .site-header.nav-open .menu-toggle span{background:#fff;}
  .nav-open~.contact-rail{visibility:hidden;}
- .hero-content{left:16px;right:auto;bottom:32px;max-width:300px;}
+ .hero-content{left:16px;right:16px;bottom:32px;max-width:300px;}
  .hero-content h1{font-size:28px;line-height:1.1;max-width:300px;}
  .section-pad{padding-inline:16px;}
 
@@ -587,6 +588,13 @@ body{line-height:1.2;}
   }
 }
 .stage-caption{top:62%;}
+@media (max-height: 650px) {
+  .stage-caption { display: none; }
+  .stage-wordmark { top: 41%; }
+}
+@media (max-height: 470px) {
+  .haptic-hero { min-height: 470px; }
+}
 .work-grid{row-gap:12px;}
 
 /* ICO Racing: mockup estático de celular, pronto para receber a captura. */
