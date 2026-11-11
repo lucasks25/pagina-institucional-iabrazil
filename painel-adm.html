@@ -14,9 +14,9 @@
   <link rel="icon" href="assets/favicon-orbital-v4-48.png" type="image/png" sizes="48x48">
   <link rel="icon" href="assets/favicon-orbital-v4.svg" type="image/svg+xml" sizes="any">
   <link rel="apple-touch-icon" href="assets/favicon-orbital-v3-180.png" sizes="180x180">
-  <link rel="stylesheet" href="/css/admin.css?v=20261111-v1">
+  <link rel="stylesheet" href="/css/admin.css?v=20261111-contatos">
   <script src="/js/leads.js?v=20261111-newsletter" defer></script>
-  <script src="/js/admin.js" defer></script>
+  <script src="/js/admin.js?v=20261111-contatos" defer></script>
   <script src="/js/admin-stats.js?v=20261111-v1" defer></script>
 </head>
 <body class="adm">
@@ -60,7 +60,7 @@
         <div class="adm-head">
           <div>
             <h1 id="painel-titulo" tabindex="-1">Contatos recebidos</h1>
-            <p>Pedidos enviados pelo formulário do site, do mais recente para o mais antigo.</p>
+            <p>Acompanhe e revise os contatos enviados pelo site.</p>
           </div>
           <div class="adm-sync">
             <span id="atualizado"></span>
@@ -72,55 +72,65 @@
           <li class="stat stat-main">
             <span class="stat-label">Novos</span>
             <strong class="stat-n" id="n-novos"></strong>
-            <span class="stat-side">
-              <span class="stat-sub">aguardando o primeiro contato</span>
-              <button class="stat-link" type="button" id="ver-novos">Ver só os novos</button>
-            </span>
+            <button class="stat-link" type="button" id="ver-novos">Ver novos</button>
           </li>
-          <li class="stat"><span class="stat-label">Total</span><strong class="stat-n" id="n-total"></strong><span class="stat-sub">desde o início</span></li>
-          <li class="stat"><span class="stat-label">Esta semana</span><strong class="stat-n" id="n-semana"></strong><span class="stat-sub">desde segunda-feira</span></li>
-          <li class="stat"><span class="stat-label">Qualificados</span><strong class="stat-n" id="n-qualificados"></strong><span class="stat-sub">oportunidades confirmadas</span></li>
-          <li class="stat"><span class="stat-label">Em negociação</span><strong class="stat-n" id="n-proposta"></strong><span class="stat-sub">com proposta enviada</span></li>
-          <li class="stat"><span class="stat-label">Vendas</span><strong class="stat-n" id="n-vendas"></strong><span class="stat-sub">contratos fechados</span></li>
+          <li class="stat"><span class="stat-label">Total</span><strong class="stat-n" id="n-total"></strong></li>
+          <li class="stat"><span class="stat-label">Esta semana</span><strong class="stat-n" id="n-semana"></strong></li>
+          <li class="stat"><span class="stat-label">Qualificados</span><strong class="stat-n" id="n-qualificados"></strong></li>
+          <li class="stat"><span class="stat-label">Em negociação</span><strong class="stat-n" id="n-proposta"></strong></li>
+          <li class="stat"><span class="stat-label">Vendas</span><strong class="stat-n" id="n-vendas"></strong></li>
         </ul>
 
-        <div class="adm-tools" id="ferramentas" role="search" hidden>
-          <label class="adm-field adm-search">Buscar
-            <span class="adm-search-box">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg>
-              <input type="search" id="busca" placeholder="Nome, empresa, e-mail ou WhatsApp" autocomplete="off" spellcheck="false">
-            </span>
-          </label>
-          <label class="adm-field">Status
-            <select id="filtro-status">
-              <option value="">Todos</option>
-              <option value="novo">Novo</option>
-              <option value="em_contato">Em contato</option>
-              <option value="qualificado">Qualificado</option>
-              <option value="proposta">Proposta enviada</option>
-              <option value="fechado">Fechado (venda)</option>
-              <option value="perdido">Perdido</option>
-            </select>
-          </label>
-          <label class="adm-field">Interesse<select id="filtro-interesse"><option value="">Todos</option></select></label>
-          <button class="btn btn-line" type="button" id="exportar" title="Exporta os contatos da lista abaixo, com os filtros aplicados">Exportar CSV</button>
-          <button class="btn btn-line" type="button" id="exportar-ads" title="Arquivo no formato de importação de conversões off-line do Google Ads: só contatos que vieram de anúncio e avançaram de etapa">Conversões (Google Ads)</button>
+        <div class="adm-contacts-list">
+          <div class="adm-tools" id="ferramentas" role="search" hidden>
+            <label class="adm-field adm-search">Buscar
+              <span class="adm-search-box">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg>
+                <input type="search" id="busca" placeholder="Nome, empresa, e-mail ou WhatsApp" autocomplete="off" spellcheck="false">
+              </span>
+            </label>
+            <label class="adm-field">Status
+              <select id="filtro-status">
+                <option value="">Todos</option>
+                <option value="novo">Novo</option>
+                <option value="em_contato">Em contato</option>
+                <option value="qualificado">Qualificado</option>
+                <option value="proposta">Proposta enviada</option>
+                <option value="fechado">Fechado (venda)</option>
+                <option value="perdido">Perdido</option>
+              </select>
+            </label>
+            <label class="adm-field">Tipo
+              <select id="filtro-tipo">
+                <option value="">Todos</option>
+                <option value="formulario">Formulário</option>
+                <option value="email">Só e-mail</option>
+              </select>
+            </label>
+            <label class="adm-field adm-interest">Interesse<select id="filtro-interesse"><option value="">Todos</option></select></label>
+          </div>
+
+          <div class="adm-list-head" id="lista-topo" hidden>
+            <div class="adm-list-count">
+              <p id="contagem" aria-live="polite"></p>
+              <button class="adm-link" type="button" id="limpar" hidden>Limpar filtros</button>
+            </div>
+            <div class="adm-exports">
+              <button class="btn btn-line btn-sm" type="button" id="exportar" title="Exporta os contatos da lista abaixo, com os filtros aplicados">Exportar CSV</button>
+              <button class="btn btn-line btn-sm" type="button" id="exportar-ads" title="Arquivo no formato de importação de conversões off-line do Google Ads: só contatos que vieram de anúncio e avançaram de etapa">Conversões (Google Ads)</button>
+            </div>
+          </div>
+
+          <table class="adm-table" id="tabela" hidden>
+            <caption class="sr-only">Contatos recebidos pelo site, do mais recente para o mais antigo. Escolha um nome para ver os detalhes.</caption>
+            <thead>
+              <tr><th scope="col" class="c-date">Recebido</th><th scope="col">Nome e empresa</th><th scope="col" class="c-int">Interesse</th><th scope="col" class="c-contact">Contato</th><th scope="col" class="c-status">Status</th><th scope="col" class="c-actions">Ações</th></tr>
+            </thead>
+            <tbody id="linhas"></tbody>
+          </table>
+
+          <div class="adm-state" id="estado" aria-live="polite" hidden></div>
         </div>
-
-        <div class="adm-list-head" id="lista-topo" hidden>
-          <p id="contagem" aria-live="polite"></p>
-          <button class="adm-link" type="button" id="limpar" hidden>Limpar filtros</button>
-        </div>
-
-        <table class="adm-table" id="tabela" hidden>
-          <caption class="sr-only">Contatos recebidos pelo site, do mais recente para o mais antigo. Escolha um nome para ver os detalhes.</caption>
-          <thead>
-            <tr><th scope="col" class="c-date">Recebido</th><th scope="col">Nome e empresa</th><th scope="col" class="c-int">Interesse</th><th scope="col" class="c-contact">Contato</th><th scope="col" class="c-status">Status</th></tr>
-          </thead>
-          <tbody id="linhas"></tbody>
-        </table>
-
-        <div class="adm-state" id="estado" aria-live="polite" hidden></div>
       </div>
     </section>
 
@@ -228,16 +238,19 @@
 
       <div class="drawer-danger">
         <button class="adm-link" type="button" id="d-excluir">Excluir contato</button>
-        <div class="drawer-confirm" id="d-confirmar" hidden>
-          <p id="d-confirmar-txt"></p>
-          <div class="drawer-confirm-actions">
-            <button class="btn btn-line btn-sm" type="button" id="d-cancelar">Cancelar</button>
-            <button class="btn btn-dark btn-sm" type="button" id="d-excluir-sim">Excluir de vez</button>
-          </div>
-        </div>
       </div>
 
       <p class="adm-toast" id="d-toast" role="status"></p>
+    </div>
+  </dialog>
+
+  <dialog class="adm-confirm" id="exclusao-contato" aria-labelledby="exclusao-titulo" aria-describedby="exclusao-descricao">
+    <h2 id="exclusao-titulo">Excluir contato?</h2>
+    <p id="exclusao-descricao"></p>
+    <p class="adm-confirm-error" id="exclusao-erro" role="status"></p>
+    <div class="adm-confirm-actions">
+      <button class="btn btn-line" type="button" id="exclusao-cancelar" autofocus>Cancelar</button>
+      <button class="btn btn-danger" type="button" id="exclusao-confirmar">Excluir contato</button>
     </div>
   </dialog>
 

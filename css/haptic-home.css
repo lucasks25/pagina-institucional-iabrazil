@@ -727,33 +727,17 @@ body{line-height:1.2;}
   margin-top: 14px;
 }
 
-.origin-story-year {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 10 / 7;
-  container-type: inline-size;
+.origin-story-image {
+  display: block;
+  width: 100%;
+  height: auto;
   border-radius: 16px;
-  background: linear-gradient(145deg, #f2f6fb, #e2eaf4);
-  color: #14213a;
-}
-
-.origin-story-year span {
-  font-family: var(--heading);
-  font-size: 30cqi;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -.045em;
-  padding-inline-end: .045em;
 }
 
 @media (max-width: 800px) {
   .origin-story-inner {
     grid-template-columns: minmax(0, 1fr);
     max-width: 600px;
-  }
-
-  .origin-story-year {
-    aspect-ratio: 2 / 1;
   }
 }
 

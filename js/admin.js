@@ -11,6 +11,9 @@
   let current = null;   // contato aberto no painel lateral
   let opener = null;    // botão que abriu o painel (o foco volta para ele)
   let loading = false;
+  let listVersion = 0;
+  let pendingDeletion = null;
+  let deleting = false;
   let toastTimer = 0;
 
   /* ---------- Utilidades ---------- */
@@ -99,6 +102,7 @@
   /* ---------- Telas ---------- */
 
   function showLogin(message) {
+    listVersion += 1;
     leads = [];
     $('linhas').replaceChildren();
     $('tela-painel').hidden = $('usuario').hidden = true;
@@ -121,15 +125,19 @@
   async function load(quiet) {
     if (loading) return;
     loading = true;
+    const version = listVersion;
     $('atualizar').textContent = 'Atualizando...';
     if (!quiet) hideList();
     if (!quiet) setState('loading');
     try {
-      leads = await L.list();
+      const received = await L.list();
+      if (version !== listVersion) return;
+      leads = received;
       fillInterests();
       $('atualizado').textContent = `Atualizado às ${fTime.format(new Date())}`;
       render();
     } catch (err) {
+      if (version !== listVersion) return;
       if (handleAuth(err)) return;
       if (quiet && leads.length) return toast(`Não foi possível atualizar. ${errText(err)}`, true);
       hideList();
@@ -186,7 +194,7 @@
     select.value = values.includes(keep) ? keep : '';
   }
 
-  const isFiltering = () => !!($('busca').value.trim() || $('filtro-status').value || $('filtro-interesse').value);
+  const isFiltering = () => !!($('busca').value.trim() || $('filtro-status').value || $('filtro-interesse').value || $('filtro-tipo').value);
 
   // Busca sem acento e sem diferenciar maiúsculas; números também acham o WhatsApp digitado com máscara
   function filtered() {
@@ -194,8 +202,10 @@
     const num = digits($('busca').value);
     const status = $('filtro-status').value;
     const interest = $('filtro-interesse').value;
+    const type = $('filtro-tipo').value;
     return leads.filter((l) => {
       if ((status && l.status !== status) || (interest && l.interesse !== interest)) return false;
+      if (type && l.parcial !== (type === 'email')) return false;
       if (!words.length) return true;
       const hay = fold([l.nome, l.sobrenome, l.empresa, l.email, l.whatsapp].join(' '));
       return words.every((w) => hay.includes(w)) || (num.length >= 3 && digits(l.whatsapp).includes(num));
@@ -203,7 +213,7 @@
   }
 
   function clearFilters() {
-    ['busca', 'filtro-status', 'filtro-interesse'].forEach((id) => { $(id).value = ''; });
+    ['busca', 'filtro-status', 'filtro-interesse', 'filtro-tipo'].forEach((id) => { $(id).value = ''; });
     render();
     $('busca').focus();
   }
@@ -227,10 +237,11 @@
     const name = fullName(l);
     return el('tr', { class: l.status === 'novo' ? 'is-new' : null, 'data-id': l.id },
       el('td', { class: 'c-date' }, el('time', { dateTime: l.created_at, title: t.full, text: t.main }), el('span', { class: 'c-sub', text: t.sub })),
-      el('td', { class: 'c-name' }, el('button', { class: 'lead-open', type: 'button', text: name }), el('span', { class: 'c-sub', text: l.empresa || (l.parcial ? l.email : '') })),
-      el('td', { class: 'c-int', text: l.interesse }),
-      el('td', { class: 'c-contact' }, el('span', { class: 'c-line', text: l.whatsapp }), el('span', { class: 'c-sub', text: l.email })),
-      el('td', { class: 'c-status' }, statusPicker(l, `Status de ${name}`)));
+      el('td', { class: 'c-name' }, el('button', { class: 'lead-open', type: 'button', text: l.parcial ? 'Só e-mail' : name, 'aria-label': l.parcial ? `Abrir contato de ${l.email}` : null }), l.empresa ? el('span', { class: 'c-sub', text: l.empresa }) : null),
+      el('td', { class: 'c-int', text: l.interesse || '—' }),
+      el('td', { class: 'c-contact' }, l.whatsapp ? el('span', { class: 'c-line', text: l.whatsapp }) : null, el('span', { class: l.whatsapp ? 'c-sub' : 'c-line', text: l.email })),
+      el('td', { class: 'c-status' }, statusPicker(l, `Status de ${l.parcial ? l.email : name}`)),
+      el('td', { class: 'c-actions' }, el('button', { class: 'lead-delete', type: 'button', text: 'Excluir', 'aria-label': `Excluir contato de ${l.parcial ? l.email : name}` })));
   }
 
   // Select de status: mudou, já salva
@@ -301,7 +312,6 @@
     setLink($('d-email'), mailHref(l.email));
     $('d-copiar').disabled = !l.email;
     $('d-copiar').textContent = 'Copiar e-mail';
-    confirmDelete(false);
   }
 
   const notesDirty = () => !!current && $('d-notas').value.trim() !== current.notas.trim();
@@ -360,33 +370,61 @@
     }
   }
 
-  function confirmDelete(show) {
-    $('d-confirmar').hidden = !show;
-    $('d-excluir').hidden = show;
-    if (!show) return;
-    $('d-confirmar-txt').textContent = `Excluir o contato de ${fullName(current)}? Essa ação não pode ser desfeita.`;
-    $('d-cancelar').focus();
+  function openDeletion(id) {
+    const lead = leads.find((contact) => contact.id === id);
+    const dialog = $('exclusao-contato');
+    if (!lead || dialog.open) return;
+    pendingDeletion = id;
+    const name = lead.parcial ? lead.email : `${fullName(lead)} (${lead.email})`;
+    $('exclusao-descricao').textContent = `O contato de ${name} será excluído permanentemente.`;
+    $('exclusao-erro').textContent = '';
+    dialog.showModal();
+    $('exclusao-cancelar').focus();
   }
 
-  async function deleteCurrent() {
-    const l = current;
-    if (!l) return;
+  async function deleteContact() {
+    const id = pendingDeletion;
+    if (!id || deleting) return;
+    const dialog = $('exclusao-contato');
+    const confirm = $('exclusao-confirmar');
+    const cancel = $('exclusao-cancelar');
+    const error = $('exclusao-erro');
+    deleting = confirm.disabled = cancel.disabled = true;
+    confirm.textContent = 'Excluindo…';
+    error.textContent = '';
     try {
-      await L.remove(l.id);
+      await L.remove(id);
     } catch (err) {
-      if (!handleAuth(err)) toast(`Não foi possível excluir. ${errText(err)}`, true);
-      return;
+      if (err instanceof L.AuthError) {
+        dialog.close();
+        handleAuth(err);
+        return;
+      }
+      if (err.status !== 404) {
+        error.textContent = `Não foi possível excluir. ${errText(err)}`;
+        return;
+      }
+    } finally {
+      deleting = confirm.disabled = cancel.disabled = false;
+      confirm.textContent = 'Excluir contato';
+      if (error.textContent) confirm.focus();
     }
-    const index = filtered().indexOf(l);
-    leads = leads.filter((x) => x !== l);
+    const index = filtered().findIndex((contact) => contact.id === id);
+    listVersion += 1;
+    leads = leads.filter((contact) => contact.id !== id);
     fillInterests();
     render();
-    // O foco vai para o contato seguinte da lista (ou para o título, se a lista acabou)
     const rows = $('linhas').rows;
     const next = rows.length ? rows[Math.min(Math.max(index, 0), rows.length - 1)] : null;
-    opener = next ? next.querySelector('.lead-open') : $('painel-titulo');
-    current = null;
-    $('detalhe').close();
+    const focus = next ? next.querySelector('.lead-open') : $('painel-titulo');
+    dialog.close();
+    if (current?.id === id) {
+      current = null;
+      opener = focus;
+      $('detalhe').close();
+    } else {
+      focus.focus();
+    }
     toast('Contato excluído.');
   }
 
@@ -497,6 +535,7 @@
 
   function bind() {
     const drawer = $('detalhe');
+    const deletion = $('exclusao-contato');
     $('form-login').addEventListener('submit', onLogin);
     $('sair').addEventListener('click', async () => {
       await L.logout();
@@ -508,6 +547,7 @@
     $('busca').addEventListener('input', render);
     $('filtro-status').addEventListener('change', render);
     $('filtro-interesse').addEventListener('change', render);
+    $('filtro-tipo').addEventListener('change', render);
     $('limpar').addEventListener('click', clearFilters);
     $('exportar').addEventListener('click', exportCsv);
     $('exportar-ads').addEventListener('click', exportAds);
@@ -517,11 +557,12 @@
       $('linhas').querySelector('.lead-open')?.focus();
     });
 
-    // Clique em qualquer parte da linha abre os detalhes (menos no status e ao selecionar texto)
     $('linhas').addEventListener('click', (e) => {
-      if (e.target.closest('.status') || String(window.getSelection())) return;
       const tr = e.target.closest('tr');
-      if (tr) openDrawer(tr.dataset.id, tr.querySelector('.lead-open'));
+      if (!tr) return;
+      if (e.target.closest('.lead-delete')) return openDeletion(tr.dataset.id);
+      if (e.target.closest('.status') || String(window.getSelection())) return;
+      openDrawer(tr.dataset.id, tr.querySelector('.lead-open'));
     });
 
     $('d-fechar').addEventListener('click', () => drawer.close());
@@ -558,9 +599,11 @@
       setTimeout(() => { $('d-copiar').textContent = 'Copiar e-mail'; }, 2000);
     });
 
-    $('d-excluir').addEventListener('click', () => confirmDelete(true));
-    $('d-cancelar').addEventListener('click', () => { confirmDelete(false); $('d-excluir').focus(); });
-    $('d-excluir-sim').addEventListener('click', deleteCurrent);
+    $('d-excluir').addEventListener('click', () => { if (current) openDeletion(current.id); });
+    $('exclusao-cancelar').addEventListener('click', () => deletion.close());
+    $('exclusao-confirmar').addEventListener('click', deleteContact);
+    deletion.addEventListener('cancel', (e) => { if (deleting) e.preventDefault(); });
+    deletion.addEventListener('close', () => { if (!deletion.open) pendingDeletion = null; });
 
   }
 
