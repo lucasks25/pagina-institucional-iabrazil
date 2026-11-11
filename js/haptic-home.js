@@ -26,29 +26,42 @@ document.querySelectorAll('[data-contact]').forEach(link=>link.addEventListener(
 }));
 const footerForm = document.querySelector('.circular-footer-form');
 const footerEmail = footerForm?.querySelector('input[type=email]');
-const footerEmailError = footerForm?.querySelector('#footer-email-error');
-const contactEmail = dialog?.querySelector('input[name=email]');
-if (footerEmail && footerEmailError) {
-  const clearFooterEmailError = () => {
-    footerEmail.removeAttribute('aria-invalid');
-    footerEmailError.textContent = '';
+const footerSubmit = footerForm?.querySelector('button[type=submit]');
+const footerFeedback = footerForm?.querySelector('#footer-newsletter-status');
+if (footerEmail && footerSubmit && footerFeedback && window.Leads?.subscribe) {
+  const newsletterMessage = (message, state) => {
+    footerFeedback.dataset.state = state;
+    if (footerFeedback.textContent !== message) footerFeedback.textContent = message;
   };
+  footerSubmit.disabled = false;
   footerEmail.addEventListener('invalid', event => {
     event.preventDefault();
     footerEmail.setAttribute('aria-invalid', 'true');
     footerEmail.focus();
-    const message = footerEmail.validity.valueMissing
-      ? 'Informe seu e-mail para continuar.'
-      : 'Confira o formato do e-mail.';
-    if (footerEmailError.textContent !== message) footerEmailError.textContent = message;
+    newsletterMessage(footerEmail.validity.valueMissing
+      ? 'Informe seu e-mail para assinar.'
+      : 'Confira o formato do e-mail.', 'error');
   });
-  footerEmail.addEventListener('input', clearFooterEmailError);
-  footerForm.addEventListener('submit', event => {
-    clearFooterEmailError();
-    if (!contactEmail || !dialog.showModal) return;
+  footerEmail.addEventListener('input', () => {
+    footerEmail.removeAttribute('aria-invalid');
+    newsletterMessage('', '');
+  });
+  footerForm.addEventListener('submit', async event => {
     event.preventDefault();
-    contactEmail.value = footerEmail.value;
-    openContact();
+    if (footerSubmit.disabled) return;
+    footerSubmit.disabled = true;
+    footerEmail.readOnly = true;
+    newsletterMessage('Registrando sua inscrição…', 'pending');
+    try {
+      await window.Leads.subscribe(footerEmail.value);
+      footerForm.reset();
+      newsletterMessage('Inscrição confirmada.', 'success');
+    } catch (error) {
+      newsletterMessage(error.message || 'Não foi possível concluir a inscrição.', 'error');
+    } finally {
+      footerEmail.readOnly = false;
+      footerSubmit.disabled = false;
+    }
   });
 }
 document.querySelector('[data-close-contact]')?.addEventListener('click',()=>dialog.close());

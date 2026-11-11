@@ -5,6 +5,7 @@ const L = require('./_lib');
 
 const FAIL_MAX = 6;          // tentativas erradas por visitante
 const FAIL_WINDOW = 15 * 60; // em 15 minutos
+const contactsFilter = `or=(origem.is.null,origem.neq.${encodeURIComponent(L.NEWSLETTER_ORIGIN)})`;
 
 module.exports = async (req, res) => {
   const action = String((req.query && req.query.a) || new URL(req.url, 'http://x').searchParams.get('a') || '');
@@ -20,6 +21,7 @@ module.exports = async (req, res) => {
 
     if (action === 'me' && req.method === 'GET') return L.send(res, 200, { ok: true, email: s.sub });
     if (action === 'list' && req.method === 'GET') return await list(res);
+    if (action === 'newsletter' && req.method === 'GET') return await newsletter(res);
     if (action === 'stats' && req.method === 'GET') return await stats(req, res);
     if (action === 'update' && req.method === 'PATCH') return await update(req, res);
     if (action === 'remove' && req.method === 'DELETE') return await remove(req, res);
@@ -61,14 +63,24 @@ async function login(req, res) {
   return L.send(res, 401, { ok: false, error: 'credenciais' });
 }
 
-async function list(res) {
+async function listRows(query) {
   const rows = [];
   for (let page = 0; page < 50; page += 1) {
-    const chunk = await L.sb(`leads?select=*&order=created_at.desc,id.desc&limit=1000&offset=${page * 1000}`);
+    const chunk = await L.sb(`leads?${query}&order=created_at.desc,id.desc&limit=1000&offset=${page * 1000}`);
     rows.push(...chunk);
     if (chunk.length < 1000) break;
   }
-  return L.send(res, 200, { ok: true, leads: rows });
+  return rows;
+}
+
+async function list(res) {
+  const leads = await listRows(`select=*&${contactsFilter}`);
+  return L.send(res, 200, { ok: true, leads });
+}
+
+async function newsletter(res) {
+  const subscribers = await listRows(`select=email,created_at&origem=eq.${encodeURIComponent(L.NEWSLETTER_ORIGIN)}`);
+  return L.send(res, 200, { ok: true, subscribers });
 }
 
 async function update(req, res) {
@@ -95,7 +107,7 @@ async function update(req, res) {
   if (!Object.keys(patch).length) return L.send(res, 400, { ok: false });
   let rows;
   try {
-    rows = await L.sb(`leads?id=eq.${id}`, { method: 'PATCH', body: patch, prefer: 'return=representation' });
+    rows = await L.sb(`leads?id=eq.${id}&${contactsFilter}`, { method: 'PATCH', body: patch, prefer: 'return=representation' });
   } catch (err) {
     // Coluna nova ainda não existe no banco: o SQL atualizado precisa ser rodado
     if (err && err.status === 400) return L.send(res, 409, { ok: false, error: 'sql' });
@@ -108,7 +120,7 @@ async function update(req, res) {
 async function remove(req, res) {
   const id = String((req.query && req.query.id) || new URL(req.url, 'http://x').searchParams.get('id') || '');
   if (!L.UUID.test(id)) return L.send(res, 400, { ok: false });
-  const rows = await L.sb(`leads?id=eq.${id}`, { method: 'DELETE', prefer: 'return=representation' });
+  const rows = await L.sb(`leads?id=eq.${id}&${contactsFilter}`, { method: 'DELETE', prefer: 'return=representation' });
   if (!rows || !rows.length) return L.send(res, 404, { ok: false });
   return L.send(res, 200, { ok: true });
 }
@@ -152,13 +164,13 @@ async function stats(req, res) {
   }
   let leads = [];
   try {
-    const q = (cols) => L.sb(`leads?select=created_at,status,canal,campanha,pagina_entrada,parcial,mensagem${cols}&created_at=gte.${iso}&order=created_at.desc&limit=5000`);
+    const q = (cols) => L.sb(`leads?select=created_at,status,canal,campanha,pagina_entrada,parcial,mensagem${cols}&${contactsFilter}&created_at=gte.${iso}&order=created_at.desc&limit=5000`);
     leads = await q(',cargo,tamanho_empresa,faturamento,ja_ia,valor,qualificado_em,proposta_em,fechado_em')
       .catch((err) => { if (err && err.status === 400) return q(',cargo,tamanho_empresa,faturamento,ja_ia'); throw err; })
       .catch((err) => { if (err && err.status === 400) return q(''); throw err; });
   } catch (err) {
     if (!(err && (err.status === 400 || err.status === 404))) throw err;
-    leads = await L.sb(`leads?select=created_at,status,parcial,mensagem&created_at=gte.${iso}&order=created_at.desc&limit=5000`).catch(() => L.sb(`leads?select=created_at,parcial&created_at=gte.${iso}&limit=5000`));
+    leads = await L.sb(`leads?select=created_at,status,parcial,mensagem&${contactsFilter}&created_at=gte.${iso}&order=created_at.desc&limit=5000`).catch(() => L.sb(`leads?select=created_at,parcial&${contactsFilter}&created_at=gte.${iso}&limit=5000`));
   }
 
   const daily = new Map(), pages = new Map(), canais = new Map(), paises = new Map(), cidades = new Map(), devs = new Map(), camps = new Map(), refs = new Map();

@@ -6,33 +6,27 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="referrer" content="no-referrer">
   <!-- Só roda script deste site; os dados dos contatos nunca viram código -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
-  <title>Contatos | IA BRAZIL</title>
-  <meta name="theme-color" content="#0a1a3a">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>Painel | IA BRAZIL</title>
+  <meta name="theme-color" content="#ffffff">
   <link rel="icon" href="favicon-orbital-v4.ico" sizes="16x16 32x32 48x48">
   <link rel="icon" href="assets/favicon-orbital-v4-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="assets/favicon-orbital-v4-48.png" type="image/png" sizes="48x48">
   <link rel="icon" href="assets/favicon-orbital-v4.svg" type="image/svg+xml" sizes="any">
   <link rel="apple-touch-icon" href="assets/favicon-orbital-v3-180.png" sizes="180x180">
-  <link rel="manifest" href="site-orbital-v3.webmanifest">
-  <meta name="theme-color" content="#0d1014">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="/css/base.css?v=20261028-azul">
-  <link rel="stylesheet" href="/css/admin.css">
-  <script src="/js/leads.js" defer></script>
+  <link rel="stylesheet" href="/css/admin.css?v=20261111-v1">
+  <script src="/js/leads.js?v=20261111-newsletter" defer></script>
   <script src="/js/admin.js" defer></script>
-  <script src="/js/admin-stats.js" defer></script>
+  <script src="/js/admin-stats.js?v=20261111-v1" defer></script>
 </head>
 <body class="adm">
   <header class="adm-bar">
     <div class="adm-wrap adm-bar-inner">
-      <span class="logo"><img class="logo-image" src="assets/logo-ia-brazil-texto-hd.png" alt="IA BRAZIL" width="202" height="42"></span>
-      <span class="adm-bar-title">Painel</span>
+      <a class="adm-logo" href="/" aria-label="IA BRAZIL, página inicial"><img src="/assets/brand/ia-brazil-orbital-lockup.svg" alt="" width="1405" height="349"></a>
       <nav class="adm-tabs" id="abas" aria-label="Seções do painel" hidden>
-        <button type="button" data-aba="contatos" aria-current="true">Contatos</button>
-        <button type="button" data-aba="visitas">Visitas</button>
+        <button type="button" data-aba="contatos" aria-controls="tela-painel" aria-current="true">Contatos</button>
+        <button type="button" data-aba="visitas" aria-controls="tela-visitas">Visitas</button>
+        <button type="button" data-aba="newsletter" aria-controls="tela-newsletter">Newsletter</button>
       </nav>
       <div class="adm-user" id="usuario" hidden>
         <span class="adm-user-email" id="usuario-email"></span>
@@ -42,15 +36,17 @@
   </header>
 
 
-  <noscript><p class="adm-wrap adm-fatal">Ative o JavaScript para ver os contatos.</p></noscript>
+  <noscript><p class="adm-wrap adm-fatal">Ative o JavaScript para acessar o painel.</p></noscript>
 
   <main id="conteudo">
     <!-- Login -->
     <section class="adm-login" id="tela-login" aria-labelledby="login-titulo" hidden>
       <form class="adm-login-box" id="form-login" method="post" action="#">
-        <p class="adm-kicker">Área restrita</p>
-        <h1 id="login-titulo">Entrar</h1>
-        <p class="adm-login-text">Área restrita. Entre com o seu e-mail e a sua senha para ver os contatos do site.</p>
+        <div class="adm-login-heading">
+          <span class="adm-login-mark" aria-hidden="true"><img src="/assets/brand/ia-brazil-orbital-mark.svg" alt="" width="30" height="30"></span>
+          <h1 id="login-titulo">Acesse o painel</h1>
+          <p class="adm-login-text">Entre para acompanhar os contatos, as visitas e as inscrições na newsletter.</p>
+        </div>
         <label class="adm-field">E-mail<input name="email" type="email" required autocomplete="username" spellcheck="false"></label>
         <label class="adm-field">Senha<input name="password" type="password" required autocomplete="current-password"></label>
         <p class="adm-login-msg" id="login-msg" role="alert"></p>
@@ -146,6 +142,29 @@
         </div>
         <p class="adm-aviso" id="visitas-aviso" role="status" hidden></p>
         <div id="visitas-corpo"></div>
+      </div>
+    </section>
+
+    <section class="adm-dash" id="tela-newsletter" aria-labelledby="newsletter-titulo" hidden>
+      <div class="adm-wrap">
+        <div class="adm-head">
+          <div>
+            <h1 id="newsletter-titulo" tabindex="-1">Newsletter</h1>
+            <p>Inscrições recebidas pelo formulário no rodapé do site.</p>
+          </div>
+          <button class="btn btn-line btn-sm" type="button" id="newsletter-atualizar">Atualizar</button>
+        </div>
+        <p class="adm-list-head" id="newsletter-total" aria-live="polite"></p>
+        <p class="adm-state" id="newsletter-estado" role="status" hidden></p>
+        <div class="newsletter-table" id="newsletter-tabela" hidden>
+          <table>
+            <caption class="sr-only">Inscrições na newsletter, da mais recente para a mais antiga.</caption>
+            <thead>
+              <tr><th scope="col">E-mail</th><th scope="col">Data de inscrição</th></tr>
+            </thead>
+            <tbody id="newsletter-linhas"></tbody>
+          </table>
+        </div>
       </div>
     </section>
   </main>

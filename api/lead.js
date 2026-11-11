@@ -1,9 +1,32 @@
 'use strict';
-/* IA BRAZIL — recebe os contatos do site (formulário e e-mail do topo). Rota: POST /api/lead */
+/* IA BRAZIL — recebe contatos e inscrições da newsletter. Rota: POST /api/lead */
+const { createHash } = require('node:crypto');
 const L = require('./_lib');
 
 const FORM = ['nome', 'sobrenome', 'empresa', 'email', 'whatsapp', 'interesse', 'mensagem', 'origem'];
 const REQUIRED = ['nome', 'empresa', 'email', 'whatsapp', 'interesse'];
+
+async function subscribe(req, res, value) {
+  if (typeof value !== 'string' || value.trim().length > L.LIMITS.email) {
+    return L.send(res, 400, { ok: false, error: 'email' });
+  }
+  const email = L.clean(value, 'email');
+  if (!L.EMAIL.test(email)) return L.send(res, 400, { ok: false, error: 'email' });
+
+  const visitor = L.visitor(req);
+  if (await L.tooMany('newsletter', visitor, 8, 3600)) return L.send(res, 429, { ok: false, error: 'limite' });
+  await L.hit('newsletter', visitor);
+
+  // UUIDv8 derivado do e-mail permite que a chave primária trate reenvios simultâneos.
+  const hash = createHash('sha256').update(`iabrazil/newsletter:${email}`).digest('hex');
+  const id = `${hash.slice(0, 8)}-${hash.slice(8, 12)}-8${hash.slice(13, 16)}-8${hash.slice(17, 20)}-${hash.slice(20, 32)}`;
+  await L.sb('leads?on_conflict=id', {
+    method: 'POST',
+    body: { id, email, origem: L.NEWSLETTER_ORIGIN, parcial: true },
+    prefer: 'resolution=ignore-duplicates,return=minimal',
+  });
+  return L.send(res, 200, { ok: true });
+}
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return L.send(res, 405, { ok: false }, { Allow: 'POST' });
@@ -11,13 +34,19 @@ module.exports = async (req, res) => {
 
   let body;
   try { body = await L.readBody(req); } catch { return L.send(res, 413, { ok: false }); }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return L.send(res, 400, { ok: false });
 
   // Robô: o campo escondido veio preenchido. Responde "ok" sem guardar nada.
   if (body.site) return L.send(res, 200, { ok: true });
 
+  if (body.tipo === 'newsletter') {
+    try { return await subscribe(req, res, body.email); } catch (err) { return saveError(res, err); }
+  }
+
   const onlyEmail = body.tipo === 'email';
   const data = {};
   FORM.forEach((f) => { data[f] = L.clean(body[f], f) || null; });
+  if (data.origem === L.NEWSLETTER_ORIGIN) data.origem = null;
   if (!data.email || !L.EMAIL.test(data.email)) return L.send(res, 400, { ok: false, error: 'email' });
   if (!onlyEmail && REQUIRED.some((f) => !data[f])) return L.send(res, 400, { ok: false, error: 'campos' });
 
@@ -53,8 +82,11 @@ module.exports = async (req, res) => {
     await withAttr((x) => L.sb('leads', { method: 'POST', body: { ...row, ...x }, prefer: 'return=minimal' }));
     return L.send(res, 200, { ok: true });
   } catch (err) {
-    // Sem detalhes para quem chamou; o motivo fica só no log da Vercel
-    console.error('lead:', err && err.message, err && err.status);
-    return L.send(res, err && err.message === 'config' ? 503 : 502, { ok: false, error: 'indisponivel' });
+    return saveError(res, err);
   }
 };
+
+function saveError(res, err) {
+  console.error('lead:', err && err.message, err && err.status);
+  return L.send(res, err && err.message === 'config' ? 503 : 502, { ok: false, error: 'indisponivel' });
+}

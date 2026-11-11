@@ -142,6 +142,22 @@
     }
   }
 
+  async function subscribe(email) {
+    const address = clean(email, 'email');
+    if (!EMAIL.test(address)) throw new Error('Confira o formato do e-mail.');
+    const res = await request('/api/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tipo: 'newsletter', email: address }),
+    });
+    const data = await json(res);
+    if (!res.ok || !data.ok) {
+      throw new Error(res.status === 429
+        ? 'Muitos envios seguidos. Tente de novo mais tarde.'
+        : 'Não foi possível concluir a inscrição. Tente de novo em instantes.');
+    }
+  }
+
   async function login(email, password) {
     forget();
     try {
@@ -166,6 +182,11 @@
   async function list() {
     const data = await admin('list');
     return (data.leads || []).map(normalize);
+  }
+
+  async function newsletter() {
+    const data = await admin('newsletter');
+    return data.subscribers || [];
   }
 
   // Painel só muda status e notas
@@ -199,5 +220,5 @@
     await admin('remove', { method: 'DELETE', id: checkId(id) });
   }
 
-  window.Leads = Object.freeze({ mode, save, saveEmail, login, logout, hasSession, user, list, update, remove, stats, AuthError, STATUS: STATUS.slice(), LIMITS: { ...LIMITS } });
+  window.Leads = Object.freeze({ mode, save, saveEmail, subscribe, login, logout, hasSession, user, list, newsletter, update, remove, stats, AuthError, STATUS: STATUS.slice(), LIMITS: { ...LIMITS } });
 })();

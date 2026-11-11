@@ -1,4 +1,4 @@
-/* IA BRAZIL — aba "Visitas" do painel: de onde vêm as pessoas e os contatos.
+/* IA BRAZIL — abas de visitas e inscrições da newsletter.
    Tudo é montado com textContent (nenhum dado vira HTML). Os dados vêm do servidor, só com login. */
 (() => {
   'use strict';
@@ -8,7 +8,10 @@
 
   const abas = $('abas'), painel = $('tela-painel'), vis = $('tela-visitas'), login = $('tela-login'), usuario = $('usuario');
   const corpo = $('visitas-corpo'), aviso = $('visitas-aviso');
-  let aba = 'contatos', dias = 30, busy = false;
+  const newsletter = $('tela-newsletter'), newsletterAtualizar = $('newsletter-atualizar');
+  const newsletterTotal = $('newsletter-total'), newsletterEstado = $('newsletter-estado');
+  const newsletterTabela = $('newsletter-tabela'), newsletterLinhas = $('newsletter-linhas');
+  let dias = 30, busy = false, newsletterRequest;
 
   const el = (tag, attrs, ...kids) => {
     const n = document.createElement(tag);
@@ -20,37 +23,97 @@
   const nf = new Intl.NumberFormat('pt-BR');
   const num = (v) => nf.format(v || 0);
   const pct = (a, b) => (b ? `${(Math.round((a / b) * 1000) / 10).toLocaleString('pt-BR')}%` : '–');
+  const loggedIn = () => !usuario.hidden && login.hidden && L.hasSession();
 
   /* ---------- Abas ---------- */
-  function show(which) {
-    aba = which;
-    const logged = !usuario.hidden && login.hidden;
+  function show(aba) {
+    const logged = loggedIn();
     abas.hidden = !logged;
     painel.hidden = !logged || aba !== 'contatos';
     vis.hidden = !logged || aba !== 'visitas';
-    abas.querySelectorAll('button').forEach((b) => b.toggleAttribute('aria-current', b.dataset.aba === aba));
-    if (logged && aba === 'visitas') load();
+    if (newsletter) newsletter.hidden = !logged || aba !== 'newsletter';
+    abas.querySelectorAll('button').forEach((b) => {
+      if (b.dataset.aba === aba) b.setAttribute('aria-current', 'true');
+      else b.removeAttribute('aria-current');
+    });
+    if (!logged) clearNewsletter();
+    else if (aba === 'visitas') load();
+    else if (aba === 'newsletter') loadNewsletter();
   }
   abas.addEventListener('click', (e) => {
     const b = e.target.closest('button[data-aba]');
     if (b) show(b.dataset.aba);
   });
   // Quando o painel entra ou sai (login, sair, sessão vencida), volta para "Contatos"
-  new MutationObserver(() => {
-    const logged = !usuario.hidden && login.hidden;
-    if (!logged) { abas.hidden = true; vis.hidden = true; aba = 'contatos'; return; }
-    if (abas.hidden) show('contatos');
-  }).observe(usuario, { attributes: true, attributeFilter: ['hidden'] });
-  new MutationObserver(() => { if (!login.hidden) { abas.hidden = true; vis.hidden = true; aba = 'contatos'; } }).observe(login, { attributes: true, attributeFilter: ['hidden'] });
+  const sessionObserver = new MutationObserver(() => {
+    if (!loggedIn() || abas.hidden) show('contatos');
+  });
+  [usuario, login].forEach((node) => sessionObserver.observe(node, { attributes: true, attributeFilter: ['hidden'] }));
+  $('sair').addEventListener('click', () => show('contatos'));
 
   // Se a página foi recarregada já logado, o painel abre antes deste arquivo carregar: monta as abas agora
-  if (!usuario.hidden && login.hidden) show('contatos');
+  show('contatos');
 
   document.querySelectorAll('[data-dias]').forEach((b) => b.addEventListener('click', () => {
     dias = Number(b.dataset.dias);
     document.querySelectorAll('[data-dias]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     load();
   }));
+
+  /* ---------- Newsletter ---------- */
+  const subscriptionDate = new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Sao_Paulo',
+  });
+
+  function newsletterStatus(message) {
+    newsletterEstado.textContent = message;
+    newsletterEstado.hidden = !message;
+  }
+
+  function clearNewsletter() {
+    if (!newsletter) return;
+    newsletterRequest = undefined;
+    newsletterLinhas.replaceChildren();
+    newsletterTotal.textContent = '';
+    newsletterTabela.hidden = true;
+    newsletterAtualizar.disabled = false;
+    newsletterStatus('');
+  }
+
+  async function loadNewsletter() {
+    if (!newsletter || !loggedIn() || newsletterRequest) return;
+    const request = newsletterRequest = {};
+    newsletterAtualizar.disabled = true;
+    newsletterStatus('Carregando inscrições…');
+    try {
+      const subscribers = await L.newsletter();
+      if (request !== newsletterRequest || !loggedIn()) return;
+      const rows = subscribers.map(({ email, created_at }) => {
+        const date = new Date(created_at || NaN);
+        const time = Number.isNaN(date.getTime()) ? '—' : el('time', { datetime: created_at, text: subscriptionDate.format(date) });
+        return el('tr', null, el('td', { 'data-label': 'E-mail', text: email }), el('td', { 'data-label': 'Data de inscrição' }, time));
+      });
+      newsletterLinhas.replaceChildren(...rows);
+      newsletterTotal.textContent = `${num(rows.length)} ${rows.length === 1 ? 'inscrito' : 'inscritos'}`;
+      newsletterTabela.hidden = rows.length === 0;
+      newsletterStatus(rows.length ? '' : 'Nenhuma inscrição na newsletter ainda.');
+    } catch (err) {
+      if (request !== newsletterRequest) return;
+      if (err instanceof L.AuthError) {
+        show('contatos');
+        location.reload();
+      } else if (loggedIn()) {
+        newsletterStatus('Não foi possível carregar as inscrições. Tente atualizar.');
+      }
+    } finally {
+      if (request === newsletterRequest) {
+        newsletterRequest = undefined;
+        newsletterAtualizar.disabled = false;
+      }
+    }
+  }
+
+  newsletterAtualizar?.addEventListener('click', loadNewsletter);
 
   /* ---------- Peças visuais ---------- */
   const card = (rotulo, valor, nota) => el('li', { class: 'vs-card' }, el('span', { class: 'vs-k', text: rotulo }), el('strong', { text: valor }), nota ? el('small', { text: nota }) : null);

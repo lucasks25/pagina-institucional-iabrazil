@@ -11,6 +11,7 @@ const STATUS = ['novo', 'em_contato', 'qualificado', 'proposta', 'fechado', 'per
 const MULTILINE = ['mensagem', 'notas'];
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const NEWSLETTER_ORIGIN = 'Newsletter';
 const HOSTS = new Set(['www.iabrazil.com', 'iabrazil.com', 'pagina-institucional-iabrazil.vercel.app']);
 const COOKIE = 'iabr_adm';
 const SESSION_SECONDS = 8 * 3600;
@@ -249,4 +250,4 @@ const geo = (req) => {
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-module.exports = { QUALIFICACAO, isBot, uaInfo, deviceOf, hostOnly, classify, dailyVisitor, geo, cut, LIMITS, STATUS, UUID, EMAIL, clean, send, readBody, originOk, visitor, sb, tooMany, hit, session, setSession, clearSession, checkPassword, equalText, wait };
+module.exports = { QUALIFICACAO, isBot, uaInfo, deviceOf, hostOnly, classify, dailyVisitor, geo, cut, LIMITS, STATUS, UUID, EMAIL, NEWSLETTER_ORIGIN, clean, send, readBody, originOk, visitor, sb, tooMany, hit, session, setSession, clearSession, checkPassword, equalText, wait };
