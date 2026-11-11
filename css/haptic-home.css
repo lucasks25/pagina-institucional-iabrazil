@@ -481,6 +481,9 @@
 .hero-content{max-width:620px;left:max(20px,calc((100% - 1800px)/2 + 20px));bottom:32px;}
 .hero-content h1{max-width:620px;margin-bottom:12px;font-size:48px;line-height:1;text-wrap:balance;}
 .hero-description{max-width:390px;margin-bottom:20px;font-size:15px;line-height:1.45;text-wrap:balance;}
+.hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;}
+.hero-solutions{display:inline-flex;align-items:center;min-height:44px;padding-inline:8px;font-size:14px;text-underline-offset:4px;}
+.hero-solutions:hover,.hero-solutions:focus-visible{text-decoration:underline;}
 .hero-content .button{font-size:14px;line-height:.8;min-height:44px;gap:0;}
 .hero-content .button-arrow{width:0;opacity:0;overflow:hidden;transition:width .25s,opacity .25s,margin .25s;}
 .hero-content .button:hover .button-arrow,.hero-content .button:focus-visible .button-arrow{width:12px;opacity:1;margin-left:12px;}
