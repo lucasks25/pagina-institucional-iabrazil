@@ -126,17 +126,26 @@ if (introLines.length) {
       });
       node.replaceWith(...parts);
     }
-    return { line, words };
+    const fadeSpan = Math.min(4, Math.max(2, words.length / 3));
+    return { line, words, fadeSpan };
   });
 
   let queued = false;
   function revealIntro() {
     queued = false;
-    for (const { line, words } of lines) {
-      const top = line.getBoundingClientRect().top;
-      const progress = Math.min(1, Math.max(0, (1 - top / innerHeight) * 1.6));
-      const count = reduced.matches ? words.length : Math.ceil(progress * words.length);
-      words.forEach((word, index) => word.classList.toggle('is-read', index < count));
+    const start = innerHeight * .9;
+    for (const { line, words, fadeSpan } of lines) {
+      const { top, height } = line.getBoundingClientRect();
+      const end = innerHeight * .72 - height;
+      const progress = reduced.matches ? 1 : Math.min(1, Math.max(0, (start - top) / (start - end)));
+      // Sobrepõe a transição de palavras vizinhas na mesma posição de rolagem.
+      const cursor = progress * (words.length - 1 + fadeSpan);
+      words.forEach((word, index) => {
+        const reveal = Math.min(1, Math.max(0, (cursor - index) / fadeSpan));
+        const eased = reveal * reveal * (3 - 2 * reveal);
+        const opacity = String(Math.round((.24 + .76 * eased) * 1000) / 1000);
+        if (word.style.opacity !== opacity) word.style.opacity = opacity;
+      });
     }
   }
   function queueIntroReveal() {

@@ -676,13 +676,7 @@ body{line-height:1.2;}
 }
 
 .intro-word {
-  opacity: .45;
   white-space: nowrap;
-  transition: opacity .45s ease-out;
-}
-
-.intro-word.is-read {
-  opacity: 1;
 }
 
 .intro-continuation {
@@ -693,10 +687,6 @@ body{line-height:1.2;}
 .intro-continuation strong {
   color: var(--ink);
   font-weight: 600;
-}
-
-.intro-continuation .intro-word:not(.is-read) {
-  opacity: .84;
 }
 
 .intro-proof {
