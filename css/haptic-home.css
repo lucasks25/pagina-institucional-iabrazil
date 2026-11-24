@@ -603,25 +603,13 @@ body{line-height:1.2;}
 }
 .work-grid{row-gap:12px;}
 
-/* ICO Racing: mockup estático de celular, pronto para receber a captura. */
-.work-visual.work-visual-phone{background:linear-gradient(120deg,#c6b8a3,#e2d8c7 48%,#b5a58f);isolation:isolate;}
-.work-visual-phone::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(1deg,transparent 0 7px,#5c493b04 8px,transparent 9px 17px);pointer-events:none;}
-.case-phone{position:relative;z-index:1;width:40%;max-width:300px;aspect-ratio:9/19.5;padding:6px;border:1px solid #797773;border-radius:clamp(24px,3vw,44px);background:#1c1c1d;box-shadow:inset 0 0 0 1px #a4a29c,inset 0 0 0 3px #080808,-16px 20px 25px #44332230,0 3px 5px #0006;transform:translateY(-18px);}
-.case-phone::before{content:'';position:absolute;top:20%;left:-3px;width:2px;height:12%;background:#77736e;border-radius:2px;}
-.case-phone::after{content:'';position:absolute;top:26%;right:-3px;width:2px;height:15%;background:#77736e;border-radius:2px;}
-.case-phone-screen{position:relative;display:grid;place-items:center;width:100%;height:100%;overflow:hidden;border-radius:inherit;background:#f3f0ea;border:2px solid #080808;}
-.case-phone-island{position:absolute;left:32%;right:32%;height:4.2%;top:2%;background:#080808;border-radius:30px;}
-.case-phone-brand{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%;padding:18%;text-align:center;}
-.case-phone-brand img{width:100%;height:auto;mix-blend-mode:multiply;}
-.case-phone-brand>span{font:400 clamp(9px,.9vw,14px)/1.35 var(--body);letter-spacing:-.01em;color:#6f6458;}
-.case-phone-home{position:absolute;bottom:2%;left:33%;right:33%;height:3px;border-radius:3px;background:#161616;}
 .haptic-home #cases .work-grid-featured {
   --case-row: clamp(245px, 23vw, 385px);
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.08fr) minmax(0, 1.26fr);
   grid-template-rows: repeat(2, var(--case-row));
   grid-template-areas:
     "nicodanny nicodanny grupo-amp icoracing"
-    "salute vionex moltochat icoracing";
+    "salute vionex moltochat flip";
   gap: 12px;
 }
 .haptic-home #cases .work-card-nicodanny{grid-area:nicodanny;}
@@ -630,18 +618,12 @@ body{line-height:1.2;}
 .haptic-home #cases .work-card-salute{grid-area:salute;}
 .haptic-home #cases .work-card-vionex{grid-area:vionex;}
 .haptic-home #cases .work-card-moltochat{grid-area:moltochat;}
+.haptic-home #cases .work-card-flip{grid-area:flip;}
 .haptic-home #cases .work-grid-featured .work-visual{width:100%;height:100%;aspect-ratio:auto;}
-@media(min-width:810px){
- .haptic-home #cases .case-phone{width:min(64%, calc((var(--case-row) * 2 - 100px) * 9 / 19.5));transform:translateY(-26px);}
-}
 @media(max-width:809px){
  .haptic-home #cases .work-grid-featured{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-template-areas:none;}
  .haptic-home #cases .work-grid-featured .work-card{grid-area:auto;}
  .haptic-home #cases .work-grid-featured .work-visual{height:auto;aspect-ratio:1.55281;}
- .haptic-home #cases .work-card-icoracing .work-visual{aspect-ratio:.85;}
- .work-visual-phone .case-phone{width:44%;max-width:220px;}
- .haptic-home #cases .case-phone{width:40%;transform:translateY(-24px);}
- .case-phone-brand>span{font-size:11px;}
 }
 
 .haptic-home main > .section-pad + .section-pad {

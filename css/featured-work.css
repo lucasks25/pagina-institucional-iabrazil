@@ -72,32 +72,6 @@
   min-width: 0;
 }
 
-.featured-phone {
-  position: relative;
-  z-index: 1;
-  width: min(76%, 318px, calc((var(--case-row) * 2 - 112px) * 828 / 1448));
-  aspect-ratio: 828 / 1448;
-  overflow: hidden;
-  border: 3px solid #1a1919;
-  border-radius: clamp(16px, 2.2vw, 30px);
-  background: #121519;
-  box-shadow: 0 18px 36px #201a1540, 0 2px 6px #201a1547;
-  transform: translateY(-25px);
-}
-
-.featured-phone img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-}
-
-.featured-phone-detail {
-  opacity: 0;
-  transition: opacity .34s ease;
-}
-
 .featured-work-footer {
   display: flex;
   flex-wrap: wrap;
@@ -160,14 +134,6 @@
   .haptic-home #cases .work-card .project-scene__device {
     inset: auto;
   }
-
-  .haptic-home #cases .work-card-icoracing .work-visual {
-    aspect-ratio: 1;
-  }
-
-  .featured-phone {
-    width: min(46%, 280px);
-  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -200,9 +166,5 @@
 
   #cases .work-card:hover .project-scene__screen {
     transform: translateY(-3px) scale(1.025);
-  }
-
-  #cases .work-card:hover .featured-phone-detail {
-    opacity: 1;
   }
 }
