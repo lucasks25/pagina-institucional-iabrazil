@@ -1,7 +1,7 @@
 /* Home portfolio. The catalog continues to use the shared project styles. */
 .haptic-home #cases {
   --work-ease: cubic-bezier(.22, 1, .36, 1);
-  --featured-caption-space: 74px;
+  --featured-caption-space: 62px;
   padding-bottom: clamp(52px, 7vw, 104px);
   scroll-margin-top: 44px;
 }
@@ -47,12 +47,16 @@
 }
 
 .haptic-home #cases .project-scene__device {
-  inset: clamp(10px, 1.3vw, 22px) clamp(10px, 1.3vw, 22px) var(--featured-caption-space);
+  inset: 8px clamp(8px, .75vw, 14px) var(--featured-caption-space);
   margin: 0;
 }
 
 .haptic-home #cases .project-scene--grupo-amp .project-scene__device {
-  top: clamp(39px, 3vw, 52px);
+  top: 39px;
+}
+
+.haptic-home #cases .project-scene .work-caption {
+  bottom: 12px;
 }
 
 .haptic-home #cases .project-milestone {
@@ -123,15 +127,21 @@
   }
 
   .haptic-home #cases .work-grid-featured .work-visual.project-scene {
-    padding: 12px 12px 62px;
+    padding: 8px 8px 60px;
   }
 
-  .haptic-home #cases .work-visual.project-scene--grupo-amp {
+  .haptic-home #cases .work-grid-featured .work-visual.project-scene--grupo-amp {
     padding-top: 39px;
   }
 
   .haptic-home #cases .work-card .project-scene__device {
     inset: auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .haptic-home #cases .work-grid-featured .work-visual.project-scene--vionex {
+    padding-bottom: 72px;
   }
 }
 
