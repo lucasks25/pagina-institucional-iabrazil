@@ -609,7 +609,7 @@ body{line-height:1.2;}
   grid-template-rows: repeat(2, var(--case-row));
   grid-template-areas:
     "nicodanny nicodanny grupo-amp icoracing"
-    "salute vionex moltochat flip";
+    "salute vionex flip icoracing";
   gap: 12px;
 }
 .haptic-home #cases .work-card-nicodanny{grid-area:nicodanny;}
@@ -617,7 +617,6 @@ body{line-height:1.2;}
 .haptic-home #cases .work-card-icoracing{grid-area:icoracing;}
 .haptic-home #cases .work-card-salute{grid-area:salute;}
 .haptic-home #cases .work-card-vionex{grid-area:vionex;}
-.haptic-home #cases .work-card-moltochat{grid-area:moltochat;}
 .haptic-home #cases .work-card-flip{grid-area:flip;}
 .haptic-home #cases .work-grid-featured .work-visual{width:100%;height:100%;aspect-ratio:auto;}
 @media(max-width:809px){
