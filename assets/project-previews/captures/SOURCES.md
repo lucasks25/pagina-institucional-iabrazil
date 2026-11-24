@@ -28,6 +28,20 @@ Os arquivos `-detail-1-20261106.jpg` e `-detail-2-20261106.jpg` mostram pedido e
 | salute-cursos-20261123.jpg | Build local da landing page de Estética da Salute | Página da campanha na data da captura |
 | vionex-crm-20261123.jpg | Arte oficial `public/og-vionex.png` do CRM Vionex | Apresentação comercial do produto |
 
+## Galerias complementares
+
+| Arquivo | Origem | Conteúdo |
+| --- | --- | --- |
+| nicodanny-site-catalogo-20261123.jpg | Build local do site da Nicodanny | Catálogo de pães e massas |
+| nicodanny-site-solucoes-20261123.jpg | Build local do site da Nicodanny | Soluções para padarias e mercados |
+| salute-site-catalogo-20261123.jpg | Cópia local do site Escola Salute | Catálogo de cursos técnicos |
+| salute-site-radiologia-20261123.jpg | Cópia local do site Escola Salute | Página do curso de Radiologia |
+| salute-cursos-radiologia-20261123.jpg | Build local da landing page de Radiologia | Campanha de Radiologia |
+| salute-cursos-seguranca-20261123.jpg | Build local da landing page de Segurança do Trabalho | Campanha de Segurança do Trabalho |
+| salute-cursos-estetica-grade-20261123.jpg | Build local da landing page de Estética | Grade do curso de Estética |
+| salute-cursos-enfermagem-20261123.jpg | Build local da landing page de Enfermagem | Campanha de Enfermagem |
+| vionex-crm-acesso-20261123.jpg | Build local do CRM Vionex | Tela pública de acesso ao Vionex CRM |
+
 ## Fundos
 
 Superfícies geradas com o ImageGen integrado e salvas em `../backgrounds/`. Os prompts abaixo são exclusivos dos fundos.

@@ -199,7 +199,8 @@
 
 /* A primeira captura ocupa toda a largura; os detalhes formam uma dupla. */
 .project-detail .project-cover.project-scene,
-.project-detail .project-gallery__item.project-scene {
+.project-detail .project-gallery__item.project-scene,
+.project-detail .project-gallery__frame.project-scene {
   display: block;
   margin: 0;
   width: 100%;
@@ -212,11 +213,12 @@
 }
 
 .project-detail .project-cover.project-scene {
-  padding: clamp(18px, 2.8vw, 40px);
+  padding: clamp(10px, 1.25vw, 18px) clamp(18px, 2.8vw, 40px);
 }
 
-.project-detail .project-gallery__item.project-scene {
-  padding: clamp(12px, 1.7vw, 26px);
+.project-detail .project-gallery__item.project-scene,
+.project-detail .project-gallery__frame.project-scene {
+  padding: clamp(8px, .9vw, 14px) clamp(12px, 1.7vw, 26px);
 }
 
 .project-detail .project-gallery__item.project-scene:nth-child(2) {
@@ -234,6 +236,22 @@
   align-items: start;
   gap: 10px;
   margin: 10px 0 72px;
+}
+
+.project-gallery--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.project-gallery__item {
+  min-width: 0;
+  margin: 0;
+}
+
+.project-gallery__caption {
+  padding: 10px 2px 0;
+  color: #65656a;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .project-gallery:has(+ .project-capture-note) {
@@ -329,8 +347,9 @@
   }
 
   .project-detail .project-cover.project-scene,
-  .project-detail .project-gallery__item.project-scene {
-    padding: 12px;
+  .project-detail .project-gallery__item.project-scene,
+  .project-detail .project-gallery__frame.project-scene {
+    padding: 8px 12px;
   }
 
   .project-gallery {
