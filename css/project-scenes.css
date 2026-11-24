@@ -144,6 +144,10 @@
   .project-catalog .project-tile-phone .work-visual-phone {
     aspect-ratio: auto;
   }
+
+  .work-card-icoracing {
+    --phone-height-from-width: 175cqw;
+  }
 }
 
 /* Prévia da interface móvel da ICO Racing, compartilhada pela home e pelo catálogo. */
@@ -153,6 +157,36 @@
   background:
     radial-gradient(ellipse at 49% 6%, #eee6d8, transparent 73%),
     linear-gradient(145deg, #b7a994, #8b7b68 70%, #6e6153);
+}
+
+.work-visual.work-visual-phone::after {
+  inset: 40% 0 0;
+  background: linear-gradient(transparent, #0004 45%, #000a);
+}
+
+.work-visual-phone .work-caption {
+  inset: auto var(--phone-caption-inset, 20px) var(--phone-caption-inset, 20px);
+  gap: var(--phone-caption-gap, 12px);
+}
+
+.work-visual-phone .work-caption > div {
+  min-width: 0;
+}
+
+.work-visual-phone .work-caption h3 {
+  font: 500 16px/1.2 var(--body);
+  letter-spacing: 0;
+}
+
+.work-visual-phone .work-caption p {
+  margin-top: 4px;
+  color: #cecece;
+  font: 400 16px/1.25 var(--body);
+}
+
+.work-visual-phone .work-logo {
+  width: var(--phone-logo-size, 44px);
+  height: var(--phone-logo-size, 44px);
 }
 
 .case-phone-preview {
@@ -167,7 +201,7 @@
 .case-phone {
   --phone-corner: clamp(25px, 3.05vw, 45px);
   position: relative;
-  height: min(100cqh, 158cqw, 690px);
+  height: min(100cqh, var(--phone-height-from-width, 158cqw), 690px);
   aspect-ratio: 9 / 18.5;
   padding: 3px;
   border: 2px solid transparent;
@@ -271,8 +305,8 @@
     padding: 12px 12px 68px;
   }
 
-  .haptic-home #cases .work-grid-featured .work-visual-phone {
-    padding-bottom: 62px;
+  .work-visual-phone {
+    --phone-caption-inset: 16px;
   }
 
   .work-visual-phone::before {
@@ -284,6 +318,14 @@
 
   .case-phone-preview {
     inset-block-end: 68px;
+  }
+}
+
+@media (max-width: 375px) {
+  .work-visual-phone {
+    --phone-caption-inset: 12px;
+    --phone-caption-gap: 9px;
+    --phone-logo-size: 38px;
   }
 }
 
@@ -323,7 +365,7 @@
 }
 
 @media (min-width: 810px) and (max-width: 1050px) {
-  .haptic-home #cases .work-caption {
+  .haptic-home #cases .project-scene .work-caption {
     inset-inline: 12px;
     gap: 8px;
   }
@@ -332,7 +374,7 @@
     width: 58px;
   }
 
-  .haptic-home #cases .work-caption p {
+  .haptic-home #cases .project-scene .work-caption p {
     font-size: 14px;
   }
 }

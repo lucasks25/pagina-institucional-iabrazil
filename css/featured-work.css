@@ -41,7 +41,7 @@
   border-radius: 12px;
 }
 
-.haptic-home #cases .work-visual::after {
+.haptic-home #cases .project-scene::after {
   inset: 50% 0 0;
   background: linear-gradient(transparent, #101317d9);
 }
@@ -63,11 +63,11 @@
   inset: 10px auto auto 10px;
 }
 
-.haptic-home #cases .work-caption h3 {
+.haptic-home #cases .project-scene .work-caption h3 {
   font-size: clamp(15px, 1.2vw, 18px);
 }
 
-.haptic-home #cases .work-caption p {
+.haptic-home #cases .project-scene .work-caption p {
   font-size: 14px;
   color: #e2e2e2;
 }
@@ -103,11 +103,11 @@
 }
 
 @media (max-width: 1180px) {
-  .haptic-home #cases .work-caption {
+  .haptic-home #cases .project-scene .work-caption {
     gap: 8px;
   }
 
-  .haptic-home #cases .work-logo {
+  .haptic-home #cases .project-scene .work-logo {
     width: 32px;
     height: 32px;
     padding: 4px;
