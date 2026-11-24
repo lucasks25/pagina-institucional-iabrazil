@@ -159,3 +159,62 @@ if (introLines.length) {
   document.fonts?.ready.then(queueIntroReveal);
   revealIntro();
 }
+
+const originTitle = document.querySelector('#origin-title');
+const originWord = originTitle?.querySelector('.origin-story-reel em');
+const originReplay = document.querySelector('[data-origin-replay]');
+
+if (originWord?.animate && originReplay) {
+  const duration = 820;
+  const roll = originWord.animate([
+    { opacity: 0, transform: 'translateY(.9em) rotateX(-82deg)', easing: 'cubic-bezier(.31, .58, .3, 1)' },
+    { opacity: 1, transform: 'translateY(-.035em) rotateX(4deg)', offset: .88, easing: 'ease-out' },
+    { opacity: 1, transform: 'translateY(0) rotateX(0)' },
+  ], { duration, fill: 'both' });
+
+  let scrollFrame = 0;
+  let replaying = false;
+
+  function syncRoll() {
+    scrollFrame = 0;
+    if (replaying || reduced.matches) return;
+
+    const { top } = originTitle.getBoundingClientRect();
+    const start = innerHeight * .92;
+    const travel = Math.min(innerHeight * .35, 300);
+    const progress = Math.min(1, Math.max(0, (start - top) / travel));
+    const time = progress * duration;
+    if (roll.currentTime !== time) roll.currentTime = time;
+  }
+
+  function queueRoll() {
+    if (!scrollFrame && !reduced.matches && !replaying) {
+      scrollFrame = requestAnimationFrame(syncRoll);
+    }
+  }
+
+  function syncMotionPreference() {
+    originReplay.hidden = reduced.matches;
+    replaying = false;
+    roll.pause();
+    if (reduced.matches) roll.currentTime = duration;
+    else syncRoll();
+  }
+
+  roll.onfinish = () => {
+    replaying = false;
+    roll.pause();
+  };
+
+  originReplay.addEventListener('click', () => {
+    replaying = true;
+    roll.currentTime = 0;
+    roll.play();
+  });
+
+  addEventListener('scroll', queueRoll, { passive: true });
+  addEventListener('resize', queueRoll, { passive: true });
+  reduced.addEventListener('change', syncMotionPreference);
+  document.fonts?.ready.then(queueRoll);
+  syncMotionPreference();
+}
