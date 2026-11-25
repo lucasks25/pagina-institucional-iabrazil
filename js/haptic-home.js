@@ -160,61 +160,102 @@ if (introLines.length) {
   revealIntro();
 }
 
-const originTitle = document.querySelector('#origin-title');
-const originWord = originTitle?.querySelector('.origin-story-reel em');
-const originReplay = document.querySelector('[data-origin-replay]');
+const originSection = document.querySelector('#como-surgiu');
+const originContent = originSection?.querySelector('.origin-story-inner');
+const originWord = originContent?.querySelector('.origin-story-reel em');
+const originReplay = originContent?.querySelector('[data-origin-replay]');
 
 if (originWord?.animate && originReplay) {
-  const duration = 820;
-  const roll = originWord.animate([
-    { opacity: 0, transform: 'translateY(.9em) rotateX(-82deg)', easing: 'cubic-bezier(.31, .58, .3, 1)' },
-    { opacity: 1, transform: 'translateY(-.035em) rotateX(4deg)', offset: .88, easing: 'ease-out' },
-    { opacity: 1, transform: 'translateY(0) rotateX(0)' },
-  ], { duration, fill: 'both' });
+  const letterDuration = 300;
+  const letterDelay = 122;
+  const letters = [...originWord.textContent].map(character => {
+    const letter = document.createElement('span');
+    letter.className = 'origin-story-letter';
+    letter.textContent = character;
+    return letter;
+  });
+  originWord.replaceChildren(...letters);
 
+  const animations = letters.map((letter, index) => letter.animate([
+    { opacity: 0, transform: 'translateY(.82em)' },
+    { opacity: 1, transform: 'translateY(-.025em)', offset: .87 },
+    { opacity: 1, transform: 'translateY(0)' },
+  ], {
+    duration: letterDuration,
+    delay: index * letterDelay,
+    fill: 'both',
+    easing: 'cubic-bezier(.31, .58, .3, 1)',
+  }));
+  const duration = letterDuration + (letters.length - 1) * letterDelay;
+  let pin = null;
   let scrollFrame = 0;
   let replaying = false;
 
-  function syncRoll() {
+  function setLetterTime(time) {
+    for (const animation of animations) {
+      if (animation.currentTime !== time) animation.currentTime = time;
+    }
+  }
+
+  function syncLetters() {
     scrollFrame = 0;
     if (replaying || reduced.matches) return;
 
-    const { top } = originTitle.getBoundingClientRect();
-    const start = innerHeight * .92;
-    const travel = Math.min(innerHeight * .35, 300);
-    const progress = Math.min(1, Math.max(0, (start - top) / travel));
-    const time = progress * duration;
-    if (roll.currentTime !== time) roll.currentTime = time;
+    const top = pin ? originSection.getBoundingClientRect().top : originContent.getBoundingClientRect().top;
+    const start = pin?.start ?? innerHeight * .92;
+    const distance = pin?.distance ?? Math.min(innerHeight * .35, 300);
+    const progress = Math.min(1, Math.max(0, (start - top) / distance));
+    setLetterTime(progress * duration);
   }
 
-  function queueRoll() {
+  function configurePin() {
+    pin = null;
+    originSection.classList.toggle('is-pinned', !reduced.matches);
+    if (!reduced.matches) {
+      const top = parseFloat(getComputedStyle(originContent).top);
+      if (top + originContent.offsetHeight + 20 <= innerHeight) {
+        const style = getComputedStyle(originSection);
+        pin = {
+          start: top - parseFloat(style.paddingBlockStart),
+          distance: parseFloat(style.getPropertyValue('--origin-scroll-distance')),
+        };
+      } else {
+        originSection.classList.remove('is-pinned');
+      }
+    }
+    syncLetters();
+  }
+
+  function queueLetters() {
     if (!scrollFrame && !reduced.matches && !replaying) {
-      scrollFrame = requestAnimationFrame(syncRoll);
+      scrollFrame = requestAnimationFrame(syncLetters);
     }
   }
 
   function syncMotionPreference() {
     originReplay.hidden = reduced.matches;
     replaying = false;
-    roll.pause();
-    if (reduced.matches) roll.currentTime = duration;
-    else syncRoll();
+    for (const animation of animations) animation.pause();
+    if (reduced.matches) setLetterTime(duration);
+    configurePin();
   }
 
-  roll.onfinish = () => {
+  animations.at(-1).onfinish = () => {
+    if (!replaying) return;
     replaying = false;
-    roll.pause();
+    for (const animation of animations) animation.pause();
+    setLetterTime(duration);
   };
 
   originReplay.addEventListener('click', () => {
     replaying = true;
-    roll.currentTime = 0;
-    roll.play();
+    setLetterTime(0);
+    for (const animation of animations) animation.play();
   });
 
-  addEventListener('scroll', queueRoll, { passive: true });
-  addEventListener('resize', queueRoll, { passive: true });
+  addEventListener('scroll', queueLetters, { passive: true });
+  addEventListener('resize', configurePin, { passive: true });
   reduced.addEventListener('change', syncMotionPreference);
-  document.fonts?.ready.then(queueRoll);
+  document.fonts?.ready.then(configurePin);
   syncMotionPreference();
 }
