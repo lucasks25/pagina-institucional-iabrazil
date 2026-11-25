@@ -197,14 +197,20 @@ if (originWord?.animate && originReplay) {
     }
   }
 
+  const clampProgress = value => Math.min(1, Math.max(0, value));
+
   function syncLetters() {
     scrollFrame = 0;
     if (replaying || reduced.matches) return;
 
-    const top = pin ? originSection.getBoundingClientRect().top : originContent.getBoundingClientRect().top;
-    const start = pin?.start ?? innerHeight * .92;
-    const distance = pin?.distance ?? Math.min(innerHeight * .35, 300);
-    const progress = Math.min(1, Math.max(0, (start - top) / distance));
+    const entry = innerHeight * .92;
+    const top = pin
+      ? originSection.getBoundingClientRect().top + pin.padding
+      : originContent.getBoundingClientRect().top;
+    const entranceDistance = pin ? entry - pin.top : Math.min(innerHeight * .35, 300);
+    const entrance = clampProgress((entry - top) / entranceDistance);
+    const held = pin ? clampProgress((pin.top - top) / pin.distance) : 0;
+    const progress = pin ? entrance * .45 + held * .55 : entrance;
     setLetterTime(progress * duration);
   }
 
@@ -216,7 +222,8 @@ if (originWord?.animate && originReplay) {
       if (top + originContent.offsetHeight + 20 <= innerHeight) {
         const style = getComputedStyle(originSection);
         pin = {
-          start: top - parseFloat(style.paddingBlockStart),
+          top,
+          padding: parseFloat(style.paddingBlockStart),
           distance: parseFloat(style.getPropertyValue('--origin-scroll-distance')),
         };
       } else {
