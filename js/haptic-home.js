@@ -160,10 +160,9 @@ if (introLines.length) {
   revealIntro();
 }
 
-const originSection = document.querySelector('#como-surgiu');
-const originContent = originSection?.querySelector('.origin-story-inner');
-const originWord = originContent?.querySelector('.origin-story-reel em');
-const originReplay = originContent?.querySelector('[data-origin-replay]');
+const originTitle = document.querySelector('#origin-title');
+const originWord = originTitle?.querySelector('.origin-story-reel em');
+const originReplay = document.querySelector('[data-origin-replay]');
 
 if (originWord?.animate && originReplay) {
   const letterDuration = 300;
@@ -186,83 +185,50 @@ if (originWord?.animate && originReplay) {
     fill: 'both',
     easing: 'cubic-bezier(.31, .58, .3, 1)',
   }));
-  const duration = letterDuration + (letters.length - 1) * letterDelay;
-  let pin = null;
-  let scrollFrame = 0;
-  let replaying = false;
 
-  function setLetterTime(time) {
+  function rewindLetters() {
     for (const animation of animations) {
-      if (animation.currentTime !== time) animation.currentTime = time;
+      animation.pause();
+      animation.currentTime = 0;
     }
   }
 
-  const clampProgress = value => Math.min(1, Math.max(0, value));
-
-  function syncLetters() {
-    scrollFrame = 0;
-    if (replaying || reduced.matches) return;
-
-    const entry = innerHeight * .92;
-    const top = pin
-      ? originSection.getBoundingClientRect().top + pin.padding
-      : originContent.getBoundingClientRect().top;
-    const entranceDistance = pin ? entry - pin.top : Math.min(innerHeight * .35, 300);
-    const entrance = clampProgress((entry - top) / entranceDistance);
-    const held = pin ? clampProgress((pin.top - top) / pin.distance) : 0;
-    const progress = pin ? entrance * .45 + held * .55 : entrance;
-    setLetterTime(progress * duration);
+  function playLetters() {
+    for (const animation of animations) {
+      animation.currentTime = 0;
+      animation.play();
+    }
   }
 
-  function configurePin() {
-    pin = null;
-    originSection.classList.toggle('is-pinned', !reduced.matches);
-    if (!reduced.matches) {
-      const top = parseFloat(getComputedStyle(originContent).top);
-      if (top + originContent.offsetHeight + 20 <= innerHeight) {
-        const style = getComputedStyle(originSection);
-        pin = {
-          top,
-          padding: parseFloat(style.paddingBlockStart),
-          distance: parseFloat(style.getPropertyValue('--origin-scroll-distance')),
-        };
-      } else {
-        originSection.classList.remove('is-pinned');
+  let revealed = false;
+  const observer = 'IntersectionObserver' in window
+    ? new IntersectionObserver(([entry]) => {
+      if (reduced.matches) return;
+
+      if (!entry.isIntersecting) {
+        revealed = false;
+        rewindLetters();
+      } else if (!revealed && entry.intersectionRatio >= .18) {
+        revealed = true;
+        playLetters();
       }
-    }
-    syncLetters();
-  }
-
-  function queueLetters() {
-    if (!scrollFrame && !reduced.matches && !replaying) {
-      scrollFrame = requestAnimationFrame(syncLetters);
-    }
-  }
+    }, { threshold: .18, rootMargin: '0px 0px -6% 0px' })
+    : null;
 
   function syncMotionPreference() {
     originReplay.hidden = reduced.matches;
-    replaying = false;
-    for (const animation of animations) animation.pause();
-    if (reduced.matches) setLetterTime(duration);
-    configurePin();
+    observer?.disconnect();
+    if (reduced.matches || !observer) {
+      for (const animation of animations) animation.finish();
+      return;
+    }
+
+    revealed = false;
+    rewindLetters();
+    observer.observe(originTitle);
   }
 
-  animations.at(-1).onfinish = () => {
-    if (!replaying) return;
-    replaying = false;
-    for (const animation of animations) animation.pause();
-    setLetterTime(duration);
-  };
-
-  originReplay.addEventListener('click', () => {
-    replaying = true;
-    setLetterTime(0);
-    for (const animation of animations) animation.play();
-  });
-
-  addEventListener('scroll', queueLetters, { passive: true });
-  addEventListener('resize', configurePin, { passive: true });
+  originReplay.addEventListener('click', playLetters);
   reduced.addEventListener('change', syncMotionPreference);
-  document.fonts?.ready.then(configurePin);
   syncMotionPreference();
 }

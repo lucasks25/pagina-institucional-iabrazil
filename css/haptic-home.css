@@ -692,21 +692,6 @@ body{line-height:1.2;}
   margin-inline: auto;
 }
 
-.origin-story.is-pinned {
-  --origin-scroll-distance: 300px;
-}
-
-.origin-story.is-pinned::after {
-  content: '';
-  display: block;
-  block-size: var(--origin-scroll-distance);
-}
-
-.origin-story.is-pinned .origin-story-inner {
-  position: sticky;
-  top: clamp(76px, 14svh, 128px);
-}
-
 .origin-story-header {
   display: flex;
   align-items: center;
