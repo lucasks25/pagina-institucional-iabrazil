@@ -15,7 +15,7 @@
 
 .project-scene--salute,
 .project-scene--superai,
-.project-detail .project-scene--icoracing {
+.project-scene--icoracing {
   --scene-paper: #464848;
   --scene-texture: url("../assets/project-previews/backgrounds/graphite-matte.webp");
 }

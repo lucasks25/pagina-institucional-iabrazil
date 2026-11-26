@@ -42,6 +42,14 @@ Os arquivos `-detail-1-20261106.jpg` e `-detail-2-20261106.jpg` mostram pedido e
 | salute-cursos-enfermagem-20261123.jpg | Build local da landing page de Enfermagem | Campanha de Enfermagem |
 | vionex-crm-acesso-20261123.jpg | Build local do CRM Vionex | Tela pública de acesso ao Vionex CRM |
 
+## Loja virtual da ICO Racing
+
+| Arquivo | Origem | Conteúdo |
+| --- | --- | --- |
+| icoracing-loja-home-20261126.jpg | https://www.icoracing.com.br/ | Vitrine da loja |
+| icoracing-loja-catalogo-20261126.jpg | https://www.icoracing.com.br/pecas-e-componentes | Catálogo de peças |
+| icoracing-loja-produto-20261126.jpg | https://www.icoracing.com.br/protetor-de-bandeja-dianteira-maverick-x3-xrs-o-par | Página de produto |
+
 ## Fundos
 
 Superfícies geradas com o ImageGen integrado e salvas em `../backgrounds/`. Os prompts abaixo são exclusivos dos fundos.
